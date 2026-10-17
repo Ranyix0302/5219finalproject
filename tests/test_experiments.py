@@ -3,8 +3,12 @@
 import pandas as pd
 import pytest
 
-from ge5219.experiments import (compare_rankings, compare_spatial_selections, run_experiments,
-                                summarize_selected_units)
+from ge5219.experiments import (
+    compare_rankings,
+    compare_spatial_selections,
+    run_experiments,
+    summarize_selected_units,
+)
 from ge5219.settings import COST_FEATURES, FEATURES
 
 
