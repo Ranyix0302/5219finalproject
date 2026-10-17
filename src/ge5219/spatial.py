@@ -22,6 +22,56 @@ from scipy.sparse import coo_matrix
 from scipy.sparse.csgraph import connected_components
 from scipy.spatial import cKDTree
 
+RAIL_OPERATION_REVIEW = {
+    "version": "rail-operation-review-2026-10-17-v1",
+    "reviewed_on": "2026-10-17",
+    "analysis_date": "2026-10-19",
+    "scope": "partial_station_review_not_full_station_or_exit_operation_certification",
+    "excluded_station_names": ["MARINA SOUTH MRT STATION"],
+    "exclusion_reason": "LTA ties opening to surrounding developments; opening date not advised",
+    "evidence_url": (
+        "https://www.lta.gov.sg/content/ltagov/en/upcoming_projects/rail_expansion/"
+        "thomson_east_coast_line.html"
+    ),
+    "evidence_page_updated_on": "2026-07-07",
+    "matching_rule": "exact station name after uppercase and whitespace normalisation",
+    "scope_notes": [
+        "Marina South Pier is a different station and is retained",
+        "Mount Pleasant is also not yet open per LTA, but has no exit in this source",
+        "CC30, CC31 and CC32 opened on 2026-07-12; retain their delivered exits",
+        "Other retained exits, including LRT exits, are not individually certified operational",
+        "Temporary entrance closures and full bus-stop operation are not covered by this review",
+    ],
+    "retained_circle_line_evidence_url": (
+        "https://www.lta.gov.sg/content/ltagov/en/upcoming_projects/rail_expansion/"
+        "circle_line_6.html"
+    ),
+}
+
+
+def filter_rail_exits(
+    source_exits: gpd.GeoDataFrame,
+) -> tuple[gpd.GeoDataFrame, gpd.GeoDataFrame]:
+    """Remove identified unopened stations and retain a complete source audit.
+
+    A partial official-source review does not certify every retained station
+    or exit. The frozen rule and evidence travel with the prepared dataset.
+    """
+    if "STATION_NA" not in source_exits:
+        raise ValueError("Rail operation filtering requires the source station-name field")
+    audit = source_exits.copy()
+    normalised = audit.STATION_NA.map(_normalise_text)
+    excluded = normalised.isin(RAIL_OPERATION_REVIEW["excluded_station_names"])
+    audit["included_in_proximity"] = ~excluded
+    audit["operation_review_status"] = np.where(
+        excluded, "excluded_known_not_open", "retained_not_fully_operation_verified",
+    )
+    audit["operation_evidence_url"] = np.where(
+        excluded, RAIL_OPERATION_REVIEW["evidence_url"], "",
+    )
+    audit["operation_review_version"] = RAIL_OPERATION_REVIEW["version"]
+    return audit.loc[~excluded].copy(), audit
+
 
 def _require_projected(frame: gpd.GeoDataFrame) -> None:
     if frame.crs is None or frame.crs.to_epsg() != 3414:
@@ -424,11 +474,11 @@ def prepare_data(data_root: Path, output_dir: Path) -> dict:
     supermarkets, supermarket_map = _service_sites(_read_layer(gdb, "Supermarket"), "supermarket")
     _write_csv(clinic_map, audits_dir / "clinic_licence_site_mapping.csv")
     _write_csv(supermarket_map, audits_dir / "supermarket_licence_site_mapping.csv")
-    rail = _read_layer(handover / "03_GIS" / "MRT_Station_Exits.gpkg")
+    rail_source = _read_layer(handover / "03_GIS" / "MRT_Station_Exits.gpkg")
+    rail, rail_review = filter_rail_exits(rail_source)
     bus = _read_layer(handover / "03_GIS" / "BusStop_Points.gpkg")
-    rail["operation_review_status"] = "not_available_in_source_review_required"
     bus["operation_review_status"] = "not_available_in_source_review_required"
-    _write_csv(rail, audits_dir / "rail_operation_review.csv")
+    _write_csv(rail_review, audits_dir / "rail_operation_review.csv")
     _write_csv(bus, audits_dir / "bus_operation_review.csv")
     facilities = {
         "rail": rail, "bus": bus, "supermarket": supermarkets,
@@ -458,7 +508,18 @@ def prepare_data(data_root: Path, output_dir: Path) -> dict:
     unique_positions = locations[["latitude", "longitude"]].drop_duplicates()
     previous_comparison = static[["location_id", "source_residential_id"]].copy()
     previous_comparison["rail_recalculated_m"] = static.rail_exit_euclid_m
+    rail_tree_raw = cKDTree(np.column_stack([rail_source.geometry.x, rail_source.geometry.y]))
+    unfiltered_distance = rail_tree_raw.query(
+        np.column_stack([locations.geometry.x, locations.geometry.y]),
+    )[0]
+    previous_comparison["rail_unfiltered_recalculated_m"] = unfiltered_distance
+    previous_comparison["rail_operation_filter_difference_m"] = (
+        previous_comparison.rail_recalculated_m - unfiltered_distance
+    )
     previous_comparison["rail_handover_m"] = pd.to_numeric(static.Nearest_MRT_Exit_m)
+    previous_comparison["rail_unfiltered_handover_difference_m"] = (
+        unfiltered_distance - previous_comparison.rail_handover_m
+    )
     previous_comparison["rail_difference_m"] = (
         previous_comparison.rail_recalculated_m-previous_comparison.rail_handover_m
     )
@@ -476,6 +537,10 @@ def prepare_data(data_root: Path, output_dir: Path) -> dict:
         path.relative_to(data_root).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
         for path in source_paths if path.is_file() and path.suffix.lower() != ".lock"
     }
+    operation_config_text = json.dumps(RAIL_OPERATION_REVIEW, sort_keys=True, indent=2) + "\n"
+    operation_config_sha256 = hashlib.sha256(operation_config_text.encode()).hexdigest()
+    (output_dir / "transit_operation.json").write_bytes(operation_config_text.encode())
+    source_manifest["analysis_config/transit_operation.json"] = operation_config_sha256
     dataset_version = hashlib.sha256(
         json.dumps(source_manifest, sort_keys=True).encode(),
     ).hexdigest()
@@ -505,12 +570,22 @@ def prepare_data(data_root: Path, output_dir: Path) -> dict:
         "supermarket_source_records": len(supermarket_map), "supermarket_sites": len(supermarkets),
         "clinic_address_review_records": int(clinic_map.address_review_flags.ne("").sum()),
         "supermarket_address_review_records": int(supermarket_map.address_review_flags.ne("").sum()),
-        "bus_source_records": len(bus), "rail_exit_source_records": len(rail),
+        "bus_source_records": len(bus), "rail_exit_source_records": len(rail_source),
+        "rail_exit_candidate_records": len(rail),
+        "rail_exits_excluded_known_not_open": len(rail_source)-len(rail),
+        "rail_operation_filter_changed_points": int(
+            previous_comparison.rail_operation_filter_difference_m.abs().gt(1e-8).sum(),
+        ),
+        "rail_operation_filter_max_distance_change_m": float(
+            previous_comparison.rail_operation_filter_difference_m.abs().max(),
+        ),
+        "rail_operation_review": RAIL_OPERATION_REVIEW,
+        "transit_operation_config_sha256": operation_config_sha256,
         "geometry_repairs": repair_audit + park_repairs,
         "readiness_blockers": [
             f"{buildings.loc[conflict, 'postal_code'].nunique()} postal conflicts require adjudication; held-out records excluded",
             "Residential use is source-classification evidence only; independent use review outstanding",
-            "Rail exits and bus stops have no operation-status field; verify service at analysis date",
+            "Identified unopened station excluded; remaining rail exits and bus stops still need operation review",
             "Non-reserve park/corridor categories and public opening require review; distances provisional",
             "Facility address precision, licence grouping and coordinate spread need sample review",
             "AS8 endpoint review, public-transit coverage and independent route checks remain required",
@@ -519,7 +594,7 @@ def prepare_data(data_root: Path, output_dir: Path) -> dict:
         "coordinate_semantics": "B coordinates retained; A coordinate differences audited, never overwritten",
         "source_csv_sha256": hashlib.sha256(csv_path.read_bytes()).hexdigest(),
         "measurement_labels": {
-            "rail_exit_euclid_m": "Euclidean proximity, operational status unverified",
+            "rail_exit_euclid_m": "Euclidean proximity after identified-closed exclusion; remaining operation not fully verified",
             "bus_stops_800m": "Euclidean stop-point count, not routes/frequency, operation unverified",
             "park_proximity_euclid_m": "polygon proximity; inside zero; not entrance/network access",
         },

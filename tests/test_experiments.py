@@ -3,7 +3,8 @@
 import pandas as pd
 import pytest
 
-from ge5219.experiments import compare_rankings, compare_spatial_selections, run_experiments
+from ge5219.experiments import (compare_rankings, compare_spatial_selections, run_experiments,
+                                summarize_selected_units)
 from ge5219.settings import COST_FEATURES, FEATURES
 
 
@@ -21,6 +22,17 @@ def test_empty_lists_do_not_claim_perfect_robustness():
     observed = compare_rankings(empty, empty)
     assert observed["top_k_jaccard"] is None
     assert observed["spearman"] is None
+
+
+def test_selected_unit_support_counts_full_buildings_and_spatial_extent():
+    selected = pd.DataFrame({"unit_id": ["s1"], "n_planned": [2], "n_valid": [2],
+                             "n_feasible": [1], "limited_support": [True]})
+    members = pd.DataFrame({"building_id": ["a", "b", "c"], "area_id": ["s1"] * 3,
+                            "x_3414": [0.0, 3.0, 3.0], "y_3414": [0.0, 0.0, 4.0]})
+    support = summarize_selected_units(selected, members, "area_id")
+    assert support.loc[0, "n_building_records"] == 3
+    assert support.loc[0, "extent_diagonal_m"] == 5.0
+    assert support.loc[0, "n_planned"] == 2
 
 
 def test_spatial_comparison_maps_different_unit_types_to_common_positions():
@@ -46,10 +58,14 @@ def test_experiment_bundle_keeps_1000_draws_and_all_three_spatial_arms(tmp_path)
     params = {feature: {"p05": 0.0, "p95": 100.0,
                        "direction": "cost" if feature in COST_FEATURES else "benefit"}
               for feature in FEATURES}
-    manifest = run_experiments(frame, params, tmp_path, make_plots=False)
+    members = frame[["building_id", "area_id", "cluster_id"]].assign(
+        x_3414=[0.0, 3.0, 7.0], y_3414=[0.0, 4.0, 8.0])
+    manifest = run_experiments(frame, params, tmp_path, building_membership=members)
     draws = pd.read_csv(tmp_path / "monte_carlo_weights.csv")
     assert len(draws) == 1000
     assert manifest["seed"] == 42
     assert set(manifest["spatial_arms"]) == {"A_subzone", "B_subzone", "B_cluster"}
     assert manifest["spatial_commute_cap_min"] == 60
     assert pd.read_csv(tmp_path / "spatial_B_cluster" / "area_scores.csv").shape[0] == 3
+    assert (tmp_path / "spatial_B_cluster" / "selected_unit_support.csv").exists()
+    assert (tmp_path / "scenario_top5.png").exists()

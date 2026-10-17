@@ -22,6 +22,8 @@ sampling counts, **not recommendation results**:
 
 Six static measurements have been computed. Python bus counts match B's fields
 on every selected position; rail distance differences are below0.000001 m.
+Four unopened Marina South exits are excluded by a dated LTA-backed rule;
+the remaining609 exits have not all received individual operation review.
 Residential use, transport operation, park categories and facility address
 precision remain flagged for review. AS8 endpoint review and OneMap routing
 are outstanding. **No official seven-factor Top5 or real sensitivity results

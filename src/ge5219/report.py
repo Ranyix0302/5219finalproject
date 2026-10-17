@@ -68,6 +68,7 @@ def create_preparation_report(prepared: Path, output: Path) -> Path:
         ("暂纳入公园面 / 排除自然保护区", f'{quality["park_candidate_records"]} / {quality["nature_reserves_excluded"]}'),
         ("诊所牌照 → 服务地址", f'{quality["clinic_source_records"]} → {quality["clinic_sites"]}'),
         ("超市牌照 → 服务地址单元", f'{quality["supermarket_source_records"]} → {quality["supermarket_sites"]}'),
+        ("轨道出口来源 → 部分运营核查后纳入", f'{quality["rail_exit_source_records"]} → {quality["rail_exit_candidate_records"]}'),
     ]
     source_table = pd.DataFrame(source_rows, columns=["项目", "实际数量"]).to_html(index=False, border=0)
     document = f'''<!doctype html><html lang="zh-CN"><meta charset="utf-8">

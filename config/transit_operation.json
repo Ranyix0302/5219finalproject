@@ -1,0 +1,21 @@
+{
+  "analysis_date": "2026-10-19",
+  "evidence_page_updated_on": "2026-07-07",
+  "evidence_url": "https://www.lta.gov.sg/content/ltagov/en/upcoming_projects/rail_expansion/thomson_east_coast_line.html",
+  "excluded_station_names": [
+    "MARINA SOUTH MRT STATION"
+  ],
+  "exclusion_reason": "LTA ties opening to surrounding developments; opening date not advised",
+  "matching_rule": "exact station name after uppercase and whitespace normalisation",
+  "retained_circle_line_evidence_url": "https://www.lta.gov.sg/content/ltagov/en/upcoming_projects/rail_expansion/circle_line_6.html",
+  "reviewed_on": "2026-10-17",
+  "scope": "partial_station_review_not_full_station_or_exit_operation_certification",
+  "scope_notes": [
+    "Marina South Pier is a different station and is retained",
+    "Mount Pleasant is also not yet open per LTA, but has no exit in this source",
+    "CC30, CC31 and CC32 opened on 2026-07-12; retain their delivered exits",
+    "Other retained exits, including LRT exits, are not individually certified operational",
+    "Temporary entrance closures and full bus-stop operation are not covered by this review"
+  ],
+  "version": "rail-operation-review-2026-10-17-v1"
+}

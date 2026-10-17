@@ -55,6 +55,32 @@ def compare_spatial_selections(
     }
 
 
+def summarize_selected_units(
+    selected: pd.DataFrame, building_membership: pd.DataFrame, group_by: str,
+) -> pd.DataFrame:
+    """Attach full candidate-record counts and bounding-box extent to selected units.
+
+    Extent is a scale diagnostic, not an estate boundary or exact diameter.
+    Counts describe source building/address records, not households or capacity.
+    """
+    required = {"building_id", group_by, "x_3414", "y_3414"}
+    if required - set(building_membership):
+        raise ValueError("Full building membership and EPSG:3414 coordinates are required")
+    if building_membership.building_id.duplicated().any():
+        raise ValueError("Full building membership must have unique building IDs")
+    numeric = building_membership[["x_3414", "y_3414"]].to_numpy(dtype=float)
+    if not np.isfinite(numeric).all() or building_membership[group_by].isna().any():
+        raise ValueError("Building membership needs finite projected coordinates and group IDs")
+    summary = building_membership.groupby(group_by, as_index=False).agg(
+        n_building_records=("building_id", "size"),
+        x_min=("x_3414", "min"), x_max=("x_3414", "max"),
+        y_min=("y_3414", "min"), y_max=("y_3414", "max"))
+    summary["extent_diagonal_m"] = np.hypot(summary.x_max - summary.x_min,
+                                            summary.y_max - summary.y_min)
+    return selected.merge(summary.rename(columns={group_by: "unit_id"}), on="unit_id",
+                          how="left", validate="one_to_one")
+
+
 def _save_weight_runs(
     frame: pd.DataFrame, params: dict, weights: np.ndarray, output: Path,
     prefix: str, metadata: dict, labels: list[dict[str, Any]],
@@ -126,6 +152,7 @@ def _plot_experiments(
 
 def run_experiments(
     frame: pd.DataFrame, params: dict, output_dir: Path,
+    building_membership: pd.DataFrame,
     metadata: dict | None = None, draws: int = 1000, seed: int = 42,
     kappa: float = 50.0, make_plots: bool = True,
 ) -> dict[str, Any]:
@@ -143,6 +170,11 @@ def run_experiments(
         raise ValueError("Dirichlet kappa must be positive and finite")
     if "sample_A" not in frame or frame.sample_A.dtype != bool:
         raise ValueError("sample_A must be a boolean frozen sampling flag")
+    if not set(frame.building_id).issubset(set(building_membership.building_id)):
+        raise ValueError("Full building membership must include all planned building IDs")
+    empty_selection = pd.DataFrame({"unit_id": pd.Series(dtype=str)})
+    for grouping in ("area_id", "cluster_id"):
+        summarize_selected_units(empty_selection, building_membership, grouping)
     baseline = frame.loc[frame.sample_A].copy()
     if baseline.empty:
         raise ValueError("Frozen A baseline is empty")
@@ -199,10 +231,28 @@ def run_experiments(
     }
     for name, result in arms.items():
         save_result(result, output_dir / f"spatial_{name}")
+        grouping = "cluster_id" if name == "B_cluster" else "area_id"
+        support = summarize_selected_units(result["top5"], building_membership, grouping)
+        support.to_csv(output_dir / f"spatial_{name}" / "selected_unit_support.csv", index=False)
     spatial = compare_spatial_selections(frame, set(arms["B_subzone"]["top5"].unit_id),
                                          set(arms["B_cluster"]["top5"].unit_id))
     spatial["supplementation_ranking_comparison"] = compare_rankings(
         arms["A_subzone"]["area_scores"], arms["B_subzone"]["area_scores"])
+    selected_subzones = set(arms["B_subzone"]["top5"].unit_id)
+    selected_clusters = set(arms["B_cluster"]["top5"].unit_id)
+    subzone_buildings = set(building_membership.loc[
+        building_membership.area_id.isin(selected_subzones), "building_id"])
+    cluster_buildings = set(building_membership.loc[
+        building_membership.cluster_id.isin(selected_clusters), "building_id"])
+    building_union = subzone_buildings | cluster_buildings
+    spatial.update({
+        "n_subzone_building_records": len(subzone_buildings),
+        "n_cluster_building_records": len(cluster_buildings),
+        "jaccard_building_records": len(subzone_buildings & cluster_buildings) / len(building_union)
+        if building_union else None,
+        "building_count_semantics": "Distinct candidate source records, not verified households or capacity",
+        "extent_semantics": "Projected bounding-box diagonal, not exact diameter or estate boundary",
+    })
     write_json(output_dir / "spatial_comparison.json", spatial)
     qualification = {}
     for threshold in (.25, .5, .75):

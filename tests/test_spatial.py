@@ -5,7 +5,12 @@ import numpy as np
 import pandas as pd
 from shapely.geometry import Point, box
 
-from ge5219.spatial import assign_subzones, measure_static_indicators, sample_residences
+from ge5219.spatial import (
+    assign_subzones,
+    filter_rail_exits,
+    measure_static_indicators,
+    sample_residences,
+)
 
 
 def test_sampling_keeps_boundary_subzones_chains_and_uncovered_singletons():
@@ -81,3 +86,20 @@ def test_static_measures_preserve_true_zero_and_polygon_interior_distance():
     facilities["library"] = gpd.GeoDataFrame(geometry=[], crs=3414)
     incomplete = measure_static_indicators(origins, facilities)
     assert np.isnan(incomplete.library_euclid_m).all()
+
+
+def test_known_closed_station_is_excluded_without_certifying_or_name_filtering_others():
+    exits = gpd.GeoDataFrame(
+        {"STATION_NA": ["MARINA SOUTH MRT STATION", "MARINA SOUTH PIER MRT STATION",
+                        "CC30", "UNKNOWN LRT STATION"],
+         "OBJECTID_1": [21568, 1, 2, 3]},
+        geometry=[Point(0, 0), Point(3, 4), Point(10, 0), Point(12, 0)], crs=3414,
+    )
+    eligible, audit = filter_rail_exits(exits)
+    assert eligible.OBJECTID_1.tolist() == [1, 2, 3]
+    assert audit.included_in_proximity.tolist() == [False, True, True, True]
+    assert audit.loc[0, "operation_review_status"] == "excluded_known_not_open"
+    assert audit.loc[1:, "operation_review_status"].eq(
+        "retained_not_fully_operation_verified").all()
+    assert "lta.gov.sg" in audit.loc[0, "operation_evidence_url"]
+    assert "STATION_NA" in eligible.columns

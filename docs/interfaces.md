@@ -64,3 +64,8 @@ CLI commands prepare, route, score, experiments and status keep local source
 paths external. Experiment outputs include all weights/ranks, reproducible
 seeds, common candidate counts, and A/Subzone, B/Subzone, B/cluster comparisons.
 Incomplete real data returns documented status and never becomes demo scores.
+
+`run_experiments` requires full `building_membership` with building_id,
+area_id, cluster_id and EPSG:3414 x_3414/y_3414. Each spatial arm exports selected
+units' full candidate-record counts, bounding-box extent and planned/valid/
+feasible sample support. Source-record counts are not household estimates.

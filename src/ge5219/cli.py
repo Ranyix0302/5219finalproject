@@ -90,11 +90,18 @@ def _run_score(args: argparse.Namespace) -> dict:
 
 
 def _run_experiments(args: argparse.Namespace) -> dict:
+    import geopandas as gpd
+
     from .experiments import run_experiments
 
     frame, metadata, _ = _matrix_and_context(args)
     params = _normalization(frame, metadata, args.normalization)
-    return run_experiments(frame, params, args.output, metadata=metadata)
+    members = read_locations(args.prepared / "cluster_membership.csv")
+    buildings = gpd.read_file(args.prepared / "buildings.gpkg").to_crs(3414)
+    coordinates = pd.DataFrame({"building_id": buildings.building_id,
+                                "x_3414": buildings.geometry.x, "y_3414": buildings.geometry.y})
+    members = members.merge(coordinates, on="building_id", how="left", validate="one_to_one")
+    return run_experiments(frame, params, args.output, building_membership=members, metadata=metadata)
 
 
 def _run_status(args: argparse.Namespace) -> dict:
@@ -105,7 +112,12 @@ def _run_status(args: argparse.Namespace) -> dict:
                               "data_quality": quality,
                               "destination_reviewed": destination.get("reviewed") is True,
                               "routing_scene": DEPARTURE,
-                              "official_mcda_results_generated": False}
+                              "result_metadata_path": str(args.result),
+                              "seven_factor_result_bundle_available": args.result.exists()}
+    if args.result.exists():
+        result = _read_json(args.result)
+        status["stored_result_status"] = result.get("status")
+        status["stored_result_id"] = result.get("result_id")
     if args.routes and args.routes.exists():
         routes = read_locations(args.routes)
         status["route_status_counts"] = routes.route_status.value_counts().to_dict()
@@ -136,6 +148,8 @@ def _build_parser() -> argparse.ArgumentParser:
                                  default=Path("outputs/normalization-v1.json"))
             command.add_argument("--output", type=Path, default=Path(f"outputs/{name}"))
     route = commands.choices["route"]
+    commands.choices["status"].add_argument("--result", type=Path,
+                                            default=Path("outputs/score/result_metadata.json"))
     route.add_argument("--cache", type=Path, default=Path("outputs/routes.sqlite"))
     route.add_argument("--output", type=Path, default=Path("outputs/routes.csv"))
     route.add_argument("--max-requests", type=int)

@@ -59,7 +59,7 @@ Supplementation does not depend on static scores or later route success.
 
 | Field | Definition |
 | --- | --- |
-| `rail_exit_euclid_m` | Nearest delivered MRT/LRT exit-point Euclidean distance |
+| `rail_exit_euclid_m` | Nearest retained MRT/LRT exit-point Euclidean distance after identified unopened-station exclusion |
 | `bus_stops_800m` | Delivered bus-stop points within inclusive800 m Euclidean radius |
 | `supermarket_sites_800m` | Standardised service-address sites within inclusive800 m |
 | `library_euclid_m` | Nearest delivered library-point Euclidean distance |
@@ -78,9 +78,35 @@ evidence of location accuracy. Supermarket `match_status` is retained. Missing
 floor/unit, placeholder units and long numeric units that could reflect
 spreadsheet conversion are flagged rather than guessed or repaired silently.
 
-The source transport points do not contain an operation-status field.
-Distances/counts therefore remain provisional until service at the analysis
-date is checked. They do not measure network walking time, routes or frequency.
+The source transport points do not contain an operation-status field. A partial
+official-source review dated2026-10-17 identifies the four
+`MARINA SOUTH MRT STATION` exits as not yet open: [LTA's Thomson-East Coast Line
+page](https://www.lta.gov.sg/content/ltagov/en/upcoming_projects/rail_expansion/thomson_east_coast_line.html)
+(updated2026-07-07) makes opening dependent on surrounding development and
+does not announce a date. These four records remain in the source audit and
+are excluded from nearest-exit measurement. `MARINA SOUTH PIER MRT STATION`
+is a different station and remains included. [LTA's Circle Line6
+page](https://www.lta.gov.sg/content/ltagov/en/upcoming_projects/rail_expansion/circle_line_6.html)
+records the2026-07-12 opening of CC30/31/32, so those delivered exits remain.
+The 613 source exits include LRT exits; do not filter them merely because a
+station name lacks the letters MRT.
+
+The remaining609 exits are **not individually certified operational**. Their
+audit status says retained after partial review, with further station/exit
+operation review outstanding. Distances/counts remain provisional. They do
+not measure network walking time, routes or frequency. Removing the four known
+unopened exits changes zero of the currently selected2,196 nearest distances;
+this finding does not justify treating those exits as operating.
+
+The frozen executable rule is `RAIL_OPERATION_REVIEW` in the spatial module.
+`config/transit_operation.json` mirrors the full rule, review date, scope and
+official evidence. Keeping an embedded copy makes the exclusion effective
+after package installation; changing the reviewed rule requires updating its
+tracked configuration mirror and code together. Preparation writes the actual
+runtime rule snapshot to its output and hashes it into the source manifest,
+so rule changes change `dataset_version`. The transit comparison audit keeps
+both unfiltered613-exit and retained609-exit distances to separate reproduction
+of B's historical calculation from the corrected indicator.
 
 The seven `N_RESERVE=1` nature-reserve polygons are excluded. Other park and
 corridor source records have a provisional inclusion list pending category
@@ -102,8 +128,9 @@ transport operation review and Python-versus-B transit measurement differences.
 origins. These are initial request counts for one destination/time, before
 retries; they are not an API speed or completion-time promise. Duplicate
 positions can share cached routing even when separate records exist.
-`source_manifest.json` hashes the source CSV, GDB files and transport
-GeoPackages; the combined manifest hash supplies `dataset_version`.
+`source_manifest.json` hashes the source CSV, GDB files, transport GeoPackages
+and the actual transit-operation rule snapshot; the combined manifest hash
+supplies `dataset_version`.
 
 Prepared values are real GIS measurements with review flags, not final
 recommendations. `production_ready=false` and `readiness_blockers` are
@@ -120,6 +147,8 @@ Public seam tests use labelled synthetic points/polygons to check:
 2. Boundary tie audit and retention of points outside the study polygons.
 3. Inclusive radius counts, true zeros, missing-source handling and zero
    park distance inside a polygon.
+4. Known unopened-station exclusion, separation of Marina South from Marina
+   South Pier, retention of coded/LRT stations and honest unverified status.
 
 The real preparation also compares Python-derived rail distances and bus
 counts to the delivered B fields on the selected analysis positions.
