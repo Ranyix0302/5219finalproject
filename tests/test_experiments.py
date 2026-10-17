@@ -56,7 +56,7 @@ def test_experiment_bundle_keeps_1000_draws_and_all_three_spatial_arms(tmp_path)
         "location_id": ["p1", "p2", "p3"], "building_id": ["b1", "b2", "b3"],
         "area_id": ["s1", "s2", "s2"], "area_name": ["ONE", "TWO", "TWO"],
         "cluster_id": ["c1", "c2", "c3"], "cluster_name": ["ONE C1", "TWO C2", "TWO C3"],
-        "sample_A": [True, True, False], "route_status": ["Success"] * 3,
+        "sample_A": [True, True, False], "route_status": ["Success", "NoRoute", "Success"],
         **{feature: [20.0, 40.0, 70.0] for feature in FEATURES},
     })
     params = {feature: {"p05": 0.0, "p95": 100.0,
@@ -67,6 +67,10 @@ def test_experiment_bundle_keeps_1000_draws_and_all_three_spatial_arms(tmp_path)
     manifest = run_experiments(frame, params, tmp_path, building_membership=members)
     draws = pd.read_csv(tmp_path / "monte_carlo_weights.csv")
     assert len(draws) == 1000
+    frequency = pd.read_csv(tmp_path / "monte_carlo_frequency.csv").set_index("unit_id")
+    assert frequency.loc["s1", "selection_frequency"] == 1.0
+    assert frequency.loc["s2", "selection_frequency"] == 0.0
+    assert pd.isna(frequency.loc["s2", "rank_median"])
     assert manifest["seed"] == 42
     assert set(manifest["spatial_arms"]) == {"A_subzone", "B_subzone", "B_cluster"}
     assert manifest["spatial_commute_cap_min"] == 60

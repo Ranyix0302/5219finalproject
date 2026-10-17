@@ -3,18 +3,22 @@
 ## Destination and scenario
 
 The accepted scene is `NUS_AS8`, departure **2026-10-19 08:00 Asia/Singapore**.
-`config/destination.json` currently remains **reviewed: false**. On 2026-10-17,
+`config/destination.json` is **reviewed: true** after the documented desktop
+review on 2026-10-17. Official-source and real-route evidence supports a building
+ground-arrival proxy; this flag does not mean exact-door or field verification.
+See [AS8 endpoint review](as8-endpoint-review.md). On that date,
 official OneMap search for AS8 returned the building address **10 Kent Ridge
 Crescent, Singapore 119260**, latitude `1.296086762317243`, longitude
 `103.7723482217768`. This verifies address identity, not an entrance or reachable
-ground arrival position. The search response also contained an authentication
-notice. No authenticated route or map access review has been completed.
+ground arrival position. An authenticated route subsequently succeeded: its final
+189.25 m walking leg ends 12.44 m from the geocode. Official NUS campus-map and
+photographic arrival directions corroborate building identity and pedestrian
+access, with the connector and exact entrance left unverified.
 
 The NUS official address supports the building identity. Neither it nor the
 handover provisional coordinate `1.29604, 103.77229` establishes a usable
-arrival point. A reviewer must verify the destination on the official map and a
-route, record point semantics/reviewer/date in `coordinate_evidence`, update
-coordinates if needed, and explicitly set `reviewed` to true. Production
+arrival point. The desktop review records point semantics/reviewer/date in
+`coordinate_evidence` and retains the official geocode. Production
 `load_destination` and all route calls reject an unreviewed point. There is no
 fallback to provisional coordinates.
 
@@ -60,6 +64,9 @@ and its official page bundle on 2026-10-17:
   `mode=TRANSIT`, `maxWalkDistance=1000`, `numItineraries=1`.
 - The adapter takes `plan.itineraries[0].duration` in **seconds**, divides by60,
   and never substitutes another itinerary or a straight-line estimate.
+- This is the first itinerary's reported duration. Initial scheduling time
+  between the requested departure and the itinerary's actual start is not
+  automatically added. Keep this distinction when comparing other planners.
 - `walkTime`, `transitTime`, `waitingTime` are separately converted when
   supplied. Missing components/transfers/distance remain unknown, not zero.
 - HTTP401/403 are authentication/authorization failures; HTTP429 is quota

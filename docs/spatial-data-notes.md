@@ -66,17 +66,28 @@ Supplementation does not depend on static scores or later route success.
 | `clinic_sites_1000m` | Standardised service-address sites within inclusive1000 m |
 | `park_proximity_euclid_m` | Distance to included park polygon; zero when inside |
 
-Supermarket and clinic sites are grouped by normalised postal code, street
-address, floor and unit. Multiple licences at the same full address become
-one service address. Different units remain distinct sites even when their
-source geocoding shares coordinates. Missing reliable address fields retain
-separate source records and an uncertainty label. Every licence remains in
+`group_service_addresses` groups supermarket and clinic sites by normalised
+postal code, street address, floor and unit only when all four fields are
+usable. Multiple licences at the same complete address become one service
+address. Different units remain distinct sites even when their source
+geocoding shares coordinates. Missing floor/unit, a zero placeholder unit or
+a suspect long numeric unit cannot establish duplicate service-unit identity;
+these records retain a separate licence-keyed site with `unresolved_retained`
+and review flags. Free-text `Building_Name` is not guessed into floor/unit.
+The frozen rule version is `complete-service-address-v2`. Every licence remains in
 the source-to-site mapping. Address groups with coordinates spanning more
 than20 m are flagged for review; the alphabetically first licence selects
 the source point deterministically. This threshold is a review trigger, not
 evidence of location accuracy. Supermarket `match_status` is retained. Missing
 floor/unit, placeholder units and long numeric units that could reflect
 spreadsheet conversion are flagged rather than guessed or repaired silently.
+Preparation writes the actual `SERVICE_ADDRESS_REVIEW` rule to
+`service_address_rules.json` and includes its hash in `source_manifest.json`.
+Its tracked mirror is `config/service_address_rules.json`; rule changes must
+change both together. This makes revised service-address grouping change
+`dataset_version` and prevents reuse of normalization fitted to older measures.
+Unresolved licence-keyed sites are uncertainty-bearing retained records, not
+certified distinct service opportunities.
 
 The source transport points do not contain an operation-status field. A partial
 official-source review dated2026-10-17 identifies the four
@@ -108,7 +119,15 @@ so rule changes change `dataset_version`. The transit comparison audit keeps
 both unfiltered613-exit and retained609-exit distances to separate reproduction
 of B's historical calculation from the corrected indicator.
 
-The seven `N_RESERVE=1` nature-reserve polygons are excluded. Other park and
+The seven source polygons flagged `N_RESERVE=1` are excluded by the approved
+baseline rule. They are not seven legally distinct nature reserves: the source
+also flags Upper/Lower Peirce and Upper Seletar Reservoir Park records. The
+[NParks classification](https://www.nparks.gov.sg/visit/when-visiting-parks/about-parks-nature-reserves-pcns)
+identifies four nature reserves, and its
+[Upper Peirce Reservoir Park page](https://www.nparks.gov.sg/visit/parks/park-detail/upper-peirce-reservoir-park)
+places that park within Central Catchment Nature Reserve. The existing
+`nature_reserves_excluded` count is retained for interface compatibility and
+counts source-flagged polygons; it does not count legal reserves. Other park and
 corridor source records have a provisional inclusion list pending category
 and public-access review. No centroid is called an entrance; polygon proximity
 does not establish legal/physical access. Opening hours are unverified.

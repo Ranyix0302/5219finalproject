@@ -48,6 +48,21 @@ RAIL_OPERATION_REVIEW = {
     ),
 }
 
+SERVICE_ADDRESS_RULE_VERSION = "complete-service-address-v2"
+SERVICE_ADDRESS_REVIEW = {
+    "version": SERVICE_ADDRESS_RULE_VERSION,
+    "grouping_fields": ["postal_code", "street_address", "floor", "unit"],
+    "group_only_complete_usable_addresses": True,
+    "invalid_unit_values": ["", "0"],
+    "suspect_unit_rule": "all numeric with at least five digits",
+    "incomplete_address_policy": "retain separate licence-keyed unresolved site",
+    "missing_licence_policy": "retain separate source-row-keyed unresolved site",
+    "free_text_building_name_policy": "do not infer floor or unit",
+    "coordinate_policy": "same coordinates alone do not establish a duplicate site",
+    "coordinate_choice": "lexically first licence then source row within complete address",
+    "review_trigger_coordinate_spread_m": 20,
+}
+
 
 def filter_rail_exits(
     source_exits: gpd.GeoDataFrame,
@@ -311,9 +326,19 @@ def _repair_polygons(frame: gpd.GeoDataFrame, source: str) -> tuple[gpd.GeoDataF
     return repaired, audits
 
 
-def _service_sites(
+def group_service_addresses(
     frame: gpd.GeoDataFrame, source: str,
 ) -> tuple[gpd.GeoDataFrame, pd.DataFrame]:
+    """Group licences only when complete service-unit addresses establish identity.
+
+    Missing or suspect floor/unit fields retain each licence as an unresolved
+    site. Free-text building names are not guessed into structured unit fields.
+    Different licences sharing geocoded coordinates remain separate unless a
+    complete reliable address provides evidence for grouping.
+    """
+    _require_projected(frame)
+    if source not in {"clinic", "supermarket"}:
+        raise ValueError("Service-address source must be clinic or supermarket")
     entries = []
     for index, row in frame.iterrows():
         if source == "clinic":
@@ -344,14 +369,19 @@ def _service_sites(
             review_flags.append("long_numeric_unit_possible_spreadsheet_conversion")
         if source == "supermarket" and precision != "MATCHED":
             review_flags.append("geocoding_precision_requires_review")
+        complete_address = (
+            reliable and bool(floor) and bool(unit) and unit != "0"
+            and not (unit.isdigit() and len(unit) >= 5)
+        )
         address_key = "|".join([str(postal), street_address, floor, unit]) if reliable else ""
-        key = address_key or f"unresolved_source_row_{index}"
+        unresolved_key = f"unresolved_licence_{licence}" if licence else f"unresolved_row_{index}"
+        key = address_key if complete_address else unresolved_key
         site_id = f"{source}_" + hashlib.sha256(key.encode()).hexdigest()[:16]
         entries.append({
             "source_row": index, "licence_id": licence, "site_id": site_id,
             "postal_code": postal, "street_address": street_address,
             "floor": floor, "unit": unit, "address_key": address_key,
-            "dedupe_status": "full_address_grouped" if reliable else "unresolved_retained",
+            "dedupe_status": "full_address_grouped" if complete_address else "unresolved_retained",
             "coordinate_precision": precision,
             "address_review_flags": "|".join(review_flags),
         })
@@ -466,12 +496,15 @@ def prepare_data(data_root: Path, output_dir: Path) -> dict:
     park_review = parks.drop(columns="geometry").copy()
     park_review["included_provisionally"] = ~parks.N_RESERVE.eq(1)
     park_review["category_review_status"] = np.where(
-        parks.N_RESERVE.eq(1), "excluded_nature_reserve", "non_reserve_source_category_review_required",
+        parks.N_RESERVE.eq(1), "excluded_source_N_RESERVE_flag",
+        "non_reserve_source_category_review_required",
     )
     park_review["opening_status"] = "not_verified"
     _write_csv(park_review, audits_dir / "park_category_review.csv")
-    clinics, clinic_map = _service_sites(_read_layer(gdb, "Healthcare"), "clinic")
-    supermarkets, supermarket_map = _service_sites(_read_layer(gdb, "Supermarket"), "supermarket")
+    clinics, clinic_map = group_service_addresses(_read_layer(gdb, "Healthcare"), "clinic")
+    supermarkets, supermarket_map = group_service_addresses(
+        _read_layer(gdb, "Supermarket"), "supermarket",
+    )
     _write_csv(clinic_map, audits_dir / "clinic_licence_site_mapping.csv")
     _write_csv(supermarket_map, audits_dir / "supermarket_licence_site_mapping.csv")
     rail_source = _read_layer(handover / "03_GIS" / "MRT_Station_Exits.gpkg")
@@ -541,6 +574,10 @@ def prepare_data(data_root: Path, output_dir: Path) -> dict:
     operation_config_sha256 = hashlib.sha256(operation_config_text.encode()).hexdigest()
     (output_dir / "transit_operation.json").write_bytes(operation_config_text.encode())
     source_manifest["analysis_config/transit_operation.json"] = operation_config_sha256
+    address_config_text = json.dumps(SERVICE_ADDRESS_REVIEW, sort_keys=True, indent=2) + "\n"
+    address_config_sha256 = hashlib.sha256(address_config_text.encode()).hexdigest()
+    (output_dir / "service_address_rules.json").write_bytes(address_config_text.encode())
+    source_manifest["analysis_config/service_address_rules.json"] = address_config_sha256
     dataset_version = hashlib.sha256(
         json.dumps(source_manifest, sort_keys=True).encode(),
     ).hexdigest()
@@ -588,9 +625,21 @@ def prepare_data(data_root: Path, output_dir: Path) -> dict:
             "Identified unopened station excluded; remaining rail exits and bus stops still need operation review",
             "Non-reserve park/corridor categories and public opening require review; distances provisional",
             "Facility address precision, licence grouping and coordinate spread need sample review",
-            "AS8 endpoint review, public-transit coverage and independent route checks remain required",
+            "Destination review, public-transit coverage and independent route evidence are tracked separately from static preparation",
         ],
-        "facility_units": "normalised postal+street address+floor+unit, licence mapping preserved",
+        "facility_units": (
+            "complete postal+street+floor+unit groups; incomplete addresses retained by licence"
+        ),
+        "service_address_rule_version": SERVICE_ADDRESS_RULE_VERSION,
+        "service_address_config_sha256": address_config_sha256,
+        "clinic_unresolved_sites": int(
+            clinic_map.loc[clinic_map.dedupe_status.eq("unresolved_retained"), "site_id"].nunique(),
+        ),
+        "supermarket_unresolved_sites": int(
+            supermarket_map.loc[
+                supermarket_map.dedupe_status.eq("unresolved_retained"), "site_id",
+            ].nunique(),
+        ),
         "coordinate_semantics": "B coordinates retained; A coordinate differences audited, never overwritten",
         "source_csv_sha256": hashlib.sha256(csv_path.read_bytes()).hexdigest(),
         "measurement_labels": {

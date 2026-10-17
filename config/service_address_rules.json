@@ -1,0 +1,13 @@
+{
+  "version": "complete-service-address-v2",
+  "grouping_fields": ["postal_code", "street_address", "floor", "unit"],
+  "group_only_complete_usable_addresses": true,
+  "invalid_unit_values": ["", "0"],
+  "suspect_unit_rule": "all numeric with at least five digits",
+  "incomplete_address_policy": "retain separate licence-keyed unresolved site",
+  "missing_licence_policy": "retain separate source-row-keyed unresolved site",
+  "free_text_building_name_policy": "do not infer floor or unit",
+  "coordinate_policy": "same coordinates alone do not establish a duplicate site",
+  "coordinate_choice": "lexically first licence then source row within complete address",
+  "review_trigger_coordinate_spread_m": 20
+}

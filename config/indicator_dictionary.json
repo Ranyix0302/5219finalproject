@@ -3,7 +3,7 @@
   "calculation_crs": "EPSG:3414",
   "display_crs": "EPSG:4326",
   "indicators": [
-    {"field": "campus_transit_min", "unit": "minute", "direction": "cost", "definition": "First OneMap public-transit itinerary duration at the frozen departure to reviewed NUS AS8 destination", "missing": "Unknown on pending, no-route or technical failure; never zero-imputed"},
+    {"field": "campus_transit_min", "unit": "minute", "direction": "cost", "definition": "First OneMap TRANSIT-query itinerary duration at the frozen departure to reviewed NUS AS8 destination", "limitation": "May include walking-only journeys; itinerary duration can omit initial scheduling wait after the requested departure. The maxWalkDistance request is not a guaranteed hard walking limit.", "missing": "Unknown on pending, no-route or technical failure; never zero-imputed"},
     {"field": "rail_exit_euclid_m", "unit": "metre", "direction": "cost", "definition": "Nearest MRT/LRT exit Euclidean distance", "limitation": "Not network walk time; operational status needs review"},
     {"field": "bus_stops_800m", "unit": "stop-point count", "direction": "benefit", "radius_m": 800, "definition": "Unique delivered bus-stop IDs within inclusive Euclidean radius", "limitation": "Not route, frequency or capacity supply"},
     {"field": "supermarket_sites_800m", "unit": "service-address count", "direction": "benefit", "radius_m": 800, "definition": "Standardized complete service addresses within inclusive Euclidean radius", "limitation": "Licences mapped to address units; ambiguous addresses flagged"},

@@ -25,9 +25,24 @@ on every selected position; rail distance differences are below0.000001 m.
 Four unopened Marina South exits are excluded by a dated LTA-backed rule;
 the remaining609 exits have not all received individual operation review.
 Residential use, transport operation, park categories and facility address
-precision remain flagged for review. AS8 endpoint review and OneMap routing
-are outstanding. **No official seven-factor Top5 or real sensitivity results
-have been generated.** The synthetic tests are never used as research data.
+precision remain flagged for review. AS8 has received an official-source and
+real-route desktop review as a building ground-arrival proxy; its exact door
+has not been verified. All2,196 origins were queried:2,190 successful first
+itineraries and6 explicit no-route responses. The A/Subzone balanced baseline
+has239 eligible areas out of241; its Top5 includes four areas with fewer than
+three valid samples. Keep the visible limited-support flags. All registered
+experiments have completed:1,000 weight draws,84 OAT settings, three spatial
+arms,40/60 minute caps and25/50/75% qualification checks. The portable results
+page and prepared data are included in the local handover package. See
+[handover.md](docs/handover.md) for actual findings and the next group tasks.
+Synthetic tests are never research data.
+
+The [static spot check](docs/static-data-spot-check.md) covers31 real cases and
+corrected an unsupported clinic-address merge:1,192 licences now yield1,186
+grouped/retained positions. The [route desktop review](docs/route-desktop-review.md)
+records20 valid itineraries plus one unavailable case:15 acceptable desktop
+reviews and6 concerns. These are independently conducted AI-assisted checks of
+the same provider, not independent-source travel times or physical observation.
 
 ## Install
 
@@ -70,11 +85,13 @@ Source types do not prove current residential use or rental availability.
 
 ###2. Review endpoint and request routes
 
-`config/destination.json` records the official AS8 address geocode. It remains
-`reviewed:false`: an address point does not establish a reachable ground
-arrival location. Review the map/route, record reviewer/date/point semantics in
-`coordinate_evidence`, correct coordinates if necessary and explicitly set
-`reviewed:true`. This is a data-validation step from the accepted plan.
+`config/destination.json` records the official AS8 address geocode, now
+`reviewed:true` following [the recorded desktop review](docs/as8-endpoint-review.md).
+The point is a route-network-connected building ground-arrival proxy. The final
+walking geometry ends 12.44 m from the geocode; the connector and exact door
+have not been independently surveyed. Indoor walking and lift access are outside
+the travel-time measurement. Recheck and version the scenario if this endpoint
+meaning changes.
 
 Configure `ONEMAP_TOKEN` in the local process environment. Never commit it or
 send it in a chat. With a valid token and reviewed endpoint, first run a pilot:
@@ -140,6 +157,21 @@ can create kilometre-wide analysis clusters; they are not verified estates.
 
 The independently checked20routes and facility samples require actual review
 evidence. Running an experiment or passing tests does not perform that review.
+
+###5. Inspect the saved results and review evidence
+
+After the score and experiments stages finish, generate a portable offline page:
+
+```powershell
+.\.venv\Scripts\python.exe -c "from pathlib import Path; from ge5219.result_report import create_result_report; create_result_report(Path('outputs/prepared'), Path('outputs/score'), Path('outputs/experiments'), Path('outputs/GE5219_MCDA_results.html'))"
+```
+
+The page reads saved bundles and checks dataset, result IDs, sample sets,
+weights, qualification rules and route snapshot provenance. Scenario and cap
+selectors choose registered results; they do not recompute scores in the browser.
+See [route-validation.md](docs/route-validation.md) for the separate evidence
+workflow. A review summary must bind the current route file and frozen scene;
+an old or unbound summary is visibly excluded from current review completion.
 
 ## Interfaces and result status
 

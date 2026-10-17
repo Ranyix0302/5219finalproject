@@ -196,7 +196,7 @@ def run_experiments(
     simulated = rng.dirichlet(kappa * balanced, size=draws)
     monte_carlo = _save_weight_runs(baseline, params, simulated, output_dir,
                                    "monte_carlo", context, [{} for _ in range(draws)])
-    frequency = monte_carlo.assign(selected=monte_carlo["rank"].le(5)).groupby(
+    frequency = monte_carlo.assign(selected=monte_carlo["rank"].le(5).fillna(False)).groupby(
         "unit_id", as_index=False).agg(selection_frequency=("selected", "mean"),
                                       rank_median=("rank", "median"),
                                       rank_p05=("rank", lambda values: values.quantile(.05)),

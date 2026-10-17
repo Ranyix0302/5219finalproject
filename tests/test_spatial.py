@@ -1,13 +1,18 @@
 """Synthetic geometry tests for the approved public sampling and measurement seams."""
 
+import json
+from pathlib import Path
+
 import geopandas as gpd
 import numpy as np
 import pandas as pd
 from shapely.geometry import Point, box
 
 from ge5219.spatial import (
+    SERVICE_ADDRESS_REVIEW,
     assign_subzones,
     filter_rail_exits,
+    group_service_addresses,
     measure_static_indicators,
     sample_residences,
 )
@@ -103,3 +108,56 @@ def test_known_closed_station_is_excluded_without_certifying_or_name_filtering_o
         "retained_not_fully_operation_verified").all()
     assert "lta.gov.sg" in audit.loc[0, "operation_evidence_url"]
     assert "STATION_NA" in eligible.columns
+
+
+def test_incomplete_clinic_addresses_keep_distinct_licences_and_complete_ones_merge():
+    """Synthetic regression mirrors missing structured floors at different hospital levels."""
+    descriptions = [
+        ("<table><tr><th>FLOOR_NO</th><td></td></tr>"
+         "<tr><th>UNIT_NO</th><td></td></tr></table>"),
+        ("<table><tr><th>FLOOR_NO</th><td></td></tr>"
+         "<tr><th>UNIT_NO</th><td></td></tr></table>"),
+        ("<table><tr><th>FLOOR_NO</th><td>01</td></tr>"
+         "<tr><th>UNIT_NO</th><td>02</td></tr></table>"),
+        ("<table><tr><th>FLOOR_NO</th><td>01</td></tr>"
+         "<tr><th>UNIT_NO</th><td>02</td></tr></table>"),
+    ]
+    clinics = gpd.GeoDataFrame(
+        {"Clinic_ID": ["level12", "level2", "complete_b", "complete_a"],
+         "Postal_Code": ["188770"] * 4,
+         "Clinic_Address": ["585 NORTH BRIDGE ROAD"] * 4,
+         "Building_Name": ["LEVEL 12 HOSPITAL", "LEVEL 2 HOSPITAL", "ANNEX", "ANNEX"],
+         "Description": descriptions},
+        geometry=[Point(0, 0), Point(0, 0), Point(20, 0), Point(19, 0)], crs=3414,
+    )
+    sites, mapping = group_service_addresses(clinics, "clinic")
+    by_licence = mapping.set_index("licence_id")
+    assert len(sites) == 3
+    assert by_licence.loc["LEVEL12", "site_id"] != by_licence.loc["LEVEL2", "site_id"]
+    assert by_licence.loc[["LEVEL12", "LEVEL2"], "dedupe_status"].eq(
+        "unresolved_retained").all()
+    assert by_licence.loc["COMPLETE_A", "site_id"] == by_licence.loc["COMPLETE_B", "site_id"]
+    assert by_licence.loc["COMPLETE_A", "n_licences"] == 2
+    grouped_site = sites.set_index("site_id").loc[by_licence.loc["COMPLETE_A", "site_id"]]
+    assert grouped_site.geometry == Point(19, 0)
+    assert grouped_site.coordinate_spread_m == 1
+    assert set(mapping.source_row) == {0, 1, 2, 3}
+
+
+def test_placeholder_or_converted_supermarket_units_cannot_establish_duplicate_address():
+    supermarkets = gpd.GeoDataFrame(
+        {"postal_code": ["123456"] * 4, "block_house_num": ["1"] * 4,
+         "street_name": ["SYNTHETIC STREET"] * 4, "level_num": ["1"] * 4,
+         "unit_num": ["0", "0", "42401", "42401"],
+         "licence_num": ["a", "b", "c", "d"], "match_status": ["matched"] * 4},
+        geometry=[Point(0, 0)] * 4, crs=3414,
+    )
+    sites, mapping = group_service_addresses(supermarkets, "supermarket")
+    assert len(sites) == 4
+    assert mapping.dedupe_status.eq("unresolved_retained").all()
+    assert mapping.address_review_flags.ne("").all()
+
+
+def test_service_address_configuration_matches_the_packaged_review_rule():
+    path = Path(__file__).resolve().parents[1] / "config" / "service_address_rules.json"
+    assert json.loads(path.read_text(encoding="utf-8")) == SERVICE_ADDRESS_REVIEW

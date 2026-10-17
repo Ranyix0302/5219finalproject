@@ -3,14 +3,20 @@
   "name": "National University of Singapore AS8",
   "latitude": 1.296086762317243,
   "longitude": 103.7723482217768,
-  "reviewed": false,
-  "coordinate_evidence": "OneMap search AS8 on 2026-10-17 identifies the AS8 address point at 10 Kent Ridge Crescent, Singapore 119260. This is not a verified reachable ground point or entrance; production routing remains blocked until map/route review.",
+  "reviewed": true,
+  "coordinate_evidence": "Official NUS SCALE AS8 address and campus marker agree within14.3m. Official Economics arrival guide shows Central Library to AS8 entrance and first-floor lift. Authenticated OneMap request for2026-10-19 08:00 returned a final WALK leg189.25m/182s to the destination. Decoded network geometry ends12.44m from the configured address point: retain this as a route-connected AS8 ground-arrival proxy, not an exact or field-verified entrance. See docs/as8-endpoint-review.md.",
   "address": "AS8, 10 Kent Ridge Crescent, Singapore 119260",
-  "coordinate_precision": "official address geocode; access semantics unverified",
+  "coordinate_precision": "desktop-reviewed AS8 ground-arrival proxy; not a surveyed doorway or indoor endpoint",
   "sources": [
     "https://scale.nus.edu.sg/contact/contact-us",
-    "https://www.onemap.gov.sg/api/common/elastic/search?searchVal=AS8&returnGeom=Y&getAddrDetails=Y&pageNum=1"
+    "https://www.onemap.gov.sg/api/common/elastic/search?searchVal=AS8&returnGeom=Y&getAddrDetails=Y&pageNum=1",
+    "https://map.nus.edu.sg/",
+    "https://fass.nus.edu.sg/ecs/wp-content/uploads/sites/4/2022/03/Roadmap-for-Conference-Venue.pdf"
   ],
-  "handover_provisional_coordinate": [1.29604, 103.77229],
-  "review_required": "Verify AS8 reachable ground arrival point on official map and route, record reviewer/date/point semantics, and explicitly set reviewed=true. Do not label an address geocode as an entrance."
+  "handover_provisional_coordinate": [
+    1.29604,
+    103.77229
+  ],
+  "reviewed_on": "2026-10-17",
+  "reviewed_by": "Codex desktop review using official NUS sources and an authenticated OneMap route"
 }
