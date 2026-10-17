@@ -22,6 +22,7 @@ def test_matrix_retains_planned_points_without_routes_and_rejects_other_destinat
     assert frame.location_id.tolist() == ["a", "b"]
     assert pd.isna(frame.loc[1, "campus_transit_min"])
     assert frame.loc[1, "route_status"] == "Not_Requested"
+    assert frame.destination_id.tolist() == ["NUS_AS8", "NUS_AS8"]
     routes["destination_id"] = "NTU"
     with pytest.raises(ValueError, match="destination"):
         assemble_matrix(static, routes, {"destination_id": "NUS_AS8", "latitude": 1.296,

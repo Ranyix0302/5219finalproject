@@ -45,6 +45,8 @@ def assemble_matrix(
         raise ValueError("Static matrix already contains routes; refuse ambiguous overwrite")
     route_columns = [column for column in routes if column == "location_id" or column not in static]
     frame = static.merge(routes[route_columns], on="location_id", how="left", validate="one_to_one")
+    for field, value in expected.items():
+        frame[field] = value
     frame["route_status"] = frame.route_status.fillna("Not_Requested")
     frame.loc[~frame.route_status.eq("Success"), "campus_transit_min"] = np.nan
     return frame
