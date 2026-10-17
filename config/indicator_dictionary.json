@@ -1,0 +1,16 @@
+{
+  "version": "v1.0",
+  "calculation_crs": "EPSG:3414",
+  "display_crs": "EPSG:4326",
+  "indicators": [
+    {"field": "campus_transit_min", "unit": "minute", "direction": "cost", "definition": "First OneMap public-transit itinerary duration at the frozen departure to reviewed NUS AS8 destination", "missing": "Unknown on pending, no-route or technical failure; never zero-imputed"},
+    {"field": "rail_exit_euclid_m", "unit": "metre", "direction": "cost", "definition": "Nearest MRT/LRT exit Euclidean distance", "limitation": "Not network walk time; operational status needs review"},
+    {"field": "bus_stops_800m", "unit": "stop-point count", "direction": "benefit", "radius_m": 800, "definition": "Unique delivered bus-stop IDs within inclusive Euclidean radius", "limitation": "Not route, frequency or capacity supply"},
+    {"field": "supermarket_sites_800m", "unit": "service-address count", "direction": "benefit", "radius_m": 800, "definition": "Standardized complete service addresses within inclusive Euclidean radius", "limitation": "Licences mapped to address units; ambiguous addresses flagged"},
+    {"field": "library_euclid_m", "unit": "metre", "direction": "cost", "definition": "Nearest delivered library Euclidean distance", "limitation": "Not seats, opening hours or network walk time"},
+    {"field": "clinic_sites_1000m", "unit": "service-address count", "direction": "benefit", "radius_m": 1000, "definition": "Standardized clinic service addresses within inclusive Euclidean radius", "limitation": "Not care quality, affordability or student suitability"},
+    {"field": "park_proximity_euclid_m", "unit": "metre", "direction": "cost", "definition": "Distance to included park polygons; zero inside; N_RESERVE=1 excluded", "limitation": "Provisional category list; not entrance, legal access or opening status"}
+  ],
+  "normalization": "Baseline A P5/P95, clipped to 0..1 and cost-reversed; no silent constant-column handling",
+  "parameter_basis": "Approved working hypotheses, not behavior-calibrated optimum parameters"
+}

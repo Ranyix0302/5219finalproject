@@ -1,0 +1,16 @@
+{
+  "destination_id": "NUS_AS8",
+  "name": "National University of Singapore AS8",
+  "latitude": 1.296086762317243,
+  "longitude": 103.7723482217768,
+  "reviewed": false,
+  "coordinate_evidence": "OneMap search AS8 on 2026-10-17 identifies the AS8 address point at 10 Kent Ridge Crescent, Singapore 119260. This is not a verified reachable ground point or entrance; production routing remains blocked until map/route review.",
+  "address": "AS8, 10 Kent Ridge Crescent, Singapore 119260",
+  "coordinate_precision": "official address geocode; access semantics unverified",
+  "sources": [
+    "https://scale.nus.edu.sg/contact/contact-us",
+    "https://www.onemap.gov.sg/api/common/elastic/search?searchVal=AS8&returnGeom=Y&getAddrDetails=Y&pageNum=1"
+  ],
+  "handover_provisional_coordinate": [1.29604, 103.77229],
+  "review_required": "Verify AS8 reachable ground arrival point on official map and route, record reviewer/date/point semantics, and explicitly set reviewed=true. Do not label an address geocode as an entrance."
+}
