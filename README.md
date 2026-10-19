@@ -4,6 +4,25 @@ Python implementation of Xie Bingsheng's indicator framework, MCDA and
 sensitivity analysis. The accepted specification is
 [docs/implementation-plan.md](docs/implementation-plan.md).
 
+## Complete handover — 19 October 2026
+
+Start with [the documentation entry](doc.html), the complete
+[English handbook](docs/handover_en/README.md) or
+[中文详细说明](docs/handover_zh/README.md). These cover the raw-data audit,
+seven-indicator worked examples, normalization, weights, Monte Carlo, OAT,
+spatial aggregation, OneMap timing/walking caveats and open decisions.
+The [full-workflow notebooks](notebooks/) recalculate the saved-data workflow
+offline by default. Read [code structure](docs/handover_en/code_structure.md)
+for setup and optional full reruns.
+
+The GitHub repository contains source, documentation and executed notebooks.
+The separate Chinese and English complete ZIP packages additionally include
+all 176 original A/B delivery files in `raw_data/`, prepared layers, cached
+routes and saved experiment outputs. Extract the full package to reproduce
+the frozen analysis; cloning GitHub alone does not supply those datasets.
+See [current progress and next tasks](docs/project-progress-2026-10-19.md) and
+the [report methodology](docs/methodology_report_en.md).
+
 ## Current evidence — 2026-10-17
 
 Real spatial preparation has run successfully. These are measured input and

@@ -1,0 +1,61 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Progress and next work plan</title><style>
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#f3f6f7;color:#183343;font:17px/1.85 system-ui,'Microsoft YaHei',sans-serif}a{color:#006d77;text-underline-offset:3px}header{background:#123c4a;color:white;padding:45px max(28px,calc((100vw - 1340px)/2));}header h1{max-width:1050px;font-size:36px;line-height:1.25;margin:0 0 15px}header p{max-width:1000px;margin:0;color:#dce8ec}.layout{max-width:1440px;margin:auto;display:grid;grid-template-columns:275px minmax(0,1fr);gap:35px;padding:36px 28px 80px}aside{font-size:14px;position:sticky;top:20px;align-self:start;max-height:90vh;overflow:auto}aside a{display:block;text-decoration:none;padding:6px 10px;border-left:2px solid #c8dadf}main{background:white;padding:28px 35px;border:1px solid #dce5e9;min-width:0}h1{font-size:29px;line-height:1.4}h2{font-size:25px;color:#00616c;margin:2.3em 0 .7em;line-height:1.4;scroll-margin-top:20px}h3{font-size:20px;margin:1.7em 0 .5em;line-height:1.5;scroll-margin-top:20px}p{margin:.8em 0}li{margin:.55em 0}strong{color:#103c49}code{font:0.88em/1.7 Consolas,monospace;background:#f0f5f6;padding:1px 4px;overflow-wrap:anywhere}pre{background:#eef4f5;padding:18px;overflow:auto;border-left:3px solid #2a7883}pre code{background:none;white-space:pre;font-size:14px;overflow-wrap:normal}.table-wrap{overflow-x:auto;margin:1.2em 0}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:11px;border:1px solid #d5e0e5;text-align:left;vertical-align:top}th{background:#e4eff1}tr:nth-child(even){background:#f8fafb}td code{font-size:12px}.flow{width:100%;height:auto;background:#f7fafb;border:1px solid #dae6e9;margin:15px 0 28px}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}.metric{background:#e8f1f1;padding:15px;border-top:3px solid #34818a}.metric b{display:block;font-size:27px}.metric span{font-size:13px}figure{margin:30px 0}figure img{width:100%;height:auto;border:1px solid #dbe5e8}figcaption{font-size:14px;color:#4b6473;padding:10px 0}blockquote{margin:20px 0;border-left:4px solid #cc9e43;background:#fff7e8;padding:8px 20px}nav.top a{display:inline-block;color:#dceff2;margin-right:20px}footer{margin-top:35px;font-size:13px;color:#5c7481}@media(max-width:1050px){.layout{display:block}aside{position:static;max-height:260px;margin-bottom:20px;background:#e8f0f1;padding:12px}main{padding:22px}header h1{font-size:30px}}@media(max-width:600px){body{font-size:16px}.layout{padding:18px 12px}main{padding:17px}.metrics{grid-template-columns:1fr}.metric b{font-size:23px}h1{font-size:25px}h2{font-size:23px}td{min-width:125px}header{padding:30px 20px}}@media print{body{background:white;font-size:10.5pt}.layout{display:block;padding:0}aside,nav.top{display:none}header{color:black;background:white;padding:0}header p{color:black}main{padding:0;border:0}h2,h3{break-after:avoid}tr,figure{break-inside:avoid}a{color:inherit}.table-wrap{overflow:visible}}
+</style><header><h1>Progress and next work plan</h1><p>Source evidence, formulas, computed results and open decisions, explained step by step. Original source files retain their source language.</p></header><div class="layout"><aside><a href="#section-1">Completed</a><a href="#section-2">Next actions, in order</a><a href="#section-3">Decisions still needed</a></aside><main><h1>Progress and next work plan</h1>
+<p>Updated 19 October 2026. Computations were frozen on 17 October for the planned 19 October 08:00 Singapore routing scene.</p>
+<h2 id="section-1">Completed</h2>
+<ul>
+<li>Source audit, 96,763 candidate records, 241 Subzones, 384 analysis clusters, A=2,176 and B=2,196 representative locations.</li>
+<li>Six static indicators and all 2,196 route requests: 2,190 Success and six NoRoute; unknowns were not filled with zero.</li>
+<li>Frozen P5/P95, weight validation, raw-value caps, contributions, eligibility and deterministic result bundles.</li>
+<li>Four scenarios, 1,000 Dirichlet draws, 84 OAT settings, cap/qualification tests and all three spatial arms.</li>
+<li>117 implementation tests, independent arithmetic/reproduction checks, 31 static/cluster cases and 21 AI-assisted same-provider desktop route cases. No field or independent-provider validation is claimed.</li>
+<li>Original-source copies, complete bilingual handbooks, processing/code guides and full-workflow notebooks. The execution audit and package manifest specify what was actually checked.</li>
+</ul>
+<p>The formal Top 5 are PEOPLE'S PARK, CHINA SQUARE, CHINATOWN, TANJONG PAGAR and BOAT QUAY. Four have only one or two valid locations. The recommendation concerns sampled feasible locations under the declared specification, not every building or available rentals. OneMap's first itinerary can be walking-only, exceed requested walking parameters and omit initial schedule waiting.</p>
+<h2 id="section-2">Next actions, in order</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+  <th>Suggested work session</th>
+  <th>Collaborators</th>
+  <th>Action and acceptance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Next session, about 1 hour</td>
+  <td>Bingsheng + A/B</td>
+  <td>Decide sparse-support treatment, commute meaning, park categories and source conflicts; record dated decisions without silently changing the frozen baseline</td>
+</tr>
+<tr>
+  <td>Then 1–2 hours</td>
+  <td>Website/Agent owner + Bingsheng</td>
+  <td>Extract the package, run the notebook and connect one result_id across map, contributions and Top 5; demonstrate balanced, changed preferences and 40/60-minute cases with visible unknown/support flags</td>
+</tr>
+<tr>
+  <td>After integration, about 1 hour</td>
+  <td>Bingsheng + validation owner</td>
+  <td>Review walking-only, long-walk and initial-wait cases; decide whether to create a separately versioned elapsed-time/transit-required variant</td>
+</tr>
+<tr>
+  <td>Report integration, 1–2 hours</td>
+  <td>Bingsheng + report editor</td>
+  <td>Resolve highlighted TO DISCUSS items, align terminology/figures/script, disclose individual contributions and AI use, and check the whole-report 5,000-word limit</td>
+</tr>
+<tr>
+  <td>Before submission, about 1 hour</td>
+  <td>Whole group</td>
+  <td>Reproduce in another environment; check links, offline results, versions, report and video; record the actual receiving member's acceptance</td>
+</tr>
+<tr>
+  <td>Later, budget first</td>
+  <td>A/B + Bingsheng</td>
+  <td>Resolve data issues, obtain independent/field route evidence, then consider walking networks, other campuses, finer/coarser grids, distance decay and rent</td>
+</tr>
+</tbody>
+</table></div>
+<p>These are relative work sessions and suggested effort, not invented course deadlines. Website/Agent integration, user research, independent/field validation and final report approval remain group work.</p>
+<h2 id="section-3">Decisions still needed</h2>
+<p>Keep or change the low-sample qualification rule; retain the precisely labelled first-itinerary variable or create a new timing/mode version; justify 800/1,000 m radii and examine redundancy; resolve postcode/address/operation/park evidence; decide how to present chaining-based analysis clusters. Keep <code>production_ready=false</code> until the evidence supports changing it.</p>
+<p>Bingsheng's contribution covers indicator specifications, audit decisions, implementation/checking, experiment interpretation and handover, with AI assistance. A/B source contributions, website/Agent development and subsequent human acceptance belong to their respective contributors. Do not claim sole manual authorship or completed downstream validation.</p>
+<footer>GE5219 · 2026-10-19 · frozen computations: 2026-10-17 · routing scene: 2026-10-19 08:00 +08:00</footer></main></div></html>

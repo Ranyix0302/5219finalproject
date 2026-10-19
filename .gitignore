@@ -9,6 +9,7 @@ __pycache__/
 .env.*
 !.env.example
 data/
+raw_data/
 outputs/
 *.sqlite*
 *.log

@@ -1,0 +1,143 @@
+<!doctype html><html lang="zh"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>代码结构与运行说明</title><style>
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#f3f6f7;color:#183343;font:17px/1.85 system-ui,'Microsoft YaHei',sans-serif}a{color:#006d77;text-underline-offset:3px}header{background:#123c4a;color:white;padding:45px max(28px,calc((100vw - 1340px)/2));}header h1{max-width:1050px;font-size:36px;line-height:1.25;margin:0 0 15px}header p{max-width:1000px;margin:0;color:#dce8ec}.layout{max-width:1440px;margin:auto;display:grid;grid-template-columns:275px minmax(0,1fr);gap:35px;padding:36px 28px 80px}aside{font-size:14px;position:sticky;top:20px;align-self:start;max-height:90vh;overflow:auto}aside a{display:block;text-decoration:none;padding:6px 10px;border-left:2px solid #c8dadf}main{background:white;padding:28px 35px;border:1px solid #dce5e9;min-width:0}h1{font-size:29px;line-height:1.4}h2{font-size:25px;color:#00616c;margin:2.3em 0 .7em;line-height:1.4;scroll-margin-top:20px}h3{font-size:20px;margin:1.7em 0 .5em;line-height:1.5;scroll-margin-top:20px}p{margin:.8em 0}li{margin:.55em 0}strong{color:#103c49}code{font:0.88em/1.7 Consolas,monospace;background:#f0f5f6;padding:1px 4px;overflow-wrap:anywhere}pre{background:#eef4f5;padding:18px;overflow:auto;border-left:3px solid #2a7883}pre code{background:none;white-space:pre;font-size:14px;overflow-wrap:normal}.table-wrap{overflow-x:auto;margin:1.2em 0}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:11px;border:1px solid #d5e0e5;text-align:left;vertical-align:top}th{background:#e4eff1}tr:nth-child(even){background:#f8fafb}td code{font-size:12px}.flow{width:100%;height:auto;background:#f7fafb;border:1px solid #dae6e9;margin:15px 0 28px}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}.metric{background:#e8f1f1;padding:15px;border-top:3px solid #34818a}.metric b{display:block;font-size:27px}.metric span{font-size:13px}figure{margin:30px 0}figure img{width:100%;height:auto;border:1px solid #dbe5e8}figcaption{font-size:14px;color:#4b6473;padding:10px 0}blockquote{margin:20px 0;border-left:4px solid #cc9e43;background:#fff7e8;padding:8px 20px}nav.top a{display:inline-block;color:#dceff2;margin-right:20px}footer{margin-top:35px;font-size:13px;color:#5c7481}@media(max-width:1050px){.layout{display:block}aside{position:static;max-height:260px;margin-bottom:20px;background:#e8f0f1;padding:12px}main{padding:22px}header h1{font-size:30px}}@media(max-width:600px){body{font-size:16px}.layout{padding:18px 12px}main{padding:17px}.metrics{grid-template-columns:1fr}.metric b{font-size:23px}h1{font-size:25px}h2{font-size:23px}td{min-width:125px}header{padding:30px 20px}}@media print{body{background:white;font-size:10.5pt}.layout{display:block;padding:0}aside,nav.top{display:none}header{color:black;background:white;padding:0}header p{color:black}main{padding:0;border:0}h2,h3{break-after:avoid}tr,figure{break-inside:avoid}a{color:inherit}.table-wrap{overflow:visible}}
+</style><header><h1>代码结构与运行说明</h1><p>来源、公式、计算结果与待讨论问题，按真实实现逐步解释。原始来源文件保留原语言。</p></header><div class="layout"><aside><a href="#section-1">1. 文件夹各管什么</a><a href="#section-2">2. 从哪个模块读起</a><a href="#section-3">3. 安装与默认完整运行</a><a href="#section-4">4. 有意识地开展新运行</a><a href="#section-5">5. 下游交接四件套</a></aside><main><h1>代码结构与运行说明</h1>
+<p>把程序理解为一条分段流水线：原始图层 → 住宅/采样与静态指标 → 路由缓存 → 七维矩阵 → 标准化与评分 → 实验 → 网页与解释。Python 负责算分；网页展示已保存结果；语言模型不另算一套分数。</p>
+<h2 id="section-1">1. 文件夹各管什么</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+  <th>位置</th>
+  <th>内容与用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>raw_data/</code></td>
+  <td>A/B 的 176 个原始交付副本，含 ZIP 与解压内容；保持只读</td>
+</tr>
+<tr>
+  <td><code>config/</code></td>
+  <td>目的地、七指标字典、交通运营及设施地址规则；更改要记录版本并重算相关结果</td>
+</tr>
+<tr>
+  <td><code>src/ge5219/</code></td>
+  <td>下表十三个应用模块</td>
+</tr>
+<tr>
+  <td><code>notebooks/</code></td>
+  <td>中英各一份完整流程；从解压后的包运行</td>
+</tr>
+<tr>
+  <td><code>outputs/prepared/</code></td>
+  <td>派生住宅、簇归属、代表点、六项静态指标、质量与来源哈希</td>
+</tr>
+<tr>
+  <td><code>outputs/routes.csv</code>、<code>routes.sqlite</code></td>
+  <td>固定场景的通勤测量与断点续跑缓存</td>
+</tr>
+<tr>
+  <td><code>outputs/score/</code></td>
+  <td>正式 A/Subzone、均衡、无上限基线，保持冻结</td>
+</tr>
+<tr>
+  <td><code>outputs/experiments/</code></td>
+  <td>四情景、每次权重/名次、OAT、空间与门槛对照</td>
+</tr>
+<tr>
+  <td><code>outputs/audits/</code></td>
+  <td>独立算术、原始文件复制、notebook 与交接核查；有范围限制</td>
+</tr>
+<tr>
+  <td><code>docs/</code></td>
+  <td>通俗说明、处理方法、接口、决策、方法稿及进度；旧计划看日期，不当当前结果</td>
+</tr>
+<tr>
+  <td><code>tests/</code></td>
+  <td>合成测试输入，不能当研究观测</td>
+</tr>
+</tbody>
+</table></div>
+<p>GitHub 只提供源码、文档和 notebook；<code>raw_data/</code>、已计算数据和缓存在完整交接 ZIP。不要在代码或 notebook 单元格粘贴 token；新增请求从本机 <code>ONEMAP_TOKEN</code> 读取。</p>
+<h2 id="section-2">2. 从哪个模块读起</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+  <th>模块</th>
+  <th>只负责什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>spatial.py</code></td>
+  <td>读 A/B、来源映射和冲突隔离、投影/几何、150 m 簇、400 m 代表点、六项静态指标及审计</td>
+</tr>
+<tr>
+  <td><code>routing.py</code></td>
+  <td>OneMap 请求、目的地核准、本机 token、响应分类、第一行程、SQLite 缓存与重试</td>
+</tr>
+<tr>
+  <td><code>pipeline.py</code></td>
+  <td>按稳定位置 ID 合并指标和路线，核对时段/目的地，保留未知</td>
+</tr>
+<tr>
+  <td><code>mcda.py</code></td>
+  <td>固定 P5/P95、标准化、偏好/约束校验、可行点贡献、区域资格与排名</td>
+</tr>
+<tr>
+  <td><code>experiments.py</code></td>
+  <td>四情景、Dirichlet、OAT、上限/资格及三组空间对照，保存逐次参数和结果</td>
+</tr>
+<tr>
+  <td><code>artifacts.py</code></td>
+  <td>表格读取、确定性结果包与版本元数据</td>
+</tr>
+<tr>
+  <td><code>settings.py</code></td>
+  <td>七指标顺序、方向、四权重、出发时刻、方法版本</td>
+</tr>
+<tr>
+  <td><code>cli.py</code></td>
+  <td>分段命令及错误状态</td>
+</tr>
+<tr>
+  <td><code>report.py</code></td>
+  <td>数据准备证据页</td>
+</tr>
+<tr>
+  <td><code>result_report.py</code></td>
+  <td>从保存结果生成离线结果页</td>
+</tr>
+<tr>
+  <td><code>route_audit.py</code></td>
+  <td>路线复核计划、证据绑定及摘要</td>
+</tr>
+<tr>
+  <td><code>__main__.py</code>、<code>__init__.py</code></td>
+  <td>包入口与初始化</td>
+</tr>
+</tbody>
+</table></div>
+<p>先看懂公式，再读 <code>mcda.py</code>；要核计数/采样看 <code>spatial.py</code>；改路由前先读处理文档的特殊情况。</p>
+<h2 id="section-3">3. 安装与默认完整运行</h2>
+<p>Python 3.11 以上；在<strong>解压后的完整包根目录</strong>执行：</p>
+<pre><code class="language-powershell">python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -e &quot;.[dev]&quot;
+.\.venv\Scripts\python.exe -m pip install jupyterlab ipykernel nbclient nbformat
+.\.venv\Scripts\python.exe -m ipykernel install --user --name ge5219 --display-name &quot;GE5219&quot;
+.\.venv\Scripts\python.exe -m jupyterlab
+</code></pre>
+<p>打开中文 <code>_zh.ipynb</code> 或英文 <code>_en.ipynb</code>，选择对应环境。macOS/Linux 的执行文件是 <code>.venv/bin/python</code>。已装全依赖的 GIS 环境也可使用；核验日志记录实际 Python 版本。库版本不同可能影响哈希或绘图，应保留原快照并解释差异。</p>
+<p>三个开关默认均为 False：<code>RUN_PREPARE</code>、<code>RUN_API</code>、<code>RUN_FULL_EXPERIMENTS</code>。默认 Run All 仍会读取真实原始 GIS/CSV 与来源哈希，重组七维矩阵，重拟合并核对 A 标准化，重算正式基线、四情景、三空间臂、40/60 分钟和三资格门槛，共核对十三份已保存结果包。Monte Carlo 重生 1,000 组权重、从 241,000 行保存名次重算频率/分位数；<strong>默认没有重跑 1,000 次全部 MCDA</strong>。OAT 核对 84 组权重和 77 个相邻区间。末尾检查冻结文件未被改写。</p>
+<p>执行 <code>scripts/execute_handover_notebooks.py</code> 可用两个干净内核运行并保存输出与 <code>outputs/audits/notebook_execution_check.json</code>。只克隆 GitHub 而没有完整数据时，不可能凭空重算。</p>
+<h2 id="section-4">4. 有意识地开展新运行</h2>
+<pre><code class="language-powershell">.\.venv\Scripts\python.exe -m ge5219 prepare --data-root raw_data --output outputs/new_version/prepared
+.\.venv\Scripts\python.exe -m ge5219 status --prepared outputs/prepared --routes outputs/routes.csv
+.\.venv\Scripts\python.exe -m ge5219 score --prepared outputs/prepared --routes outputs/routes.csv --normalization outputs/normalization-v1.json --scenario balanced --output outputs/new_score
+.\.venv\Scripts\python.exe -m ge5219 experiments --prepared outputs/prepared --routes outputs/routes.csv --normalization outputs/normalization-v1.json --output outputs/new_experiments
+</code></pre>
+<p><code>score</code> 可额外接收 <code>--weights</code>（七项非负重要度，逗号分隔）、<code>--max-commute-min</code>、<code>--sample-set A|B</code> 和 <code>--group-by area_id|cluster_id</code>。具体以 <code>--help</code> 为准；数据变化时不要绕过标准化版本检查。</p>
+<p>打开可选 prepare 会写到 <code>outputs/notebook_recomputed/prepared</code>；可选 API 分支只查<strong>一个试点</strong>，不是全量路由，会另存 pilot 缓存。完整新批次需用 <code>route</code> 命令显式传准备目录、目的地、缓存、输出和请求预算。历史日期之后可能不能查询；改日期就另建场景，不偷偷替换旧快照。可选完整实验写到 <code>outputs/notebook_recomputed/experiments</code>，可能需数分钟；默认执行审计不能证明这些关闭分支已运行。</p>
+<h2 id="section-5">5. 下游交接四件套</h2>
+<p><code>point_scores.csv</code>、<code>area_scores.csv</code>、<code>top5.csv</code>、<code>result_metadata.json</code> 要一起取；用位置/区域 ID 关联，核对同一 <code>result_id</code>、数据版本、目的地、时段和实际权重。原值/标准化值在点表，不全在 Top 5 汇总表。</p>
+<p>无路线、覆盖不足、没有合格区域、非法输入都要显示，不能补零或自动放宽。网站/Agent 的端到端联调与接收组员在另一环境的复现，仍是后续验收。</p>
+<footer>GE5219 · 2026-10-19 · frozen computations: 2026-10-17 · routing scene: 2026-10-19 08:00 +08:00</footer></main></div></html>

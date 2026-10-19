@@ -1,0 +1,2024 @@
+{
+  "provenance": {
+    "written_on": "2026-10-19",
+    "data_and_route_snapshot_date": "2026-10-17",
+    "interpretation": "Actual frozen computed results, not observed journeys. Teaching hypotheses explicitly separated.",
+    "source_paths": [
+      "outputs/score/point_scores.csv",
+      "outputs/score/area_scores.csv",
+      "outputs/prepared/buildings.gpkg",
+      "outputs/prepared/data_quality.json",
+      "outputs/experiments/"
+    ]
+  },
+  "baseline_metadata": {
+    "dataset_version": "4dd2fff167c585379bfdd69dd49989ab2b90503f0a78c8eabd5d2dbd282db864",
+    "analysis_version": "mcda-v1.0",
+    "destination_id": "NUS_AS8",
+    "departure": "2026-10-19T08:00:00+08:00",
+    "source_routes_sha256": "737f54b62bd2ee3188027c418a5f12ad4b90c3d3865e960296bf9ab375cbb0f5",
+    "result_id": "mcda-7541f705e66a7e1095a13b60",
+    "applied_weights": {
+      "campus_transit_min": 0.25,
+      "rail_exit_euclid_m": 0.15,
+      "bus_stops_800m": 0.1,
+      "supermarket_sites_800m": 0.15,
+      "library_euclid_m": 0.1,
+      "clinic_sites_1000m": 0.1,
+      "park_proximity_euclid_m": 0.15
+    },
+    "max_commute_min": null,
+    "min_valid_share": 0.9,
+    "min_feasible_share": 0.5
+  },
+  "data_quality": {
+    "status": "provisional_review_required",
+    "production_ready": false,
+    "dataset_version": "4dd2fff167c585379bfdd69dd49989ab2b90503f0a78c8eabd5d2dbd282db864",
+    "source_records": 96977,
+    "candidate_records": 96763,
+    "held_out_records": 214,
+    "conflict_records": 214,
+    "conflict_postal_codes": 107,
+    "source_mapping_failures": 0,
+    "outside_subzones": 0,
+    "area_count": 241,
+    "cluster_count": 384,
+    "singleton_clusters": 44,
+    "sample_A_count": 2176,
+    "sample_B_count": 2196,
+    "supplement_count": 20,
+    "unique_route_origins_B": 2196,
+    "unique_route_origins_A": 2176,
+    "request_count_semantics": "one initial query per unique origin for one frozen scenario; retries extra",
+    "grid_size_m": 400,
+    "grid_origin_3414": [
+      0,
+      0
+    ],
+    "cluster_radius_m": 150,
+    "park_source_records": 462,
+    "nature_reserves_excluded": 7,
+    "park_candidate_records": 455,
+    "clinic_source_records": 1192,
+    "clinic_sites": 1186,
+    "supermarket_source_records": 440,
+    "supermarket_sites": 440,
+    "clinic_address_review_records": 59,
+    "supermarket_address_review_records": 116,
+    "bus_source_records": 5205,
+    "rail_exit_source_records": 613,
+    "rail_exit_candidate_records": 609,
+    "rail_exits_excluded_known_not_open": 4,
+    "rail_operation_filter_changed_points": 0,
+    "rail_operation_filter_max_distance_change_m": 0.0,
+    "rail_operation_review": {
+      "version": "rail-operation-review-2026-10-17-v1",
+      "reviewed_on": "2026-10-17",
+      "analysis_date": "2026-10-19",
+      "scope": "partial_station_review_not_full_station_or_exit_operation_certification",
+      "excluded_station_names": [
+        "MARINA SOUTH MRT STATION"
+      ],
+      "exclusion_reason": "LTA ties opening to surrounding developments; opening date not advised",
+      "evidence_url": "https://www.lta.gov.sg/content/ltagov/en/upcoming_projects/rail_expansion/thomson_east_coast_line.html",
+      "evidence_page_updated_on": "2026-07-07",
+      "matching_rule": "exact station name after uppercase and whitespace normalisation",
+      "scope_notes": [
+        "Marina South Pier is a different station and is retained",
+        "Mount Pleasant is also not yet open per LTA, but has no exit in this source",
+        "CC30, CC31 and CC32 opened on 2026-07-12; retain their delivered exits",
+        "Other retained exits, including LRT exits, are not individually certified operational",
+        "Temporary entrance closures and full bus-stop operation are not covered by this review"
+      ],
+      "retained_circle_line_evidence_url": "https://www.lta.gov.sg/content/ltagov/en/upcoming_projects/rail_expansion/circle_line_6.html"
+    },
+    "transit_operation_config_sha256": "53daeeedf75fa8432709b0d0f0ac34cdf161858eb8c4a5d8090b015f81268be5",
+    "geometry_repairs": [
+      {
+        "source": "Subzone",
+        "source_row": 29,
+        "before_type": "MultiPolygon",
+        "after_type": "MultiPolygon",
+        "valid_after": true,
+        "area_before_m2": 2206353.5731158373,
+        "area_after_m2": 2206353.5731158378
+      },
+      {
+        "source": "Subzone",
+        "source_row": 30,
+        "before_type": "MultiPolygon",
+        "after_type": "MultiPolygon",
+        "valid_after": true,
+        "area_before_m2": 4919832.802333367,
+        "area_after_m2": 4919832.8023333615
+      },
+      {
+        "source": "Subzone",
+        "source_row": 34,
+        "before_type": "MultiPolygon",
+        "after_type": "Polygon",
+        "valid_after": true,
+        "area_before_m2": 2698655.030103158,
+        "area_after_m2": 2698655.0301031605
+      },
+      {
+        "source": "Subzone",
+        "source_row": 58,
+        "before_type": "MultiPolygon",
+        "after_type": "Polygon",
+        "valid_after": true,
+        "area_before_m2": 1097833.6912705698,
+        "area_after_m2": 1097833.69127057
+      },
+      {
+        "source": "Subzone",
+        "source_row": 108,
+        "before_type": "MultiPolygon",
+        "after_type": "MultiPolygon",
+        "valid_after": true,
+        "area_before_m2": 2464856.695933533,
+        "area_after_m2": 2464856.6959335348
+      },
+      {
+        "source": "Subzone",
+        "source_row": 317,
+        "before_type": "MultiPolygon",
+        "after_type": "MultiPolygon",
+        "valid_after": true,
+        "area_before_m2": 67250524.31263453,
+        "area_after_m2": 67250524.31263435
+      },
+      {
+        "source": "Parks_and_Nature",
+        "source_row": 14,
+        "before_type": "MultiPolygon",
+        "after_type": "MultiPolygon",
+        "valid_after": true,
+        "area_before_m2": 97386.7275717499,
+        "area_after_m2": 97386.72757174983
+      },
+      {
+        "source": "Parks_and_Nature",
+        "source_row": 290,
+        "before_type": "MultiPolygon",
+        "after_type": "MultiPolygon",
+        "valid_after": true,
+        "area_before_m2": 546111.9605844405,
+        "area_after_m2": 546111.9605844426
+      }
+    ],
+    "readiness_blockers": [
+      "107 postal conflicts require adjudication; held-out records excluded",
+      "Residential use is source-classification evidence only; independent use review outstanding",
+      "Identified unopened station excluded; remaining rail exits and bus stops still need operation review",
+      "Non-reserve park/corridor categories and public opening require review; distances provisional",
+      "Facility address precision, licence grouping and coordinate spread need sample review",
+      "Destination review, public-transit coverage and independent route evidence are tracked separately from static preparation"
+    ],
+    "facility_units": "complete postal+street+floor+unit groups; incomplete addresses retained by licence",
+    "service_address_rule_version": "complete-service-address-v2",
+    "service_address_config_sha256": "aadd88291da38e3b228963f3fc3fef8a62a4caefe132a460e28cf8adfad4b0a7",
+    "clinic_unresolved_sites": 59,
+    "supermarket_unresolved_sites": 99,
+    "coordinate_semantics": "B coordinates retained; A coordinate differences audited, never overwritten",
+    "source_csv_sha256": "394c157a77651b7d51bd936b6bc1c36affc6427c41ea91791591c7893e6034ee",
+    "measurement_labels": {
+      "rail_exit_euclid_m": "Euclidean proximity after identified-closed exclusion; remaining operation not fully verified",
+      "bus_stops_800m": "Euclidean stop-point count, not routes/frequency, operation unverified",
+      "park_proximity_euclid_m": "polygon proximity; inside zero; not entrance/network access"
+    }
+  },
+  "housing_type_source": {
+    "Landed": 73041,
+    "HDB": 13436,
+    "Non-Landed": 9897,
+    "EC": 603
+  },
+  "housing_type_candidates": {
+    "Landed": 72934,
+    "HDB": 13329,
+    "Non-Landed": 9897,
+    "EC": 603
+  },
+  "coordinate_difference_quantiles_m": {
+    "0.0": 2.1748605691966754e-07,
+    "0.5": 4.629435497527916e-05,
+    "0.95": 9.075686199961154,
+    "1.0": 83.43447094440194
+  },
+  "coincident_candidate_records": {
+    "count_records_in_coordinate_groups_gt1": 2594
+  },
+  "baseline_counts": {
+    "planned": 2176,
+    "valid": 2170,
+    "units": 241,
+    "eligible": 239,
+    "excluded_units": [
+      {
+        "unit_name": "ONE TREE HILL",
+        "n_planned": 5,
+        "n_valid": 4,
+        "n_feasible": 4,
+        "valid_share": 0.8,
+        "verified_feasible_share": 0.8
+      },
+      {
+        "unit_name": "SENTOSA",
+        "n_planned": 15,
+        "n_valid": 10,
+        "n_feasible": 10,
+        "valid_share": 0.6666666666666666,
+        "verified_feasible_share": 0.6666666666666666
+      }
+    ]
+  },
+  "normalization": {
+    "parameters": {
+      "campus_transit_min": {
+        "p05": 28.125833333333336,
+        "p95": 87.50166666666665,
+        "direction": "cost"
+      },
+      "rail_exit_euclid_m": {
+        "p05": 117.21919796501726,
+        "p95": 1552.8038708847298,
+        "direction": "cost"
+      },
+      "bus_stops_800m": {
+        "p05": 11.0,
+        "p95": 48.0,
+        "direction": "benefit"
+      },
+      "supermarket_sites_800m": {
+        "p05": 0.0,
+        "p95": 7.0,
+        "direction": "benefit"
+      },
+      "library_euclid_m": {
+        "p05": 385.5427505238215,
+        "p95": 3036.189038506085,
+        "direction": "cost"
+      },
+      "clinic_sites_1000m": {
+        "p05": 1.0,
+        "p95": 30.0,
+        "direction": "benefit"
+      },
+      "park_proximity_euclid_m": {
+        "p05": 32.24648173854885,
+        "p95": 965.5813364548301,
+        "direction": "cost"
+      }
+    },
+    "dataset_version": "4dd2fff167c585379bfdd69dd49989ab2b90503f0a78c8eabd5d2dbd282db864",
+    "baseline_measurements_sha256": "75dee31adfe8d67b3dfd7de5f6be5c9dc9c822d69ac14f1ae6a2de8526249295",
+    "fitted_on": "A",
+    "quantiles": [
+      0.05,
+      0.95
+    ],
+    "departure": "2026-10-19T08:00:00+08:00"
+  },
+  "A_raw_statistics": {
+    "campus_transit_min": {
+      "count": 2170.0,
+      "mean": 56.72349462365592,
+      "std": 18.159767706587328,
+      "min": 4.85,
+      "5%": 28.125833333333333,
+      "50%": 55.49166666666666,
+      "95%": 87.50166666666665,
+      "max": 116.9
+    },
+    "rail_exit_euclid_m": {
+      "count": 2176.0,
+      "mean": 635.6478799087622,
+      "std": 467.4794597771318,
+      "min": 15.325057774433,
+      "5%": 117.21919796501726,
+      "50%": 535.708353057813,
+      "95%": 1552.8038708847298,
+      "max": 3619.76312508817
+    },
+    "bus_stops_800m": {
+      "count": 2176.0,
+      "mean": 29.678308823529413,
+      "std": 11.19435030280121,
+      "min": 0.0,
+      "5%": 11.0,
+      "50%": 30.0,
+      "95%": 48.0,
+      "max": 60.0
+    },
+    "supermarket_sites_800m": {
+      "count": 2176.0,
+      "mean": 2.920955882352941,
+      "std": 2.168786345471958,
+      "min": 0.0,
+      "5%": 0.0,
+      "50%": 3.0,
+      "95%": 7.0,
+      "max": 12.0
+    },
+    "library_euclid_m": {
+      "count": 2176.0,
+      "mean": 1476.3976213190554,
+      "std": 804.2401496160795,
+      "min": 0.422529906088762,
+      "5%": 385.5427505238215,
+      "50%": 1367.095209368395,
+      "95%": 3036.189038506085,
+      "max": 4782.14865603111
+    },
+    "clinic_sites_1000m": {
+      "count": 2176.0,
+      "mean": 13.383272058823529,
+      "std": 8.802516649099513,
+      "min": 0.0,
+      "5%": 1.0,
+      "50%": 12.0,
+      "95%": 30.0,
+      "max": 48.0
+    },
+    "park_proximity_euclid_m": {
+      "count": 2176.0,
+      "mean": 379.0908900785565,
+      "std": 317.88675236330783,
+      "min": 4.97941007116757,
+      "5%": 32.24648173854885,
+      "50%": 298.2645228819855,
+      "95%": 965.5813364548301,
+      "max": 2318.87484317884
+    }
+  },
+  "actual_examples": [
+    {
+      "location_id": "LOC_BLD_000d4f886a7311338eff",
+      "source_residential_id": "R001186",
+      "building_id": "BLD_000d4f886a7311338eff",
+      "housing_type": "HDB",
+      "postal_code": "730517",
+      "area_id": "WDSZ04",
+      "area_name": "WOODLANDS SOUTH",
+      "latitude": 1.43382994983641,
+      "longitude": 103.791679801798,
+      "route_status": "Success",
+      "campus_transit_min": 65.95,
+      "rail_exit_euclid_m": 308.201051182186,
+      "bus_stops_800m": 57,
+      "supermarket_sites_800m": 4,
+      "library_euclid_m": 545.438591281052,
+      "clinic_sites_1000m": 18,
+      "park_proximity_euclid_m": 901.974841743375,
+      "z_campus_transit_min": 0.3629703442758696,
+      "z_rail_exit_euclid_m": 0.8669658036758312,
+      "z_bus_stops_800m": 1.0,
+      "z_supermarket_sites_800m": 0.5714285714285714,
+      "z_library_euclid_m": 0.9396766586767232,
+      "z_clinic_sites_1000m": 0.5862068965517241,
+      "z_park_proximity_euclid_m": 0.0681497046746318,
+      "contribution_campus_transit_min": 0.0907425860689674,
+      "contribution_rail_exit_euclid_m": 0.1300448705513746,
+      "contribution_bus_stops_800m": 0.1,
+      "contribution_supermarket_sites_800m": 0.0857142857142857,
+      "contribution_library_euclid_m": 0.0939676658676723,
+      "contribution_clinic_sites_1000m": 0.0586206896551724,
+      "contribution_park_proximity_euclid_m": 0.0102224557011947,
+      "score": 0.5693125535586673
+    },
+    {
+      "location_id": "LOC_BLD_5647ef210a6a77763abe",
+      "source_residential_id": "R017273",
+      "building_id": "BLD_5647ef210a6a77763abe",
+      "housing_type": "Non-Landed",
+      "postal_code": "059108",
+      "area_id": "OTSZ02",
+      "area_name": "PEOPLE'S PARK",
+      "latitude": 1.28413397157114,
+      "longitude": 103.842519972664,
+      "route_status": "Success",
+      "campus_transit_min": 36.23333333333333,
+      "rail_exit_euclid_m": 68.1176704603203,
+      "bus_stops_800m": 36,
+      "supermarket_sites_800m": 7,
+      "library_euclid_m": 297.045383843425,
+      "clinic_sites_1000m": 36,
+      "park_proximity_euclid_m": 153.266614138892,
+      "z_campus_transit_min": 0.8634545480063438,
+      "z_rail_exit_euclid_m": 1.0,
+      "z_bus_stops_800m": 0.6756756756756757,
+      "z_supermarket_sites_800m": 1.0,
+      "z_library_euclid_m": 1.0,
+      "z_clinic_sites_1000m": 1.0,
+      "z_park_proximity_euclid_m": 0.870335783787769,
+      "contribution_campus_transit_min": 0.2158636370015859,
+      "contribution_rail_exit_euclid_m": 0.15,
+      "contribution_bus_stops_800m": 0.0675675675675675,
+      "contribution_supermarket_sites_800m": 0.15,
+      "contribution_library_euclid_m": 0.1,
+      "contribution_clinic_sites_1000m": 0.1,
+      "contribution_park_proximity_euclid_m": 0.1305503675681653,
+      "score": 0.9139815721373188
+    }
+  ],
+  "baseline_top5": [
+    {
+      "unit_id": "OTSZ02",
+      "unit_name": "PEOPLE'S PARK",
+      "unit_type": "subzone",
+      "n_planned": 1,
+      "n_valid": 1,
+      "n_feasible": 1,
+      "valid_share": 1.0,
+      "conditional_feasible_share": 1.0,
+      "verified_feasible_share": 1.0,
+      "limited_support": true,
+      "eligible": true,
+      "score": 0.9139815721373188,
+      "score_std": 0.0,
+      "score_min": 0.9139815721373188,
+      "score_max": 0.9139815721373188,
+      "mean_commute_min": 36.23333333333333,
+      "mean_rail_exit_euclid_m": 68.1176704603203,
+      "contribution_campus_transit_min": 0.2158636370015859,
+      "contribution_rail_exit_euclid_m": 0.15,
+      "contribution_bus_stops_800m": 0.0675675675675675,
+      "contribution_supermarket_sites_800m": 0.15,
+      "contribution_library_euclid_m": 0.1,
+      "contribution_clinic_sites_1000m": 0.1,
+      "contribution_park_proximity_euclid_m": 0.1305503675681653,
+      "rank": 1,
+      "result_id": "mcda-7541f705e66a7e1095a13b60"
+    },
+    {
+      "unit_id": "OTSZ04",
+      "unit_name": "CHINA SQUARE",
+      "unit_type": "subzone",
+      "n_planned": 1,
+      "n_valid": 1,
+      "n_feasible": 1,
+      "valid_share": 1.0,
+      "conditional_feasible_share": 1.0,
+      "verified_feasible_share": 1.0,
+      "limited_support": true,
+      "eligible": true,
+      "score": 0.8794288629534385,
+      "score_std": 0.0,
+      "score_min": 0.8794288629534385,
+      "score_max": 0.8794288629534385,
+      "mean_commute_min": 45.13333333333333,
+      "mean_rail_exit_euclid_m": 120.186561864924,
+      "contribution_campus_transit_min": 0.1783904787301231,
+      "contribution_rail_exit_euclid_m": 0.1496899489153219,
+      "contribution_bus_stops_800m": 0.0837837837837837,
+      "contribution_supermarket_sites_800m": 0.1285714285714285,
+      "contribution_library_euclid_m": 0.1,
+      "contribution_clinic_sites_1000m": 0.1,
+      "contribution_park_proximity_euclid_m": 0.1389932229527811,
+      "rank": 2,
+      "result_id": "mcda-7541f705e66a7e1095a13b60"
+    },
+    {
+      "unit_id": "OTSZ03",
+      "unit_name": "CHINATOWN",
+      "unit_type": "subzone",
+      "n_planned": 6,
+      "n_valid": 6,
+      "n_feasible": 6,
+      "valid_share": 1.0,
+      "conditional_feasible_share": 1.0,
+      "verified_feasible_share": 1.0,
+      "limited_support": false,
+      "eligible": true,
+      "score": 0.8677041049622874,
+      "score_std": 0.0435615748835849,
+      "score_min": 0.7744239601249532,
+      "score_max": 0.9015370950294268,
+      "mean_commute_min": 41.480555555555554,
+      "mean_rail_exit_euclid_m": 172.73159345548024,
+      "contribution_campus_transit_min": 0.1937703798309263,
+      "contribution_rail_exit_euclid_m": 0.1417091182762772,
+      "contribution_bus_stops_800m": 0.0711711711711711,
+      "contribution_supermarket_sites_800m": 0.1428571428571428,
+      "contribution_library_euclid_m": 0.0880211972138441,
+      "contribution_clinic_sites_1000m": 0.0925287356321839,
+      "contribution_park_proximity_euclid_m": 0.1376463599807416,
+      "rank": 3,
+      "result_id": "mcda-7541f705e66a7e1095a13b60"
+    },
+    {
+      "unit_id": "DTSZ09",
+      "unit_name": "TANJONG PAGAR",
+      "unit_type": "subzone",
+      "n_planned": 2,
+      "n_valid": 2,
+      "n_feasible": 2,
+      "valid_share": 1.0,
+      "conditional_feasible_share": 1.0,
+      "verified_feasible_share": 1.0,
+      "limited_support": true,
+      "eligible": true,
+      "score": 0.8444460709123072,
+      "score_std": 0.0689883354665391,
+      "score_min": 0.775457735445768,
+      "score_max": 0.9134344063788464,
+      "mean_commute_min": 37.21666666666667,
+      "mean_rail_exit_euclid_m": 103.76037472170606,
+      "contribution_campus_transit_min": 0.2117233442337651,
+      "contribution_rail_exit_euclid_m": 0.149227163987084,
+      "contribution_bus_stops_800m": 0.0608108108108108,
+      "contribution_supermarket_sites_800m": 0.1285714285714285,
+      "contribution_library_euclid_m": 0.07442033953259,
+      "contribution_clinic_sites_1000m": 0.0879310344827586,
+      "contribution_park_proximity_euclid_m": 0.1317619492938699,
+      "rank": 4,
+      "result_id": "mcda-7541f705e66a7e1095a13b60"
+    },
+    {
+      "unit_id": "SRSZ03",
+      "unit_name": "BOAT QUAY",
+      "unit_type": "subzone",
+      "n_planned": 2,
+      "n_valid": 2,
+      "n_feasible": 2,
+      "valid_share": 1.0,
+      "conditional_feasible_share": 1.0,
+      "verified_feasible_share": 1.0,
+      "limited_support": true,
+      "eligible": true,
+      "score": 0.8314750835152305,
+      "score_std": 0.0134731367260033,
+      "score_min": 0.8180019467892271,
+      "score_max": 0.8449482202412337,
+      "mean_commute_min": 47.16666666666667,
+      "mean_rail_exit_euclid_m": 223.328695061315,
+      "contribution_campus_transit_min": 0.1698291953797139,
+      "contribution_rail_exit_euclid_m": 0.1389129322256738,
+      "contribution_bus_stops_800m": 0.0743243243243243,
+      "contribution_supermarket_sites_800m": 0.1178571428571428,
+      "contribution_library_euclid_m": 0.0956464893693497,
+      "contribution_clinic_sites_1000m": 0.1,
+      "contribution_park_proximity_euclid_m": 0.1349049993590257,
+      "rank": 5,
+      "result_id": "mcda-7541f705e66a7e1095a13b60"
+    }
+  ],
+  "scenarios": {
+    "campus_first": {
+      "weights": {
+        "campus_transit_min": 0.4,
+        "rail_exit_euclid_m": 0.2,
+        "bus_stops_800m": 0.1,
+        "supermarket_sites_800m": 0.1,
+        "library_euclid_m": 0.05,
+        "clinic_sites_1000m": 0.05,
+        "park_proximity_euclid_m": 0.1
+      },
+      "top5": [
+        {
+          "unit_name": "PEOPLE'S PARK",
+          "score": 0.899982965148882,
+          "n_planned": 1,
+          "n_valid": 1
+        },
+        {
+          "unit_name": "TANJONG PAGAR",
+          "score": 0.8532689858188205,
+          "n_planned": 2,
+          "n_valid": 2
+        },
+        {
+          "unit_name": "CHINATOWN",
+          "score": 0.8474265715839602,
+          "n_planned": 6,
+          "n_valid": 6
+        },
+        {
+          "unit_name": "CHINA SQUARE",
+          "score": 0.8471715826552165,
+          "n_planned": 1,
+          "n_valid": 1
+        },
+        {
+          "unit_name": "HOLLAND DRIVE",
+          "score": 0.8347362852193342,
+          "n_planned": 4,
+          "n_valid": 4
+        }
+      ]
+    },
+    "transit_first": {
+      "weights": {
+        "campus_transit_min": 0.15,
+        "rail_exit_euclid_m": 0.35,
+        "bus_stops_800m": 0.25,
+        "supermarket_sites_800m": 0.1,
+        "library_euclid_m": 0.05,
+        "clinic_sites_1000m": 0.05,
+        "park_proximity_euclid_m": 0.05
+      },
+      "top5": [
+        {
+          "unit_name": "CHINA SQUARE",
+          "score": 0.8978156541984974,
+          "n_planned": 1,
+          "n_valid": 1
+        },
+        {
+          "unit_name": "PEOPLE'S PARK",
+          "score": 0.8919538903092593,
+          "n_planned": 1,
+          "n_valid": 1
+        },
+        {
+          "unit_name": "CITY HALL",
+          "score": 0.870525296006921,
+          "n_planned": 4,
+          "n_valid": 4
+        },
+        {
+          "unit_name": "BUGIS",
+          "score": 0.8673602318906659,
+          "n_planned": 3,
+          "n_valid": 3
+        },
+        {
+          "unit_name": "CHINATOWN",
+          "score": 0.8562399467924874,
+          "n_planned": 6,
+          "n_valid": 6
+        }
+      ]
+    },
+    "lifestyle": {
+      "weights": {
+        "campus_transit_min": 0.1,
+        "rail_exit_euclid_m": 0.1,
+        "bus_stops_800m": 0.1,
+        "supermarket_sites_800m": 0.2,
+        "library_euclid_m": 0.15,
+        "clinic_sites_1000m": 0.15,
+        "park_proximity_euclid_m": 0.2
+      },
+      "top5": [
+        {
+          "unit_name": "PEOPLE'S PARK",
+          "score": 0.9279801791257556,
+          "n_planned": 1,
+          "n_valid": 1
+        },
+        {
+          "unit_name": "CHINA SQUARE",
+          "score": 0.9116861432516604,
+          "n_planned": 1,
+          "n_valid": 1
+        },
+        {
+          "unit_name": "CHINATOWN",
+          "score": 0.8879816383406145,
+          "n_planned": 6,
+          "n_valid": 6
+        },
+        {
+          "unit_name": "BOAT QUAY",
+          "score": 0.8653505476355752,
+          "n_planned": 2,
+          "n_valid": 2
+        },
+        {
+          "unit_name": "CLARKE QUAY",
+          "score": 0.8418649915344942,
+          "n_planned": 1,
+          "n_valid": 1
+        }
+      ]
+    },
+    "balanced": {
+      "weights": {
+        "campus_transit_min": 0.25,
+        "rail_exit_euclid_m": 0.15,
+        "bus_stops_800m": 0.1,
+        "supermarket_sites_800m": 0.15,
+        "library_euclid_m": 0.1,
+        "clinic_sites_1000m": 0.1,
+        "park_proximity_euclid_m": 0.15
+      },
+      "top5": [
+        {
+          "unit_name": "PEOPLE'S PARK",
+          "score": 0.9139815721373188,
+          "n_planned": 1,
+          "n_valid": 1
+        },
+        {
+          "unit_name": "CHINA SQUARE",
+          "score": 0.8794288629534385,
+          "n_planned": 1,
+          "n_valid": 1
+        },
+        {
+          "unit_name": "CHINATOWN",
+          "score": 0.8677041049622874,
+          "n_planned": 6,
+          "n_valid": 6
+        },
+        {
+          "unit_name": "TANJONG PAGAR",
+          "score": 0.8444460709123072,
+          "n_planned": 2,
+          "n_valid": 2
+        },
+        {
+          "unit_name": "BOAT QUAY",
+          "score": 0.8314750835152305,
+          "n_planned": 2,
+          "n_valid": 2
+        }
+      ]
+    }
+  },
+  "caps": {
+    "40": {
+      "n_eligible": 51,
+      "n_feasible": 380,
+      "top5": [
+        {
+          "unit_name": "PEOPLE'S PARK",
+          "score": 0.9139815721373188,
+          "n_planned": 1,
+          "n_valid": 1,
+          "n_feasible": 1
+        },
+        {
+          "unit_name": "TANJONG PAGAR",
+          "score": 0.8444460709123072,
+          "n_planned": 2,
+          "n_valid": 2,
+          "n_feasible": 2
+        },
+        {
+          "unit_name": "CLEMENTI CENTRAL",
+          "score": 0.7911403987380241,
+          "n_planned": 9,
+          "n_valid": 9,
+          "n_feasible": 9
+        },
+        {
+          "unit_name": "HOLLAND DRIVE",
+          "score": 0.7757415192859626,
+          "n_planned": 4,
+          "n_valid": 4,
+          "n_feasible": 4
+        },
+        {
+          "unit_name": "JURONG GATEWAY",
+          "score": 0.7383087968646067,
+          "n_planned": 4,
+          "n_valid": 4,
+          "n_feasible": 4
+        }
+      ]
+    },
+    "60": {
+      "n_eligible": 167,
+      "n_feasible": 1304,
+      "top5": [
+        {
+          "unit_name": "PEOPLE'S PARK",
+          "score": 0.9139815721373188,
+          "n_planned": 1,
+          "n_valid": 1,
+          "n_feasible": 1
+        },
+        {
+          "unit_name": "CHINA SQUARE",
+          "score": 0.8794288629534385,
+          "n_planned": 1,
+          "n_valid": 1,
+          "n_feasible": 1
+        },
+        {
+          "unit_name": "CHINATOWN",
+          "score": 0.8677041049622874,
+          "n_planned": 6,
+          "n_valid": 6,
+          "n_feasible": 6
+        },
+        {
+          "unit_name": "TANJONG PAGAR",
+          "score": 0.8444460709123072,
+          "n_planned": 2,
+          "n_valid": 2,
+          "n_feasible": 2
+        },
+        {
+          "unit_name": "BOAT QUAY",
+          "score": 0.8314750835152305,
+          "n_planned": 2,
+          "n_valid": 2,
+          "n_feasible": 2
+        }
+      ]
+    }
+  },
+  "qualifications": {
+    "25": {
+      "n_eligible": 178,
+      "top5": [
+        {
+          "unit_name": "PEOPLE'S PARK",
+          "score": 0.9139815721373188
+        },
+        {
+          "unit_name": "CHINA SQUARE",
+          "score": 0.8794288629534385
+        },
+        {
+          "unit_name": "CHINATOWN",
+          "score": 0.8677041049622874
+        },
+        {
+          "unit_name": "TANJONG PAGAR",
+          "score": 0.8444460709123072
+        },
+        {
+          "unit_name": "BOAT QUAY",
+          "score": 0.8314750835152305
+        }
+      ]
+    },
+    "50": {
+      "n_eligible": 167,
+      "top5": [
+        {
+          "unit_name": "PEOPLE'S PARK",
+          "score": 0.9139815721373188
+        },
+        {
+          "unit_name": "CHINA SQUARE",
+          "score": 0.8794288629534385
+        },
+        {
+          "unit_name": "CHINATOWN",
+          "score": 0.8677041049622874
+        },
+        {
+          "unit_name": "TANJONG PAGAR",
+          "score": 0.8444460709123072
+        },
+        {
+          "unit_name": "BOAT QUAY",
+          "score": 0.8314750835152305
+        }
+      ]
+    },
+    "75": {
+      "n_eligible": 152,
+      "top5": [
+        {
+          "unit_name": "PEOPLE'S PARK",
+          "score": 0.9139815721373188
+        },
+        {
+          "unit_name": "CHINA SQUARE",
+          "score": 0.8794288629534385
+        },
+        {
+          "unit_name": "CHINATOWN",
+          "score": 0.8677041049622874
+        },
+        {
+          "unit_name": "TANJONG PAGAR",
+          "score": 0.8444460709123072
+        },
+        {
+          "unit_name": "BOAT QUAY",
+          "score": 0.8314750835152305
+        }
+      ]
+    }
+  },
+  "spatial": {
+    "A_subzone": {
+      "planned": 2176,
+      "units": 241,
+      "n_eligible": 167,
+      "selected_support": [
+        {
+          "unit_id": "OTSZ02",
+          "unit_name": "PEOPLE'S PARK",
+          "unit_type": "subzone",
+          "n_planned": 1,
+          "n_valid": 1,
+          "n_feasible": 1,
+          "valid_share": 1.0,
+          "conditional_feasible_share": 1.0,
+          "verified_feasible_share": 1.0,
+          "limited_support": true,
+          "eligible": true,
+          "score": 0.9139815721373188,
+          "score_std": 0.0,
+          "score_min": 0.9139815721373188,
+          "score_max": 0.9139815721373188,
+          "mean_commute_min": 36.23333333333333,
+          "mean_rail_exit_euclid_m": 68.1176704603203,
+          "contribution_campus_transit_min": 0.2158636370015859,
+          "contribution_rail_exit_euclid_m": 0.15,
+          "contribution_bus_stops_800m": 0.0675675675675675,
+          "contribution_supermarket_sites_800m": 0.15,
+          "contribution_library_euclid_m": 0.1,
+          "contribution_clinic_sites_1000m": 0.1,
+          "contribution_park_proximity_euclid_m": 0.1305503675681653,
+          "rank": 1,
+          "result_id": "mcda-b6e6cd4ce8cac47bd21bfce0",
+          "n_building_records": 1,
+          "x_min": 29024.038900037027,
+          "x_max": 29024.038900037027,
+          "y_min": 29618.531799999662,
+          "y_max": 29618.531799999662,
+          "extent_diagonal_m": 0.0
+        },
+        {
+          "unit_id": "OTSZ04",
+          "unit_name": "CHINA SQUARE",
+          "unit_type": "subzone",
+          "n_planned": 1,
+          "n_valid": 1,
+          "n_feasible": 1,
+          "valid_share": 1.0,
+          "conditional_feasible_share": 1.0,
+          "verified_feasible_share": 1.0,
+          "limited_support": true,
+          "eligible": true,
+          "score": 0.8794288629534385,
+          "score_std": 0.0,
+          "score_min": 0.8794288629534385,
+          "score_max": 0.8794288629534385,
+          "mean_commute_min": 45.13333333333333,
+          "mean_rail_exit_euclid_m": 120.186561864924,
+          "contribution_campus_transit_min": 0.1783904787301231,
+          "contribution_rail_exit_euclid_m": 0.1496899489153219,
+          "contribution_bus_stops_800m": 0.0837837837837837,
+          "contribution_supermarket_sites_800m": 0.1285714285714285,
+          "contribution_library_euclid_m": 0.1,
+          "contribution_clinic_sites_1000m": 0.1,
+          "contribution_park_proximity_euclid_m": 0.1389932229527811,
+          "rank": 2,
+          "result_id": "mcda-b6e6cd4ce8cac47bd21bfce0",
+          "n_building_records": 9,
+          "x_min": 29342.32280003684,
+          "x_max": 29459.470600036053,
+          "y_min": 29625.119999998235,
+          "y_max": 29747.364700000544,
+          "extent_diagonal_m": 169.3144226677404
+        },
+        {
+          "unit_id": "OTSZ03",
+          "unit_name": "CHINATOWN",
+          "unit_type": "subzone",
+          "n_planned": 6,
+          "n_valid": 6,
+          "n_feasible": 6,
+          "valid_share": 1.0,
+          "conditional_feasible_share": 1.0,
+          "verified_feasible_share": 1.0,
+          "limited_support": false,
+          "eligible": true,
+          "score": 0.8677041049622874,
+          "score_std": 0.0435615748835849,
+          "score_min": 0.7744239601249532,
+          "score_max": 0.9015370950294268,
+          "mean_commute_min": 41.480555555555554,
+          "mean_rail_exit_euclid_m": 172.73159345548024,
+          "contribution_campus_transit_min": 0.1937703798309263,
+          "contribution_rail_exit_euclid_m": 0.1417091182762772,
+          "contribution_bus_stops_800m": 0.0711711711711711,
+          "contribution_supermarket_sites_800m": 0.1428571428571428,
+          "contribution_library_euclid_m": 0.0880211972138441,
+          "contribution_clinic_sites_1000m": 0.0925287356321839,
+          "contribution_park_proximity_euclid_m": 0.1376463599807416,
+          "rank": 3,
+          "result_id": "mcda-b6e6cd4ce8cac47bd21bfce0",
+          "n_building_records": 44,
+          "x_min": 28779.77400003491,
+          "x_max": 29712.17420003448,
+          "y_min": 28591.930299999,
+          "y_max": 29472.549799998586,
+          "extent_diagonal_m": 1282.5212812030686
+        },
+        {
+          "unit_id": "DTSZ09",
+          "unit_name": "TANJONG PAGAR",
+          "unit_type": "subzone",
+          "n_planned": 2,
+          "n_valid": 2,
+          "n_feasible": 2,
+          "valid_share": 1.0,
+          "conditional_feasible_share": 1.0,
+          "verified_feasible_share": 1.0,
+          "limited_support": true,
+          "eligible": true,
+          "score": 0.8444460709123072,
+          "score_std": 0.0689883354665391,
+          "score_min": 0.775457735445768,
+          "score_max": 0.9134344063788464,
+          "mean_commute_min": 37.21666666666667,
+          "mean_rail_exit_euclid_m": 103.76037472170606,
+          "contribution_campus_transit_min": 0.2117233442337651,
+          "contribution_rail_exit_euclid_m": 0.149227163987084,
+          "contribution_bus_stops_800m": 0.0608108108108108,
+          "contribution_supermarket_sites_800m": 0.1285714285714285,
+          "contribution_library_euclid_m": 0.07442033953259,
+          "contribution_clinic_sites_1000m": 0.0879310344827586,
+          "contribution_park_proximity_euclid_m": 0.1317619492938699,
+          "rank": 4,
+          "result_id": "mcda-b6e6cd4ce8cac47bd21bfce0",
+          "n_building_records": 7,
+          "x_min": 29224.321900035426,
+          "x_max": 29437.556700037785,
+          "y_min": 28485.43260000001,
+          "y_max": 28842.67270000044,
+          "extent_diagonal_m": 416.0403453757336
+        },
+        {
+          "unit_id": "SRSZ03",
+          "unit_name": "BOAT QUAY",
+          "unit_type": "subzone",
+          "n_planned": 2,
+          "n_valid": 2,
+          "n_feasible": 2,
+          "valid_share": 1.0,
+          "conditional_feasible_share": 1.0,
+          "verified_feasible_share": 1.0,
+          "limited_support": true,
+          "eligible": true,
+          "score": 0.8314750835152305,
+          "score_std": 0.0134731367260033,
+          "score_min": 0.8180019467892271,
+          "score_max": 0.8449482202412337,
+          "mean_commute_min": 47.16666666666667,
+          "mean_rail_exit_euclid_m": 223.328695061315,
+          "contribution_campus_transit_min": 0.1698291953797139,
+          "contribution_rail_exit_euclid_m": 0.1389129322256738,
+          "contribution_bus_stops_800m": 0.0743243243243243,
+          "contribution_supermarket_sites_800m": 0.1178571428571428,
+          "contribution_library_euclid_m": 0.0956464893693497,
+          "contribution_clinic_sites_1000m": 0.1,
+          "contribution_park_proximity_euclid_m": 0.1349049993590257,
+          "rank": 5,
+          "result_id": "mcda-b6e6cd4ce8cac47bd21bfce0",
+          "n_building_records": 3,
+          "x_min": 29680.473900036894,
+          "x_max": 29712.5044000359,
+          "y_min": 29874.862199998905,
+          "y_max": 30154.938499999967,
+          "extent_diagonal_m": 281.9019098063577
+        }
+      ]
+    },
+    "B_subzone": {
+      "planned": 2196,
+      "units": 241,
+      "n_eligible": 167,
+      "selected_support": [
+        {
+          "unit_id": "OTSZ02",
+          "unit_name": "PEOPLE'S PARK",
+          "unit_type": "subzone",
+          "n_planned": 1,
+          "n_valid": 1,
+          "n_feasible": 1,
+          "valid_share": 1.0,
+          "conditional_feasible_share": 1.0,
+          "verified_feasible_share": 1.0,
+          "limited_support": true,
+          "eligible": true,
+          "score": 0.9139815721373188,
+          "score_std": 0.0,
+          "score_min": 0.9139815721373188,
+          "score_max": 0.9139815721373188,
+          "mean_commute_min": 36.23333333333333,
+          "mean_rail_exit_euclid_m": 68.1176704603203,
+          "contribution_campus_transit_min": 0.2158636370015859,
+          "contribution_rail_exit_euclid_m": 0.15,
+          "contribution_bus_stops_800m": 0.0675675675675675,
+          "contribution_supermarket_sites_800m": 0.15,
+          "contribution_library_euclid_m": 0.1,
+          "contribution_clinic_sites_1000m": 0.1,
+          "contribution_park_proximity_euclid_m": 0.1305503675681653,
+          "rank": 1,
+          "result_id": "mcda-60d9f07fd5e2cb4ec6380bd4",
+          "n_building_records": 1,
+          "x_min": 29024.038900037027,
+          "x_max": 29024.038900037027,
+          "y_min": 29618.531799999662,
+          "y_max": 29618.531799999662,
+          "extent_diagonal_m": 0.0
+        },
+        {
+          "unit_id": "OTSZ04",
+          "unit_name": "CHINA SQUARE",
+          "unit_type": "subzone",
+          "n_planned": 1,
+          "n_valid": 1,
+          "n_feasible": 1,
+          "valid_share": 1.0,
+          "conditional_feasible_share": 1.0,
+          "verified_feasible_share": 1.0,
+          "limited_support": true,
+          "eligible": true,
+          "score": 0.8794288629534385,
+          "score_std": 0.0,
+          "score_min": 0.8794288629534385,
+          "score_max": 0.8794288629534385,
+          "mean_commute_min": 45.13333333333333,
+          "mean_rail_exit_euclid_m": 120.186561864924,
+          "contribution_campus_transit_min": 0.1783904787301231,
+          "contribution_rail_exit_euclid_m": 0.1496899489153219,
+          "contribution_bus_stops_800m": 0.0837837837837837,
+          "contribution_supermarket_sites_800m": 0.1285714285714285,
+          "contribution_library_euclid_m": 0.1,
+          "contribution_clinic_sites_1000m": 0.1,
+          "contribution_park_proximity_euclid_m": 0.1389932229527811,
+          "rank": 2,
+          "result_id": "mcda-60d9f07fd5e2cb4ec6380bd4",
+          "n_building_records": 9,
+          "x_min": 29342.32280003684,
+          "x_max": 29459.470600036053,
+          "y_min": 29625.119999998235,
+          "y_max": 29747.364700000544,
+          "extent_diagonal_m": 169.3144226677404
+        },
+        {
+          "unit_id": "OTSZ03",
+          "unit_name": "CHINATOWN",
+          "unit_type": "subzone",
+          "n_planned": 7,
+          "n_valid": 7,
+          "n_feasible": 7,
+          "valid_share": 1.0,
+          "conditional_feasible_share": 1.0,
+          "verified_feasible_share": 1.0,
+          "limited_support": false,
+          "eligible": true,
+          "score": 0.8699191026280951,
+          "score_std": 0.0406934986975446,
+          "score_min": 0.7744239601249532,
+          "score_max": 0.9015370950294268,
+          "mean_commute_min": 42.0904761904762,
+          "mean_rail_exit_euclid_m": 171.62036329433363,
+          "contribution_campus_transit_min": 0.1912023289898688,
+          "contribution_rail_exit_euclid_m": 0.142181021084804,
+          "contribution_bus_stops_800m": 0.0722007722007721,
+          "contribution_supermarket_sites_800m": 0.1438775510204081,
+          "contribution_library_euclid_m": 0.0877716485604949,
+          "contribution_clinic_sites_1000m": 0.0935960591133004,
+          "contribution_park_proximity_euclid_m": 0.1390897216584465,
+          "rank": 3,
+          "result_id": "mcda-60d9f07fd5e2cb4ec6380bd4",
+          "n_building_records": 44,
+          "x_min": 28779.77400003491,
+          "x_max": 29712.17420003448,
+          "y_min": 28591.930299999,
+          "y_max": 29472.549799998586,
+          "extent_diagonal_m": 1282.5212812030686
+        },
+        {
+          "unit_id": "DTSZ09",
+          "unit_name": "TANJONG PAGAR",
+          "unit_type": "subzone",
+          "n_planned": 2,
+          "n_valid": 2,
+          "n_feasible": 2,
+          "valid_share": 1.0,
+          "conditional_feasible_share": 1.0,
+          "verified_feasible_share": 1.0,
+          "limited_support": true,
+          "eligible": true,
+          "score": 0.8444460709123072,
+          "score_std": 0.0689883354665391,
+          "score_min": 0.775457735445768,
+          "score_max": 0.9134344063788464,
+          "mean_commute_min": 37.21666666666667,
+          "mean_rail_exit_euclid_m": 103.76037472170606,
+          "contribution_campus_transit_min": 0.2117233442337651,
+          "contribution_rail_exit_euclid_m": 0.149227163987084,
+          "contribution_bus_stops_800m": 0.0608108108108108,
+          "contribution_supermarket_sites_800m": 0.1285714285714285,
+          "contribution_library_euclid_m": 0.07442033953259,
+          "contribution_clinic_sites_1000m": 0.0879310344827586,
+          "contribution_park_proximity_euclid_m": 0.1317619492938699,
+          "rank": 4,
+          "result_id": "mcda-60d9f07fd5e2cb4ec6380bd4",
+          "n_building_records": 7,
+          "x_min": 29224.321900035426,
+          "x_max": 29437.556700037785,
+          "y_min": 28485.43260000001,
+          "y_max": 28842.67270000044,
+          "extent_diagonal_m": 416.0403453757336
+        },
+        {
+          "unit_id": "SRSZ03",
+          "unit_name": "BOAT QUAY",
+          "unit_type": "subzone",
+          "n_planned": 2,
+          "n_valid": 2,
+          "n_feasible": 2,
+          "valid_share": 1.0,
+          "conditional_feasible_share": 1.0,
+          "verified_feasible_share": 1.0,
+          "limited_support": true,
+          "eligible": true,
+          "score": 0.8314750835152305,
+          "score_std": 0.0134731367260033,
+          "score_min": 0.8180019467892271,
+          "score_max": 0.8449482202412337,
+          "mean_commute_min": 47.16666666666667,
+          "mean_rail_exit_euclid_m": 223.328695061315,
+          "contribution_campus_transit_min": 0.1698291953797139,
+          "contribution_rail_exit_euclid_m": 0.1389129322256738,
+          "contribution_bus_stops_800m": 0.0743243243243243,
+          "contribution_supermarket_sites_800m": 0.1178571428571428,
+          "contribution_library_euclid_m": 0.0956464893693497,
+          "contribution_clinic_sites_1000m": 0.1,
+          "contribution_park_proximity_euclid_m": 0.1349049993590257,
+          "rank": 5,
+          "result_id": "mcda-60d9f07fd5e2cb4ec6380bd4",
+          "n_building_records": 3,
+          "x_min": 29680.473900036894,
+          "x_max": 29712.5044000359,
+          "y_min": 29874.862199998905,
+          "y_max": 30154.938499999967,
+          "extent_diagonal_m": 281.9019098063577
+        }
+      ]
+    },
+    "B_cluster": {
+      "planned": 2196,
+      "units": 384,
+      "n_eligible": 276,
+      "selected_support": [
+        {
+          "unit_id": "OTSZ02_C_39fc69d26fca",
+          "unit_name": "PEOPLE'S PARK · analysis cluster 39fc69d26fca",
+          "unit_type": "cluster",
+          "n_planned": 1,
+          "n_valid": 1,
+          "n_feasible": 1,
+          "valid_share": 1.0,
+          "conditional_feasible_share": 1.0,
+          "verified_feasible_share": 1.0,
+          "limited_support": true,
+          "eligible": true,
+          "score": 0.9139815721373188,
+          "score_std": 0.0,
+          "score_min": 0.9139815721373188,
+          "score_max": 0.9139815721373188,
+          "mean_commute_min": 36.23333333333333,
+          "mean_rail_exit_euclid_m": 68.1176704603203,
+          "contribution_campus_transit_min": 0.2158636370015859,
+          "contribution_rail_exit_euclid_m": 0.15,
+          "contribution_bus_stops_800m": 0.0675675675675675,
+          "contribution_supermarket_sites_800m": 0.15,
+          "contribution_library_euclid_m": 0.1,
+          "contribution_clinic_sites_1000m": 0.1,
+          "contribution_park_proximity_euclid_m": 0.1305503675681653,
+          "rank": 1,
+          "result_id": "mcda-d18502107c3f0bc22373443f",
+          "n_building_records": 1,
+          "x_min": 29024.038900037027,
+          "x_max": 29024.038900037027,
+          "y_min": 29618.531799999662,
+          "y_max": 29618.531799999662,
+          "extent_diagonal_m": 0.0
+        },
+        {
+          "unit_id": "DTSZ09_C_df3846d8096e",
+          "unit_name": "TANJONG PAGAR · analysis cluster df3846d8096e",
+          "unit_type": "cluster",
+          "n_planned": 1,
+          "n_valid": 1,
+          "n_feasible": 1,
+          "valid_share": 1.0,
+          "conditional_feasible_share": 1.0,
+          "verified_feasible_share": 1.0,
+          "limited_support": true,
+          "eligible": true,
+          "score": 0.9134344063788464,
+          "score_std": 0.0,
+          "score_min": 0.9134344063788464,
+          "score_max": 0.9134344063788464,
+          "mean_commute_min": 37.03333333333333,
+          "mean_rail_exit_euclid_m": 75.5085976807621,
+          "contribution_campus_transit_min": 0.2124952632243758,
+          "contribution_rail_exit_euclid_m": 0.15,
+          "contribution_bus_stops_800m": 0.0756756756756756,
+          "contribution_supermarket_sites_800m": 0.15,
+          "contribution_library_euclid_m": 0.0803884371882117,
+          "contribution_clinic_sites_1000m": 0.1,
+          "contribution_park_proximity_euclid_m": 0.1448750302905832,
+          "rank": 2,
+          "result_id": "mcda-d18502107c3f0bc22373443f",
+          "n_building_records": 2,
+          "x_min": 29387.98660003851,
+          "x_max": 29402.8604000344,
+          "y_min": 28706.5975000002,
+          "y_max": 28842.67270000044,
+          "extent_diagonal_m": 136.88568216370513
+        },
+        {
+          "unit_id": "OTSZ01_C_3f0b940407d7",
+          "unit_name": "PEARL'S HILL · analysis cluster 3f0b940407d7",
+          "unit_type": "cluster",
+          "n_planned": 1,
+          "n_valid": 1,
+          "n_feasible": 1,
+          "valid_share": 1.0,
+          "conditional_feasible_share": 1.0,
+          "verified_feasible_share": 1.0,
+          "limited_support": true,
+          "eligible": true,
+          "score": 0.9054028528521204,
+          "score_std": 0.0,
+          "score_min": 0.9054028528521204,
+          "score_max": 0.9054028528521204,
+          "mean_commute_min": 37.11666666666667,
+          "mean_rail_exit_euclid_m": 172.659939621198,
+          "contribution_campus_transit_min": 0.2121443909559164,
+          "contribution_rail_exit_euclid_m": 0.1442071607441212,
+          "contribution_bus_stops_800m": 0.0729729729729729,
+          "contribution_supermarket_sites_800m": 0.15,
+          "contribution_library_euclid_m": 0.0909734597188152,
+          "contribution_clinic_sites_1000m": 0.0862068965517241,
+          "contribution_park_proximity_euclid_m": 0.1488979719085701,
+          "rank": 3,
+          "result_id": "mcda-d18502107c3f0bc22373443f",
+          "n_building_records": 1,
+          "x_min": 28722.95350003709,
+          "x_max": 28722.95350003709,
+          "y_min": 29488.883499999934,
+          "y_max": 29488.883499999934,
+          "extent_diagonal_m": 0.0
+        },
+        {
+          "unit_id": "OTSZ03_C_1064ecff3b71",
+          "unit_name": "CHINATOWN · analysis cluster 1064ecff3b71",
+          "unit_type": "cluster",
+          "n_planned": 1,
+          "n_valid": 1,
+          "n_feasible": 1,
+          "valid_share": 1.0,
+          "conditional_feasible_share": 1.0,
+          "verified_feasible_share": 1.0,
+          "limited_support": true,
+          "eligible": true,
+          "score": 0.9015370950294268,
+          "score_std": 0.0,
+          "score_min": 0.9015370950294268,
+          "score_max": 0.9015370950294268,
+          "mean_commute_min": 38.55,
+          "mean_rail_exit_euclid_m": 18.820534107525,
+          "contribution_campus_transit_min": 0.2061093879384149,
+          "contribution_rail_exit_euclid_m": 0.15,
+          "contribution_bus_stops_800m": 0.0675675675675675,
+          "contribution_supermarket_sites_800m": 0.15,
+          "contribution_library_euclid_m": 0.0854327296938871,
+          "contribution_clinic_sites_1000m": 0.1,
+          "contribution_park_proximity_euclid_m": 0.1424274098295572,
+          "rank": 4,
+          "result_id": "mcda-d18502107c3f0bc22373443f",
+          "n_building_records": 2,
+          "x_min": 28779.77400003491,
+          "x_max": 28849.62030003828,
+          "y_min": 29167.48369999969,
+          "y_max": 29254.1138,
+          "extent_diagonal_m": 111.28018624276316
+        },
+        {
+          "unit_id": "OTSZ03_C_c03a99682846",
+          "unit_name": "CHINATOWN · analysis cluster c03a99682846",
+          "unit_type": "cluster",
+          "n_planned": 1,
+          "n_valid": 1,
+          "n_feasible": 1,
+          "valid_share": 1.0,
+          "conditional_feasible_share": 1.0,
+          "verified_feasible_share": 1.0,
+          "limited_support": true,
+          "eligible": true,
+          "score": 0.9011143960973388,
+          "score_std": 0.0,
+          "score_min": 0.9011143960973388,
+          "score_max": 0.9011143960973388,
+          "mean_commute_min": 39.1,
+          "mean_rail_exit_euclid_m": 200.760149399528,
+          "contribution_campus_transit_min": 0.2037936309665829,
+          "contribution_rail_exit_euclid_m": 0.1412710528667803,
+          "contribution_bus_stops_800m": 0.0702702702702702,
+          "contribution_supermarket_sites_800m": 0.15,
+          "contribution_library_euclid_m": 0.098986414097644,
+          "contribution_clinic_sites_1000m": 0.1,
+          "contribution_park_proximity_euclid_m": 0.136793027896061,
+          "rank": 5,
+          "result_id": "mcda-d18502107c3f0bc22373443f",
+          "n_building_records": 11,
+          "x_min": 29003.55700003607,
+          "x_max": 29227.524300035493,
+          "y_min": 29244.165599999375,
+          "y_max": 29472.549799998586,
+          "extent_diagonal_m": 319.8760608084126
+        }
+      ]
+    }
+  },
+  "scenario_comparisons": [
+    {
+      "left": "campus_first",
+      "right": "transit_first",
+      "top_k_jaccard": 0.4285714285714285,
+      "n_common": 239,
+      "n_left": 239,
+      "n_right": 239,
+      "spearman": 0.7996360887451214,
+      "kendall": 0.6135860201821314
+    },
+    {
+      "left": "campus_first",
+      "right": "lifestyle",
+      "top_k_jaccard": 0.4285714285714285,
+      "n_common": 239,
+      "n_left": 239,
+      "n_right": 239,
+      "spearman": 0.7882994620442318,
+      "kendall": 0.5983966808480714
+    },
+    {
+      "left": "campus_first",
+      "right": "balanced",
+      "top_k_jaccard": 0.6666666666666666,
+      "n_common": 239,
+      "n_left": 239,
+      "n_right": 239,
+      "spearman": 0.9422242537182236,
+      "kendall": 0.7998663900706726
+    },
+    {
+      "left": "transit_first",
+      "right": "lifestyle",
+      "top_k_jaccard": 0.4285714285714285,
+      "n_common": 239,
+      "n_left": 239,
+      "n_right": 239,
+      "spearman": 0.914165289546781,
+      "kendall": 0.7450159980310115
+    },
+    {
+      "left": "transit_first",
+      "right": "balanced",
+      "top_k_jaccard": 0.4285714285714285,
+      "n_common": 239,
+      "n_left": 239,
+      "n_right": 239,
+      "spearman": 0.9034694630990472,
+      "kendall": 0.7372103653176751
+    },
+    {
+      "left": "lifestyle",
+      "right": "balanced",
+      "top_k_jaccard": 0.6666666666666666,
+      "n_common": 239,
+      "n_left": 239,
+      "n_right": 239,
+      "spearman": 0.9435102492879998,
+      "kendall": 0.7985302907773988
+    }
+  ],
+  "monte_carlo": {
+    "draws": 1000,
+    "seed": 42,
+    "kappa": 50,
+    "top10": [
+      {
+        "unit_id": "OTSZ03",
+        "selection_frequency": 1.0,
+        "rank_median": 3.0,
+        "rank_p05": 2.0,
+        "rank_p95": 3.0,
+        "unit_name": "CHINATOWN"
+      },
+      {
+        "unit_id": "OTSZ02",
+        "selection_frequency": 1.0,
+        "rank_median": 1.0,
+        "rank_p05": 1.0,
+        "rank_p95": 1.0,
+        "unit_name": "PEOPLE'S PARK"
+      },
+      {
+        "unit_id": "OTSZ04",
+        "selection_frequency": 0.998,
+        "rank_median": 2.0,
+        "rank_p05": 2.0,
+        "rank_p95": 3.0,
+        "unit_name": "CHINA SQUARE"
+      },
+      {
+        "unit_id": "DTSZ09",
+        "selection_frequency": 0.901,
+        "rank_median": 4.0,
+        "rank_p05": 4.0,
+        "rank_p95": 6.0,
+        "unit_name": "TANJONG PAGAR"
+      },
+      {
+        "unit_id": "SRSZ03",
+        "selection_frequency": 0.602,
+        "rank_median": 5.0,
+        "rank_p05": 4.0,
+        "rank_p95": 8.0,
+        "unit_name": "BOAT QUAY"
+      },
+      {
+        "unit_id": "OTSZ01",
+        "selection_frequency": 0.174,
+        "rank_median": 7.0,
+        "rank_p05": 5.0,
+        "rank_p95": 10.0,
+        "unit_name": "PEARL'S HILL"
+      },
+      {
+        "unit_id": "SRSZ02",
+        "selection_frequency": 0.131,
+        "rank_median": 7.0,
+        "rank_p05": 5.0,
+        "rank_p95": 10.0,
+        "unit_name": "CLARKE QUAY"
+      },
+      {
+        "unit_id": "CLSZ06",
+        "selection_frequency": 0.065,
+        "rank_median": 11.0,
+        "rank_p05": 5.0,
+        "rank_p95": 20.0,
+        "unit_name": "CLEMENTI CENTRAL"
+      },
+      {
+        "unit_id": "DTSZ02",
+        "selection_frequency": 0.064,
+        "rank_median": 9.0,
+        "rank_p05": 5.0,
+        "rank_p95": 13.0,
+        "unit_name": "CITY HALL"
+      },
+      {
+        "unit_id": "QTSZ02",
+        "selection_frequency": 0.046,
+        "rank_median": 14.0,
+        "rank_p05": 6.0,
+        "rank_p95": 30.0,
+        "unit_name": "HOLLAND DRIVE"
+      }
+    ]
+  },
+  "oat": {
+    "settings": 84,
+    "adjacent_intervals": 77,
+    "changed_top5_intervals": 17,
+    "changed_intervals": [
+      {
+        "target_feature": "campus_transit_min",
+        "interval_start": 0.05,
+        "interval_end": 0.1,
+        "top_k_jaccard": 0.6666666666666666,
+        "n_common": 239,
+        "n_left": 239,
+        "n_right": 239,
+        "spearman": 0.9943083928131922,
+        "kendall": 0.9393832846946308
+      },
+      {
+        "target_feature": "campus_transit_min",
+        "interval_start": 0.3,
+        "interval_end": 0.35,
+        "top_k_jaccard": 0.6666666666666666,
+        "n_common": 239,
+        "n_left": 239,
+        "n_right": 239,
+        "spearman": 0.9941413804015328,
+        "kendall": 0.9398755318026792
+      },
+      {
+        "target_feature": "campus_transit_min",
+        "interval_start": 0.4,
+        "interval_end": 0.45,
+        "top_k_jaccard": 0.6666666666666666,
+        "n_common": 239,
+        "n_left": 239,
+        "n_right": 239,
+        "spearman": 0.9957411835026896,
+        "kendall": 0.947751485531451
+      },
+      {
+        "target_feature": "campus_transit_min",
+        "interval_start": 0.5,
+        "interval_end": 0.55,
+        "top_k_jaccard": 0.6666666666666666,
+        "n_common": 239,
+        "n_left": 239,
+        "n_right": 239,
+        "spearman": 0.9956945958299638,
+        "kendall": 0.9504940051334342
+      },
+      {
+        "target_feature": "rail_exit_euclid_m",
+        "interval_start": 0.5,
+        "interval_end": 0.55,
+        "top_k_jaccard": 0.6666666666666666,
+        "n_common": 239,
+        "n_left": 239,
+        "n_right": 239,
+        "spearman": 0.9981303400021097,
+        "kendall": 0.9673007278225096
+      },
+      {
+        "target_feature": "bus_stops_800m",
+        "interval_start": 0.15,
+        "interval_end": 0.2,
+        "top_k_jaccard": 0.6666666666666666,
+        "n_common": 239,
+        "n_left": 239,
+        "n_right": 239,
+        "spearman": 0.9946749411061496,
+        "kendall": 0.9412116310959528
+      },
+      {
+        "target_feature": "bus_stops_800m",
+        "interval_start": 0.25,
+        "interval_end": 0.3,
+        "top_k_jaccard": 0.6666666666666666,
+        "n_common": 239,
+        "n_left": 239,
+        "n_right": 239,
+        "spearman": 0.9954273759713088,
+        "kendall": 0.9452902499912098
+      },
+      {
+        "target_feature": "bus_stops_800m",
+        "interval_start": 0.35,
+        "interval_end": 0.4,
+        "top_k_jaccard": 0.6666666666666666,
+        "n_common": 239,
+        "n_left": 239,
+        "n_right": 239,
+        "spearman": 0.9959943391582574,
+        "kendall": 0.9484546956858056
+      },
+      {
+        "target_feature": "bus_stops_800m",
+        "interval_start": 0.45,
+        "interval_end": 0.5,
+        "top_k_jaccard": 0.6666666666666666,
+        "n_common": 239,
+        "n_left": 239,
+        "n_right": 239,
+        "spearman": 0.9968074258992298,
+        "kendall": 0.9549242291058684
+      },
+      {
+        "target_feature": "supermarket_sites_800m",
+        "interval_start": 0.2,
+        "interval_end": 0.25,
+        "top_k_jaccard": 0.6666666666666666,
+        "n_common": 239,
+        "n_left": 239,
+        "n_right": 239,
+        "spearman": 0.9962096972680288,
+        "kendall": 0.9514081783340952
+      },
+      {
+        "target_feature": "supermarket_sites_800m",
+        "interval_start": 0.3,
+        "interval_end": 0.35,
+        "top_k_jaccard": 0.6666666666666666,
+        "n_common": 239,
+        "n_left": 239,
+        "n_right": 239,
+        "spearman": 0.9971889174079672,
+        "kendall": 0.9605499103407052
+      },
+      {
+        "target_feature": "supermarket_sites_800m",
+        "interval_start": 0.5,
+        "interval_end": 0.55,
+        "top_k_jaccard": 0.6666666666666666,
+        "n_common": 239,
+        "n_left": 239,
+        "n_right": 239,
+        "spearman": 0.9982859252487604,
+        "kendall": 0.9689884321929608
+      },
+      {
+        "target_feature": "library_euclid_m",
+        "interval_start": 0.15,
+        "interval_end": 0.2,
+        "top_k_jaccard": 0.6666666666666666,
+        "n_common": 239,
+        "n_left": 239,
+        "n_right": 239,
+        "spearman": 0.9958176576069756,
+        "kendall": 0.948665658732112
+      },
+      {
+        "target_feature": "library_euclid_m",
+        "interval_start": 0.45,
+        "interval_end": 0.5,
+        "top_k_jaccard": 0.6666666666666666,
+        "n_common": 239,
+        "n_left": 239,
+        "n_right": 239,
+        "spearman": 0.9980573819485952,
+        "kendall": 0.967792974930558
+      },
+      {
+        "target_feature": "clinic_sites_1000m",
+        "interval_start": 0.05,
+        "interval_end": 0.1,
+        "top_k_jaccard": 0.6666666666666666,
+        "n_common": 239,
+        "n_left": 239,
+        "n_right": 239,
+        "spearman": 0.9954361660982384,
+        "kendall": 0.9473998804542738
+      },
+      {
+        "target_feature": "clinic_sites_1000m",
+        "interval_start": 0.3,
+        "interval_end": 0.35,
+        "top_k_jaccard": 0.6666666666666666,
+        "n_common": 239,
+        "n_left": 239,
+        "n_right": 239,
+        "spearman": 0.9980951794943916,
+        "kendall": 0.9660349495446714
+      },
+      {
+        "target_feature": "park_proximity_euclid_m",
+        "interval_start": 0.05,
+        "interval_end": 0.1,
+        "top_k_jaccard": 0.6666666666666666,
+        "n_common": 239,
+        "n_left": 239,
+        "n_right": 239,
+        "spearman": 0.9952964030800604,
+        "kendall": 0.9461341021764352
+      }
+    ],
+    "examples": [
+      {
+        "target": "campus_transit_min",
+        "weight": 0.05,
+        "top5": [
+          {
+            "unit_name": "PEOPLE'S PARK",
+            "score": 0.9274554452389124
+          },
+          {
+            "unit_name": "CHINA SQUARE",
+            "score": 0.9236600490955574
+          },
+          {
+            "unit_name": "CHINATOWN",
+            "score": 0.8924034611325758
+          },
+          {
+            "unit_name": "BOAT QUAY",
+            "score": 0.8720506307142637
+          },
+          {
+            "unit_name": "CLARKE QUAY",
+            "score": 0.850232154170073
+          }
+        ]
+      },
+      {
+        "target": "campus_transit_min",
+        "weight": 0.1,
+        "top5": [
+          {
+            "unit_name": "PEOPLE'S PARK",
+            "score": 0.9240869769635138
+          },
+          {
+            "unit_name": "CHINA SQUARE",
+            "score": 0.9126022525600276
+          },
+          {
+            "unit_name": "CHINATOWN",
+            "score": 0.8862286220900036
+          },
+          {
+            "unit_name": "BOAT QUAY",
+            "score": 0.8619067439145054
+          },
+          {
+            "unit_name": "TANJONG PAGAR",
+            "score": 0.8439566097077565
+          }
+        ]
+      },
+      {
+        "target": "campus_transit_min",
+        "weight": 0.3,
+        "top5": [
+          {
+            "unit_name": "PEOPLE'S PARK",
+            "score": 0.9106131038619206
+          },
+          {
+            "unit_name": "CHINA SQUARE",
+            "score": 0.8683710664179088
+          },
+          {
+            "unit_name": "CHINATOWN",
+            "score": 0.8615292659197152
+          },
+          {
+            "unit_name": "TANJONG PAGAR",
+            "score": 0.8446092246471575
+          },
+          {
+            "unit_name": "BOAT QUAY",
+            "score": 0.8213311967154722
+          }
+        ]
+      },
+      {
+        "target": "campus_transit_min",
+        "weight": 0.35,
+        "top5": [
+          {
+            "unit_name": "PEOPLE'S PARK",
+            "score": 0.907244635586522
+          },
+          {
+            "unit_name": "CHINA SQUARE",
+            "score": 0.857313269882379
+          },
+          {
+            "unit_name": "CHINATOWN",
+            "score": 0.855354426877143
+          },
+          {
+            "unit_name": "TANJONG PAGAR",
+            "score": 0.8447723783820077
+          },
+          {
+            "unit_name": "CLEMENTI CENTRAL",
+            "score": 0.8189883455729543
+          }
+        ]
+      }
+    ]
+  },
+  "spatial_comparison": {
+    "jaccard_positions": 0.2857142857142857,
+    "n_subzone_positions": 13,
+    "n_cluster_positions": 5,
+    "n_common_positions": 4,
+    "subzone_position_ids": [
+      "LOC_BLD_1bdfe5b88b6a935ad0a6",
+      "LOC_BLD_27009e4b07c7ec08cd5e",
+      "LOC_BLD_31e51a112dd0c9cd504f",
+      "LOC_BLD_48c4debc8835a3370e8e",
+      "LOC_BLD_50ed55e92d6bc2c67f3d",
+      "LOC_BLD_5647ef210a6a77763abe",
+      "LOC_BLD_62076b7f0ae4fb368b90",
+      "LOC_BLD_62b783869ae46de86ad2",
+      "LOC_BLD_6cf791a3effbed75f30d",
+      "LOC_BLD_a28da48bd545f0f4d908",
+      "LOC_BLD_aebbb1d5693c20913146",
+      "LOC_BLD_b3c91dbe303a18bbe6ab",
+      "LOC_BLD_fec7b8aefbdc1cba6792"
+    ],
+    "cluster_position_ids": [
+      "LOC_BLD_48c4debc8835a3370e8e",
+      "LOC_BLD_5647ef210a6a77763abe",
+      "LOC_BLD_6cf791a3effbed75f30d",
+      "LOC_BLD_b3c91dbe303a18bbe6ab",
+      "LOC_BLD_e7cc9d052f6fd1e55b6d"
+    ],
+    "interpretation": "Different unit sizes change footprint overlap; this alone is not robustness evidence.",
+    "supplementation_ranking_comparison": {
+      "top_k_jaccard": 1.0,
+      "n_common": 167,
+      "n_left": 167,
+      "n_right": 167,
+      "spearman": 0.9994795263174168,
+      "kendall": 0.9933626722458698
+    },
+    "n_subzone_building_records": 64,
+    "n_cluster_building_records": 17,
+    "jaccard_building_records": 0.24615384615384617,
+    "building_count_semantics": "Distinct candidate source records, not verified households or capacity",
+    "extent_semantics": "Projected bounding-box diagonal, not exact diameter or estate boundary"
+  },
+  "cluster_statistics": {
+    "count": 384,
+    "largest": [
+      {
+        "cluster_id": "BDSZ05_C_0fe53e56a96e",
+        "cluster_name": "FRANKEL · analysis cluster 0fe53e56a96e",
+        "area_id": "BDSZ05",
+        "area_name": "FRANKEL",
+        "n_buildings": 6124,
+        "singleton": false,
+        "extent_diagonal_m": 3619.6367546714,
+        "housing_type_counts": "{\"Landed\": 5527, \"Non-Landed\": 597}",
+        "n_sample_A": 34,
+        "n_sample_B": 34
+      },
+      {
+        "cluster_id": "BDSZ04_C_59a4024851b0",
+        "cluster_name": "BEDOK NORTH · analysis cluster 59a4024851b0",
+        "area_id": "BDSZ04",
+        "area_name": "BEDOK NORTH",
+        "n_buildings": 1616,
+        "singleton": false,
+        "extent_diagonal_m": 3444.08513863916,
+        "housing_type_counts": "{\"HDB\": 239, \"Landed\": 1259, \"Non-Landed\": 118}",
+        "n_sample_A": 28,
+        "n_sample_B": 28
+      },
+      {
+        "cluster_id": "TMSZ02_C_2888ddaf708f",
+        "cluster_name": "TAMPINES EAST · analysis cluster 2888ddaf708f",
+        "area_id": "TMSZ02",
+        "area_name": "TAMPINES EAST",
+        "n_buildings": 503,
+        "singleton": false,
+        "extent_diagonal_m": 3266.64490116999,
+        "housing_type_counts": "{\"EC\": 9, \"HDB\": 465, \"Non-Landed\": 29}",
+        "n_sample_A": 32,
+        "n_sample_B": 32
+      }
+    ],
+    "n_uncovered_in_A": 20
+  },
+  "route_status_counts": {
+    "Success": 2190,
+    "NoRoute": 6
+  },
+  "teaching_hypotheses": {
+    "label": "Invented two-indicator arithmetic example; not a real residence or a pipeline output",
+    "profiles": {
+      "X": [
+        0.9,
+        0.3
+      ],
+      "Y": [
+        0.4,
+        0.8
+      ]
+    },
+    "weights_campus_focused": [
+      0.7,
+      0.3
+    ],
+    "scores_campus_focused": {
+      "X": 0.72,
+      "Y": 0.52
+    },
+    "weights_services_focused": [
+      0.3,
+      0.7
+    ],
+    "scores_services_focused": {
+      "X": 0.48,
+      "Y": 0.68
+    }
+  },
+  "original_delivery_checks": {
+    "raw_file_count": 176,
+    "raw_bytes": 625191511,
+    "A_Dwelling_records": 83541,
+    "A_HDB_Point_records": 13436,
+    "A_Parks_and_Nature_polygons": 462,
+    "A_Park_Point_records": 462,
+    "park_points_outside_corresponding_polygon": 52,
+    "B_old_demo_distinct_residential_ids": 5,
+    "B_old_demo_min_minutes": 58.28333333333333,
+    "B_old_demo_max_minutes": 97.31666666666666,
+    "B_old_demo_all_above_40_min": true,
+    "B_old_demo_source": "raw_data/GE5219_B_Handover/01_Data/Transit_Travel_Time_Latest.csv",
+    "interpretation": "Original five demo routes are separate from the production snapshot; this is not an island-wide result."
+  },
+  "example_source_file_sha256": {
+    "outputs/score/point_scores.csv": "f3e7e2edc7daf4183b3b68f20b0de2c70cbba50403ab3c460330e36630c14a1e",
+    "outputs/score/area_scores.csv": "951d6f669aa67eb5d05b14229832fb8769a5d8e64cba73716f8ac912d85b9628",
+    "outputs/normalization-v1.json": "870b77f99f491593ed6d0e55186422ebbb2598f9956699b1c1c00089eb79f1b5",
+    "outputs/experiments/spatial_comparison.json": "4cd5490c90c9230723021d1219cea7587c301cf3cf548935a4b2ca8ebd7ba0ad",
+    "outputs/experiments/oat_switch_intervals.csv": "de20d96dbffe0f8960ead34b1d20bc0c67321139d76ddd64ad7e43d9ac5bf4e2"
+  }
+}
