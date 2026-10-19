@@ -4,6 +4,19 @@ Document date: 19 October 2026. This guide is written for teammates who have not
 
 **The deliverable is a reproducible, explainable baseline for comparing residential locations.** It asks: under the delivered housing records, one specified NUS AS8 routing scenario, seven indicators and declared preferences, which official Subzones have the highest average score among verified feasible representative locations? It does not establish current rental availability, rent, household capacity or the operation of every facility. It therefore cannot directly answer which available dwelling a student should rent today.
 
+## 0. Read the calculation in plain language
+
+Measure seven conditions at each representative residential point. Put them on one fixed 0–1 scale. Add their weighted contributions. Exclude points that fail hard constraints. Aggregate the remaining points to official Subzones. Sensitivity analysis then asks how recommendations change when preferences, caps or spatial units change.
+
+- **Does this version use distance decay?** No. Bus stops, supermarkets and clinics use fixed-radius counts. Rail/library indicators use nearest straight-line distance. Parks use straight-line distance to polygons. Campus uses the first OneMap itinerary duration. Decay remains a possible extension.
+- **What are P5 and P95?** They are values near the 5% and 95% positions after one indicator's valid observations are sorted. They are percentiles of raw measurements, not preference weights or scores of 5 and 95.
+- **What does clipping do?** For score calculation only, values beyond the two boundaries are treated as the boundary values. The bus P95 is 48, so 57 stops is treated as 48 for scaling and receives 1. The original 57 and its residential record remain available.
+- **What does Monte Carlo ask?** Would the recommendations remain similar if people assigned somewhat different importance to the seven conditions? This experiment draws 1,000 legal weight vectors and reranks each. It does not resample residences or request new journeys.
+- **What does OAT ask?** If campus importance increases step by step, which areas enter or leave the Top 5? The other six weights give up their share proportionally so that all weights still sum to 1.
+- **How can the next developer call it?** Existing Python and command-line interfaces support scoring, custom importance and a commute cap. Python also exposes eligibility thresholds and Top k. See the [integration guide](interfaces.md). There is no deployed HTTP service or arbitrary facility-distance constraint.
+
+Each figure now follows the paragraph it explains. Its caption distinguishes actual results from teaching examples and explains the legend, axes and reading limits.
+
 ## 1. Start here: files and the frozen baseline
 
 Open the [actual results page](../../outputs/GE5219_MCDA_真实结果.html), then the [route desktop review page](../../outputs/route_audit_v2/route_audit.html). The [Notebook directory](../../notebooks/) supports a step by step reading of the calculation, and the standard package's [documentation entry](../../doc.html) brings the reading links together. Source result tables are in the [baseline](../../outputs/score/), [experiments](../../outputs/experiments/) and [prepared data](../../outputs/prepared/) directories.
@@ -93,6 +106,10 @@ The 800 m bus/supermarket radius and 1,000 m clinic radius are approved working 
 
 Teaching boundary example: a supermarket at 799 m or exactly 800 m counts as one; one at 801 m counts as zero. The threshold is reproducible but can magnify small coordinate errors near its boundary. Multiple radii and distance decay could be compared in a later version; they have not been run as part of the frozen baseline. A true zero count remains zero. If the entire facility source is unavailable, the measurement is unknown, not evidence that no facilities exist nearby.
 
+**Separate two questions:** Euclidean/network distance specifies how distance is measured. Buffer/decay specifies how a facility contributes as that distance increases. Decay can also use Euclidean distance. A hypothetical rule that halves contribution every 500 m is shown below; 500 m is only a teaching assumption and was not used in the frozen indicators or experiments.
+
+<!-- VISUAL: measurement -->
+
 The actual raw distributions in A are below. Each column uses its available measurements among all planned locations. Six unavailable campus routes remain missing, so campus N is six smaller than static indicator N:
 
 | Indicator | Observed N | Minimum | Median | Maximum |
@@ -130,6 +147,10 @@ Every `z` is now better when larger. P5/P95 clipping limits the effect of extrem
 
 For example, the real location below has 57 bus stops, above P95=48, so its bus score is 1. A count of 48 receives the same bus score as 57. Its 65.95 campus minutes become `1 − (65.95 − 28.125833)/(87.501667 − 28.125833) = 0.362970`. Missing, negative or nonfinite observations remain unknown. A failed route never becomes zero minutes. Undefined or constant P5/P95 bounds cause an error rather than a silently invented score.
 
+**Think of two ends of a ruler:** for bus counts, 11 maps to 0 and 48 to 1. Values between them scale proportionally. Below 11 remains 0; above 48 remains 1. Campus minutes run in the opposite direction: approximately 28.13 minutes or less saturates at 1; 87.50 or more at 0. Clipping removes no residential rows and does not alter raw minutes used for 40/60-minute constraints. Linear interpolation can produce a percentile that is not one observed value.
+
+<!-- VISUAL: normalization -->
+
 These parameters are fitted once on A and held fixed for the four preference scenarios, Monte Carlo, OAT, commute caps, qualification thresholds and three spatial arms. Refitting on B, each new scenario or only feasible observations would change the ruler while supposedly testing one other change. Full precision and provenance are in [normalization-v1.json](../../outputs/normalization-v1.json).
 
 ## 7. A real seven dimensional example and the meaning of weights
@@ -149,6 +170,8 @@ The following values are **actual frozen measurements and output**, not invented
 
 The uncapped point is valid and feasible; its exact saved score is 0.5693125535586673, the sum of its seven contributions. With either a 60 or 40 minute cap, 65.95 minutes makes it infeasible. Nearby libraries and many bus stops cannot offset a hard constraint. Raw measurements remain, but its contributions and score for that recommendation are empty.
 
+<!-- VISUAL: contribution -->
+
 The four declared preference vectors below each sum to 1. They are interpretable demonstration/working assumptions. **No AHP pairwise comparison, consistency ratio, student survey fitting or empirical preference estimation was performed.**
 
 | Scenario | Campus | Rail exit | Bus | Supermarket | Library | Clinic | Park |
@@ -161,6 +184,10 @@ The four declared preference vectors below each sum to 1. They are interpretable
 For user supplied importance values `a_j`, the core checks seven finite, nonnegative values, rejects booleans and an all zero vector, then normalises `w_j = a_j / Σ_k a_k`. The implementation divides by the maximum first to avoid overflow; this is mathematically equivalent. Importance `(5,3,2,3,2,2,3)` sums to 20 and produces the balanced vector. Weights express tradeoffs after normalisation; they are not a monetary value for one minute of travel. This version still requires all seven measurements even when one indicator has zero weight.
 
 The point score is `S_i = Σ_j w_j z_ij`, with contribution `C_ij = w_j z_ij`. The weighted sum allows compensation: when no hard constraint is triggered, strengths can offset weaknesses. Correlated transport or city centre amenity indicators may also count related advantages more than once. The saved correlation figure can flag this concern but does not resolve conceptual overlap automatically.
+
+**Read the correlation plot carefully:** each cell compares two columns across shared representative positions. Positive correlation means values tend to rise together; negative correlation means one tends to rise as the other falls. The legend spans −1 to 1. A larger raw value is not always better: larger distances are worse. Colour alone does not justify removing an indicator.
+
+<!-- VISUAL: correlation -->
 
 **Separate invented teaching example:** reduce the problem to two normalised indicators, “campus convenience” and “local services”, with hypothetical profiles X=(0.9,0.3), Y=(0.4,0.8). Weights (0.7,0.3) give X=0.72 and Y=0.52. Weights (0.3,0.7) give X=0.48 and Y=0.68. Only preferences changed, yet the ordering reversed. This two indicator example is neither a real residence nor an output of the seven indicator pipeline. The table above is the real example. [Teaching values and full raw statistics](../handover_shared/teaching_examples.json) explicitly distinguish them.
 
@@ -175,6 +202,8 @@ For an area with `N` planned locations, `V` valid locations and `F` feasible loc
 - `verified_feasible_share = F/N` measures verified feasibility among all planned locations.
 
 Eligibility requires `V/N ≥ 0.90`, `F/N ≥ 0.50` and `F>0`. **The denominator is planned N.** Removing failed rows and substituting F/V would reward incomplete coverage. Teaching example: 20 planned points, 18 valid and nine feasible have 90% valid coverage and 50% conditional feasibility, but only 45% verified feasibility. The area fails the default 50% rule.
+
+<!-- VISUAL: eligibility -->
 
 Eligible areas are ranked by the **equal mean of feasible point scores**, `S_area = (Σ_{i∈F} S_i)/F`. Each area contribution is also the mean across feasible points. There is no household, population, dwelling unit or full building membership weighting. Two feasible scores of 0.8 and 0.6 average to 0.7; a third failed point is not inserted as a zero into that mean, but still counts in the coverage and eligibility denominator. An ineligible area can have a calculable mean; that does not entitle it to a rank.
 
@@ -205,6 +234,8 @@ All four fixed preference comparisons use A/Subzone, no commute cap and the same
 
 For comparable units, `Jaccard = |intersection|/|union|` compares Top 5 sets. Pairwise Jaccard across the four scenarios is 0.429–0.667, while Spearman rank correlation over 239 jointly eligible areas is 0.788–0.944. Campus and transit preference Top 5 sets share three areas, giving `3/7≈0.429`. A fairly correlated overall ranking can still produce a changed recommendation list. The six pairs in [scenario_comparisons.csv](../../outputs/experiments/scenario_comparisons.csv) do not support a claim of complete robustness.
 
+<!-- VISUAL: scenarios -->
+
 Monte Carlo explores **1,000** random preference vectors near balanced: `w^(b) ~ Dirichlet(κ w_balanced)`, with `κ=50` and `seed=42`. Its parameter vector is `(12.5,7.5,5,7.5,5,5,7.5)`. Each draw has nonnegative weights summing to 1, with expected weights equal to balanced. Larger κ generally concentrates draws more tightly. Neither κ nor this preference distribution was estimated from real students. The seed makes the random sequence reproducible.
 
 Every draw recomputes all area rankings and saves its weights and results. A selection frequency is `Σ_b 1[rank_b≤5]/1000`; median, P5 and P95 ranks summarise defined ranks, where smaller is better. Undefined ranks remain empty. Areas that were ineligible stay ineligible in a weight only experiment, with zero selection frequency and no invented rank zero.
@@ -222,7 +253,11 @@ Every draw recomputes all area rankings and saves its weights and results. A sel
 | CITY HALL | 0.064 | 9 | 5–13 |
 | HOLLAND DRIVE | 0.046 | 14 | 6–30 |
 
-For example, BOAT QUAY enters the Top 5 in 602 of the 1,000 declared weight draws and its P5–P95 ranks span 4–8, showing a recommendation near the list's edge. PEOPLE'S PARK remains first in all these draws, but its single sample and unresolved source limitations still exist. **Weight uncertainty is not data confidence.** These frequencies are not tenant choice probabilities, probabilities of true optimality, route accuracy or small sample confidence intervals. They do not simulate coordinate error, missing source facilities, operation changes or variation between travel days. The [frequency table](../../outputs/experiments/monte_carlo_frequency.csv), [drawn weights](../../outputs/experiments/monte_carlo_weights.csv) and [full ranks](../../outputs/experiments/monte_carlo_ranks.csv) preserve the experiment.
+For example, BOAT QUAY enters the Top 5 in 602 of the 1,000 declared weight draws and its P5–P95 ranks span 4–8, showing a recommendation near the list's edge. PEOPLE'S PARK has frequency 1.000, meaning it always enters the Top 5. Its saved ranks show 991 first places and nine second places. Its rank P5–P95 of 1–1 therefore does not imply first place in every draw: a few tail results fall outside that interval. CHINATOWN likewise has frequency 1.000 but ranks mainly second or third. Frequency 1 does not itself imply first place, and high frequency does not remove limited sampling or source uncertainty. **Weight uncertainty is not data confidence.** These frequencies are not tenant choice probabilities, probabilities of true optimality, route accuracy or small sample confidence intervals. They do not simulate coordinate error, missing source facilities, operation changes or variation between travel days. The [frequency table](../../outputs/experiments/monte_carlo_frequency.csv), [drawn weights](../../outputs/experiments/monte_carlo_weights.csv) and [full ranks](../../outputs/experiments/monte_carlo_ranks.csv) preserve the experiment.
+
+**Purpose and limits:** one balanced vector gives one shortlist. Monte Carlo changes all seven weights together to test dependence on that declared tradeoff. A frequency of 602/1,000 identifies an area near the shortlist edge under the tested preferences; it does not mean 60.2% of students should live there. Rank P5–P95 uses ranks from these simulations, whereas Section 6 uses raw minutes/metres for its percentiles. It is not a 90% confidence interval for a true optimal rank.
+
+<!-- VISUAL: monte_carlo -->
 
 ## 10. OAT: which tested weight intervals change the list
 
@@ -233,6 +268,10 @@ Each of seven indicators takes 12 target values `0.05,0.10,…,0.60`: **84 setti
 Actual example: at campus weight 0.30, BOAT QUAY is fifth with score 0.821331. At 0.35, CLEMENTI CENTRAL becomes fifth with score 0.818988; the first four selected names stay the same. The endpoint Top 5 Jaccard is `4/6=0.666667`. This locates a change within the tested 0.30–0.35 interval; it does **not** solve an exact critical weight or establish that only one switch occurs inside the interval. Another real change from 0.05 to 0.10 replaces CLARKE QUAY with TANJONG PAGAR.
 
 OAT still uses A/Subzone, no cap and fixed normalisation. Its seven paths do not cover the entire preference simplex. Evidence is in [oat_switch_intervals.csv](../../outputs/experiments/oat_switch_intervals.csv), [OAT weights](../../outputs/experiments/oat_weights.csv) and [OAT ranks](../../outputs/experiments/oat_ranks.csv).
+
+**How it differs from Monte Carlo:** Monte Carlo varies weights jointly at random. OAT follows a specified path to identify which importance changes can alter the shortlist. They answer different questions. Neither proves conceptual validity or measurement accuracy.
+
+<!-- VISUAL: oat -->
 
 ## 11. Route minutes have specific limitations
 
@@ -260,6 +299,8 @@ The 40/60 minute comparisons keep A, Subzone, balanced weights, 90% valid covera
 
 CHINA SQUARE's sole location takes 45.13 minutes, so it fails the 40 minute cap and passes 60 minutes. Where only some locations pass, an area's score averages those feasible points; it may change with the cap even though the underlying housing conditions did not improve. A 40 minute cap is not a new normalisation and is not merely a penalty applied to longer journeys.
 
+<!-- VISUAL: caps -->
+
 The separate qualification experiment fixes the cap at **60 minutes** and changes only the minimum `F/N`:
 
 | Minimum verified feasible share | Eligible areas | Top 5 |
@@ -269,6 +310,8 @@ The separate qualification experiment fixes the cap at **60 minutes** and change
 | 75% | 152 | Same |
 
 An unchanged Top 5 means only that this shortlist is insensitive to these three tested thresholds. The eligible population still shrinks from 178 to 152, so the policy matters. These percentages are declared recommendation rules, not estimated student acceptance rates. See [cap 40](../../outputs/experiments/commute_cap_40/), [cap 60](../../outputs/experiments/commute_cap_60/) and the [qualification comparisons](../../outputs/experiments/qualification_comparisons.csv).
+
+<!-- VISUAL: qualification -->
 
 ## 13. Three spatial arms: supplementation and unit scale
 
@@ -300,6 +343,8 @@ This uses complete membership instead of labelling 13 or five samples as all hou
 | B_cluster PEOPLE'S PARK `39fc69d26fca` | 1 | 1 | 0 m |
 
 All five selected clusters have only one valid sampled location. Smaller units can yield high scoring local selections with little sampled internal variation; a larger Subzone mean can hide internal differences. Low overlap means the geographic footprint of a recommendation changes with the unit definition. **Two scales do not establish which is better, and low Jaccard alone does not prove model failure.** Boundary effects, the 150 m threshold, 400 m grid, denser sampling and full routing remain possible extensions. The [spatial comparison JSON](../../outputs/experiments/spatial_comparison.json) and each arm's [support table](../../outputs/experiments/spatial_B_cluster/selected_unit_support.csv) retain the exact evidence.
+
+<!-- VISUAL: spatial -->
 
 ## 14. Existing verification and correct reuse
 

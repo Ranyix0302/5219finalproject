@@ -1,0 +1,520 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Interfaces for the next team member</title><style>
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#f3f6f7;color:#183343;font:17px/1.85 system-ui,'Microsoft YaHei',sans-serif}a{color:#006d77;text-underline-offset:3px}header{background:#123c4a;color:white;padding:45px max(28px,calc((100vw - 1340px)/2));}header h1{max-width:1050px;font-size:36px;line-height:1.25;margin:0 0 15px}header p{max-width:1000px;margin:0;color:#dce8ec}.layout{max-width:1440px;margin:auto;display:grid;grid-template-columns:275px minmax(0,1fr);gap:35px;padding:36px 28px 80px}aside{font-size:14px;position:sticky;top:20px;align-self:start;max-height:90vh;overflow:auto}aside a{display:block;text-decoration:none;padding:6px 10px;border-left:2px solid #c8dadf}main{background:white;padding:28px 35px;border:1px solid #dce5e9;min-width:0}h1{font-size:29px;line-height:1.4}h2{font-size:25px;color:#00616c;margin:2.3em 0 .7em;line-height:1.4;scroll-margin-top:20px}h3{font-size:20px;margin:1.7em 0 .5em;line-height:1.5;scroll-margin-top:20px}p{margin:.8em 0}li{margin:.55em 0}strong{color:#103c49}code{font:0.88em/1.7 Consolas,monospace;background:#f0f5f6;padding:1px 4px;overflow-wrap:anywhere}pre{background:#eef4f5;padding:18px;overflow:auto;border-left:3px solid #2a7883}pre code{background:none;white-space:pre;font-size:14px;overflow-wrap:normal}.table-wrap{overflow-x:auto;margin:1.2em 0}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:11px;border:1px solid #d5e0e5;text-align:left;vertical-align:top}th{background:#e4eff1}tr:nth-child(even){background:#f8fafb}td code{font-size:12px}.flow{width:100%;height:auto;background:#f7fafb;border:1px solid #dae6e9;margin:15px 0 28px}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}.metric{background:#e8f1f1;padding:15px;border-top:3px solid #34818a}.metric b{display:block;font-size:27px}.metric span{font-size:13px}figure{margin:30px 0}figure img{width:100%;height:auto;border:1px solid #dbe5e8}figcaption{font-size:14px;color:#4b6473;padding:10px 0}blockquote{margin:20px 0;border-left:4px solid #cc9e43;background:#fff7e8;padding:8px 20px}nav.top a{display:inline-block;color:#dceff2;margin-right:20px}footer{margin-top:35px;font-size:13px;color:#5c7481}@media(max-width:1050px){.layout{display:block}aside{position:static;max-height:260px;margin-bottom:20px;background:#e8f0f1;padding:12px}main{padding:22px}header h1{font-size:30px}}@media(max-width:600px){body{font-size:16px}.layout{padding:18px 12px}main{padding:17px}.metrics{grid-template-columns:1fr}.metric b{font-size:23px}h1{font-size:25px}h2{font-size:23px}td{min-width:125px}header{padding:30px 20px}}@media print{body{background:white;font-size:10.5pt}.layout{display:block;padding:0}aside,nav.top{display:none}header{color:black;background:white;padding:0}header p{color:black}main{padding:0;border:0}h2,h3{break-after:avoid}tr,figure{break-inside:avoid}a{color:inherit}.table-wrap{overflow:visible}}
+
+.method-figure{margin:26px 0 36px;padding:22px;border:1px solid #c8dce2;border-radius:8px;background:#fbfdfd}.method-figure h3{margin:10px 0 16px;line-height:1.5}.figure-tag{display:inline-block;border:1px solid #aac6cf;background:#e7f0f3;color:#285567;border-radius:20px;padding:2px 11px;font-size:12px;font-weight:650}.method-svg{width:100%;height:auto;display:block;min-width:0;background:white;font-family:system-ui,'Microsoft YaHei',sans-serif}.figure-legend{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:7px 19px;font-size:14px;line-height:1.6;margin:12px 0}.figure-legend li{margin:0;display:flex;align-items:center;gap:7px}.legend-chip{display:inline-block;min-width:17px;height:11px;border:1px solid #71919c;border-radius:2px}.figure-reading{padding:13px 17px;background:#eef5f4;border-left:3px solid #478f80;margin:18px 0 12px;color:#244c4b}.figure-reading p{margin:5px 0 0;font-size:15px;line-height:1.8}.figure-source{font-size:12px;line-height:1.8;color:#5d7480;overflow-wrap:anywhere}.method-figure table{font-size:13px;margin-top:15px}.method-figure figcaption{padding:0}.oat-panel{margin:18px 0 30px;padding-bottom:20px;border-bottom:1px solid #d9e5e9}.oat-panel:last-of-type{border-bottom:0}.document-nav{display:flex;flex-wrap:wrap;gap:7px 18px;margin-top:20px;font-size:14px}.document-nav a{color:#e0f2f4}.method-figure>.table-wrap{overflow:auto}.method-figure h3{scroll-margin-top:20px}@media(max-width:600px){.method-figure{padding:12px;margin:20px -7px}.method-svg{min-width:660px}.method-figure{overflow-x:auto}.figure-legend,.figure-reading,.figure-source{min-width:240px}.figure-legend li{font-size:13px}}@media print{.method-figure{break-inside:auto;background:white}.oat-panel,.method-svg,.figure-legend{break-inside:avoid}.method-svg{min-width:0}.document-nav{display:none}.figure-reading{background:white}.figure-tag{background:white}}
+</style><header><h1>Interfaces for the next team member</h1><p>Source evidence, formulas, computed results and open decisions, explained step by step. Original source files retain their source language.</p><nav class="document-nav"><a href="index.html">English handbook</a><a href="../handover_zh/index.html">中文</a><a href="interfaces.html">Integration interfaces</a><a href="code_structure.html">Code structure</a><a href="processing_methods.html">Processing methods</a><a href="project_progress.html">Progress</a></nav></header><div class="layout"><aside><a href="#section-1">1. Entry points and available parameters</a><a href="#section-2">2. Minimal Python call</a><a href="#section-3">3. CLI commands</a><a href="#section-4">4. Inputs, outputs, errors and identity</a><a href="#section-5">5. Executed acceptance evidence</a><a href="#section-6">6. Other stages and fixed versions</a><a href="#section-7">7. Proposed web interface — not implemented</a><a href="#section-8">8. Unsupported requests and next work</a></aside><main><h1>Interfaces for the next team member</h1>
+<p><strong>Scoring and a commute hard constraint are already implemented in Python.</strong>
+The current report switches saved scenario bundles. It has no HTTP service or
+browser-side live scoring. No new OneMap request or token is required to
+re-score existing measurements.</p>
+<p>Read the <a href="../interfaces.md">public contract</a> for the full schema and
+<a href="../handover_zh/interfaces.md">Chinese guide</a> for Chinese explanations.</p>
+<h2 id="section-1">1. Entry points and available parameters</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+  <th>Interface</th>
+  <th>Use</th>
+  <th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>ge5219.mcda.recommend</code></td>
+  <td>New scores, custom weights, commute cap, eligibility thresholds, Top k, aggregation</td>
+  <td>Implemented</td>
+</tr>
+<tr>
+  <td><code>python -m ge5219 score</code></td>
+  <td>Save one reproducible scenario</td>
+  <td>Implemented; advanced thresholds/k are Python-only</td>
+</tr>
+<tr>
+  <td>Three CSVs + result_metadata.json</td>
+  <td>One recommendation shared by map, tables and Agent</td>
+  <td>Implemented</td>
+</tr>
+<tr>
+  <td>Website HTTP request</td>
+  <td>Server calls Python and returns JSON</td>
+  <td><strong>Not implemented; proposed in section 7</strong></td>
+</tr>
+</tbody>
+</table></div>
+<pre><code class="language-python">recommend(frame, params, weights, group_by=&quot;area_id&quot;, max_commute_min=None,
+          min_valid_share=0.9, min_feasible_share=0.5,
+          metadata=None, k=5)
+</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+  <th>Argument</th>
+  <th>Meaning/default</th>
+  <th>CLI option</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>frame</td>
+  <td>ALL planned positions, including failed/unknown routes; A=2,176, B=2,196</td>
+  <td>--sample-set A (default) or B</td>
+</tr>
+<tr>
+  <td>params</td>
+  <td>Seven frozen P5/P95 objects and directions from normalization-v1.json[&quot;parameters&quot;]</td>
+  <td>--normalization</td>
+</tr>
+<tr>
+  <td>weights</td>
+  <td>Seven finite nonnegative importance values, not all zero, sum-normalized internally; ordered vector or exact seven-key mapping</td>
+  <td>--weights; otherwise --scenario balanced</td>
+</tr>
+<tr>
+  <td>group_by</td>
+  <td>area_id default, or cluster_id</td>
+  <td>--group-by</td>
+</tr>
+<tr>
+  <td>max_commute_min</td>
+  <td>None default; finite nonnegative raw minutes; values ≤ cap pass</td>
+  <td>--max-commute-min</td>
+</tr>
+<tr>
+  <td>min_valid_share</td>
+  <td>n_valid/n_planned, default 0.9; range 0–1</td>
+  <td>Python only</td>
+</tr>
+<tr>
+  <td>min_feasible_share</td>
+  <td>n_feasible/n_planned, default 0.5; range 0–1</td>
+  <td>Python only</td>
+</tr>
+<tr>
+  <td>k</td>
+  <td>Positive nonboolean integer, default 5</td>
+  <td>Python only</td>
+</tr>
+<tr>
+  <td>metadata</td>
+  <td>Mapping, default None; retain version, scene, sample and source hashes for handover</td>
+  <td>CLI builds context</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>top5</code> remains the return key/file name for any k and can contain fewer than k
+rows. Presets are campus_first, transit_first, lifestyle and balanced; these are
+declared preference scenarios, not survey estimates. Boolean, negative,
+nonfinite and all-zero importance values are rejected. All seven dimensions
+remain required even when one has zero weight.</p>
+<p>Weights are not hard constraints. A poor commute score can be offset by other
+indicators. A raw max_commute_min cap removes positions exceeding that duration
+from feasible scoring. It does not compare normalized or clipped minutes.</p>
+<p>For 10 planned positions, 9 valid and 4 feasible, valid coverage is 90% and
+verified feasible share is 40%; the default model rejects the area. Do not
+replace 4/10 with 4/9. The latter is conditional feasible share, separately
+reported and unknown if n_valid=0. Eligibility also requires n_feasible&gt;0.
+limited_support means n_valid&lt;3: a warning flag, not an extra eligibility rule.</p>
+<p>Exact seven-feature order and units:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+  <th>Field</th>
+  <th>Unit</th>
+  <th>Direction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>campus_transit_min</td>
+  <td>first OneMap itinerary duration, minutes</td>
+  <td>lower better</td>
+</tr>
+<tr>
+  <td>rail_exit_euclid_m</td>
+  <td>Euclidean metres to rail exit</td>
+  <td>lower better</td>
+</tr>
+<tr>
+  <td>bus_stops_800m</td>
+  <td>stop points within 800 m Euclidean radius</td>
+  <td>higher better</td>
+</tr>
+<tr>
+  <td>supermarket_sites_800m</td>
+  <td>service sites within 800 m Euclidean radius</td>
+  <td>higher better</td>
+</tr>
+<tr>
+  <td>library_euclid_m</td>
+  <td>Euclidean metres to library</td>
+  <td>lower better</td>
+</tr>
+<tr>
+  <td>clinic_sites_1000m</td>
+  <td>service sites within 1,000 m Euclidean radius</td>
+  <td>higher better</td>
+</tr>
+<tr>
+  <td>park_proximity_euclid_m</td>
+  <td>Euclidean polygon proximity; zero inside</td>
+  <td>lower better</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="section-2">2. Minimal Python call</h2>
+<p>Install as described in <a href="code_structure.md">code_structure.md</a>. Run this from
+the extracted complete package root, using the frozen joined B matrix:</p>
+<pre><code class="language-python">import json
+from pathlib import Path
+from ge5219.artifacts import read_locations, save_result
+from ge5219.mcda import recommend
+from ge5219.settings import SCENARIOS
+
+root = Path.cwd()
+frame = read_locations(root / &quot;outputs/score/indicator_matrix.csv&quot;)
+frame_A = frame.loc[frame.sample_A].copy()
+params = json.loads((root / &quot;outputs/normalization-v1.json&quot;).read_text(
+    encoding=&quot;utf-8&quot;))[&quot;parameters&quot;]
+stored = json.loads((root / &quot;outputs/score/result_metadata.json&quot;).read_text(
+    encoding=&quot;utf-8&quot;))
+output_keys = {&quot;result_id&quot;, &quot;status&quot;, &quot;applied_weights&quot;, &quot;group_by&quot;,
+               &quot;max_commute_min&quot;, &quot;min_valid_share&quot;, &quot;min_feasible_share&quot;}
+context = {key: value for key, value in stored.items() if key not in output_keys}
+result = recommend(frame_A, params, SCENARIOS[&quot;balanced&quot;],
+                   max_commute_min=40, metadata=context)
+save_result(result, root / &quot;outputs/interface_acceptance/my_cap40&quot;)
+print(result[&quot;metadata&quot;][&quot;status&quot;])
+print(result[&quot;top5&quot;][[&quot;unit_name&quot;, &quot;score&quot;, &quot;n_planned&quot;, &quot;n_feasible&quot;]])
+</code></pre>
+<p>The <a href="../../examples/score_from_handover.py">complete executed example</a> additionally
+checks dataset version, static/route hashes and A fingerprint, and rebuilds the
+matrix through the public join boundary. Use that version during integration.</p>
+<p>Custom importance and stricter eligibility use the same function:</p>
+<pre><code class="language-python">weights = {&quot;campus_transit_min&quot;: 3, &quot;rail_exit_euclid_m&quot;: 2,
+           &quot;bus_stops_800m&quot;: 1, &quot;supermarket_sites_800m&quot;: 1,
+           &quot;library_euclid_m&quot;: 1, &quot;clinic_sites_1000m&quot;: 1,
+           &quot;park_proximity_euclid_m&quot;: 1}
+result = recommend(frame_A, params, weights, max_commute_min=60,
+                   min_feasible_share=0.75, k=3, metadata=context)
+</code></pre>
+<p>Applied weights are [.3,.2,.1,.1,.1,.1,.1]. For B/cluster, use full frame,
+group_by=&quot;cluster_id&quot;, and metadata sample_set=&quot;B&quot;. Re-aggregate through the
+function; do not rename Subzone rows. Keep normalization fixed on A.</p>
+<h2 id="section-3">3. CLI commands</h2>
+<p>Run from the package root in Windows; always choose a fresh output directory:</p>
+<pre><code class="language-powershell">.\.venv\Scripts\python.exe -m ge5219 score --routes outputs/routes.csv --max-commute-min 40 --output outputs/interface_acceptance/cli_cap40
+.\.venv\Scripts\python.exe -m ge5219 score --routes outputs/routes.csv --weights &quot;3,2,1,1,1,1,1&quot; --output outputs/interface_acceptance/cli_custom_weights
+.\.venv\Scripts\python.exe -m ge5219 score --routes outputs/routes.csv --sample-set B --group-by cluster_id --max-commute-min 60 --output outputs/interface_acceptance/cli_B_cluster
+.\.venv\Scripts\python.exe examples/score_from_handover.py
+</code></pre>
+<p>--weights overrides --scenario. CLI does not expose --min-valid-share,
+--min-feasible-share or --k; use Python for these. Future CLI support would
+only need argument parsing and forwarding, not a new scoring algorithm.
+The CLI default output is outputs/score: it would replace baseline files.</p>
+<h2 id="section-4">4. Inputs, outputs, errors and identity</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+  <th>Input</th>
+  <th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>outputs/prepared/static_indicators.csv</td>
+  <td>All planned B positions, IDs, names, coordinates, sample_A and six static indicators</td>
+</tr>
+<tr>
+  <td>outputs/routes.csv</td>
+  <td>Matching routes: IDs, origin/destination, scene/mode, status and minutes</td>
+</tr>
+<tr>
+  <td>outputs/normalization-v1.json</td>
+  <td>Frozen A bounds, dataset version and measurement fingerprint</td>
+</tr>
+<tr>
+  <td>config/destination.json</td>
+  <td>Reviewed NUS AS8 ground-arrival proxy</td>
+</tr>
+<tr>
+  <td>outputs/score/indicator_matrix.csv</td>
+  <td>Frozen joined B matrix for teaching; reconstruct/check during integration</td>
+</tr>
+</tbody>
+</table></div>
+<p>IDs/postal codes are strings. location_id is unique and each grouping ID has
+one consistent name. Interchange uses EPSG:4326, distances use EPSG:3414 metres.
+Do not drop failed/unknown positions: that would falsely reduce denominators.
+assemble_matrix checks IDs, origin/destination, scene and mode, then left-joins
+all planned positions. Only route_status=Success certifies observed minutes.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+  <th>Output</th>
+  <th>Main fields/use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>point_scores.csv</td>
+  <td>Raw features, seven z_ scores, seven contribution_ values, is_valid/is_feasible, measurement/feasibility statuses, score, result_id; rejected/unknown rows retained</td>
+</tr>
+<tr>
+  <td>area_scores.csv</td>
+  <td>unit_id/name/type, planned/valid/feasible counts, valid_share, conditional_feasible_share, verified_feasible_share, eligible, limited_support, score/std/min/max, mean raw commute/rail distance, contribution means, rank, result_id</td>
+</tr>
+<tr>
+  <td>top5.csv</td>
+  <td>Up to k eligible rows in deterministic order</td>
+</tr>
+<tr>
+  <td>result_metadata.json</td>
+  <td>status, result_id, applied weights, cap, thresholds, dataset/method versions, destination/scene and source evidence</td>
+</tr>
+</tbody>
+</table></div>
+<p>The <a href="../interfaces.md">public contract</a> and example outputs give exact names.
+Rejected or unknown positions have no total score/contributions. Area scores
+average feasible positions, not households or buildings. An ineligible area
+can have a mean but cannot enter recommendations and has no rank.
+Sort by unrounded score descending; exact ties use mean raw commute, mean rail
+distance and stable ID ascending. Do not sort rounded display scores again.
+Scores on 0–1 are model values, not probabilities.</p>
+<p>All four files must share result_id. It incorporates input, parameters,
+weights, caps, thresholds, k, grouping and supplied metadata. Metadata changes
+can change it; keep separate dataset versions/hashes. The map, table and Agent
+explanation must use the same result. save_result writes these four files.</p>
+<p>Current hashing also preserves numeric representation: Python int 40 and
+CLI-parsed float 40.0 give identical scores but different IDs. Standardize types
+in integration and use the returned ID; never construct one from display
+values. This is an identity limitation, not a scoring difference.
+CLI score additionally writes the full B indicator_matrix.csv even when A was
+scored; identify the actual sample through point_scores and sample_set.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+  <th>metadata.status</th>
+  <th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>ok</td>
+  <td>At least one eligible unit; can be fewer than k</td>
+</tr>
+<tr>
+  <td>data_coverage_insufficient</td>
+  <td>No unit reaches valid coverage</td>
+</tr>
+<tr>
+  <td>no_feasible_results</td>
+  <td>No complete eligibility passes, while coverage alone is not the explanation</td>
+</tr>
+<tr>
+  <td>unsupported_destination</td>
+  <td>Destination is not currently supported NUS_AS8</td>
+</tr>
+</tbody>
+</table></div>
+<p>Invalid weights/caps/grouping, missing columns or duplicate IDs raise ValueError.
+CLI prints invalid_parameters_or_inputs and exits 2. Valid no-result outcomes
+exit 0: inspect metadata.status. Never substitute fabricated recommendations.
+Missing/nonfinite pandas/NumPy values must become JSON null, never zero or a
+nonstandard NaN literal. Use public write_json and display unknown values as such.</p>
+<h2 id="section-5">5. Executed acceptance evidence</h2>
+<p>The full example executed eight checks with no route-client call and preserved
+all frozen input/baseline hashes. Outputs are in outputs/interface_acceptance/:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+  <th>Case</th>
+  <th>Sample/unit</th>
+  <th style="text-align:right">Eligible</th>
+  <th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>balanced, no cap</td>
+  <td>A/Subzone</td>
+  <td style="text-align:right">239</td>
+  <td>Exact baseline mcda-7541f705e66a7e1095a13b60 reproduced</td>
+</tr>
+<tr>
+  <td>cap40</td>
+  <td>A/Subzone</td>
+  <td style="text-align:right">51</td>
+  <td>Top IDs/scores match saved experiment</td>
+</tr>
+<tr>
+  <td>cap60</td>
+  <td>A/Subzone</td>
+  <td style="text-align:right">167</td>
+  <td>Top IDs/scores match saved experiment</td>
+</tr>
+<tr>
+  <td>custom [3,2,1,1,1,1,1]</td>
+  <td>A/Subzone</td>
+  <td style="text-align:right">239</td>
+  <td>Applied [.3,.2,.1,.1,.1,.1,.1] checked</td>
+</tr>
+<tr>
+  <td>cap60, 75% feasibility</td>
+  <td>A/Subzone</td>
+  <td style="text-align:right">152</td>
+  <td>Matches saved qualification_75</td>
+</tr>
+<tr>
+  <td>k=3</td>
+  <td>A/Subzone</td>
+  <td style="text-align:right">239</td>
+  <td>Exactly three returned rows</td>
+</tr>
+<tr>
+  <td>cap60, clusters</td>
+  <td>B/cluster</td>
+  <td style="text-align:right">276</td>
+  <td>Matches saved spatial_B_cluster</td>
+</tr>
+<tr>
+  <td>cap0</td>
+  <td>A/Subzone</td>
+  <td style="text-align:right">0</td>
+  <td>no_feasible_results and empty Top table</td>
+</tr>
+</tbody>
+</table></div>
+<p>Baseline Top 5: PEOPLE'S PARK, CHINA SQUARE, CHINATOWN, TANJONG PAGAR,
+BOAT QUAY. Cap40: PEOPLE'S PARK, TANJONG PAGAR, CLEMENTI CENTRAL,
+HOLLAND DRIVE, JURONG GATEWAY. Constraints change qualifying points and areas.</p>
+<p><a href="../../outputs/interface_acceptance/acceptance_summary.json">acceptance_summary.json</a>
+records evidence. Each case includes four files and standards-compliant
+response.json. Re-run during handover. This checks consistency with frozen
+analysis, not correctness of every real-world measurement.</p>
+<p>The three section 3 CLI commands were also executed and matched Python tables.
+Replaying the CLI float cap type also reproduces its exact ID. Evidence:
+<a href="../../outputs/interface_acceptance/cli_acceptance_summary.json">cli_acceptance_summary.json</a>.</p>
+<h2 id="section-6">6. Other stages and fixed versions</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+  <th>Entry</th>
+  <th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>spatial.prepare_data / CLI prepare</td>
+  <td>Raw data to samples/static indicators/clusters/audits; no API</td>
+</tr>
+<tr>
+  <td>pipeline.assemble_matrix</td>
+  <td>Validate and join all planned measurements; no API</td>
+</tr>
+<tr>
+  <td>mcda.fit_normalization/normalize_indicators</td>
+  <td>Fit/apply percentiles; scenario changes only apply frozen parameters</td>
+</tr>
+<tr>
+  <td>routing.OneMapClient/SQLiteRouteCache/route_locations / CLI route</td>
+  <td>New routes and resumable scene-specific cache; token from local ONEMAP_TOKEN only</td>
+</tr>
+<tr>
+  <td>experiments.run_experiments / CLI experiments</td>
+  <td>Preferences, Monte Carlo, OAT, spatial/threshold comparisons; saved routes need no new request</td>
+</tr>
+<tr>
+  <td>CLI status</td>
+  <td>Prepared data, reviewed destination, routes and saved metadata</td>
+</tr>
+</tbody>
+</table></div>
+<p>Scene: 2026-10-19T08:00:00+08:00, Asia/Singapore; analysis mcda-v1.0;
+destination NUS_AS8 ground-arrival proxy. First itinerary duration can be
+walking-only and can omit initial waiting. A cap constrains that duration,
+not a verified complete door-to-door commute. See
+<a href="processing_methods.md">processing_methods.md</a>.</p>
+<p>The public scoring function does not bind params to dataset hashes by itself;
+the CLI/full example check dataset/A fingerprint binding. A server must also
+check version, route/static hashes and scene. Do not refit P5/P95 when weights,
+caps, A/B or grouping change. Changed measurements or indicator meaning require
+an explicitly new parameter/analysis version.</p>
+<h2 id="section-7">7. Proposed web interface — not implemented</h2>
+<p>There is no current POST /recommendations endpoint. This is a proposed request:</p>
+<pre><code class="language-json">{
+  &quot;analysis_version&quot;: &quot;mcda-v1.0&quot;, &quot;destination_id&quot;: &quot;NUS_AS8&quot;,
+  &quot;departure&quot;: &quot;2026-10-19T08:00:00+08:00&quot;,
+  &quot;sample_set&quot;: &quot;A&quot;, &quot;group_by&quot;: &quot;area_id&quot;,
+  &quot;weights&quot;: {
+    &quot;campus_transit_min&quot;: 3, &quot;rail_exit_euclid_m&quot;: 2,
+    &quot;bus_stops_800m&quot;: 1, &quot;supermarket_sites_800m&quot;: 1,
+    &quot;library_euclid_m&quot;: 1, &quot;clinic_sites_1000m&quot;: 1,
+    &quot;park_proximity_euclid_m&quot;: 1
+  },
+  &quot;max_commute_min&quot;: 40, &quot;min_valid_share&quot;: 0.9,
+  &quot;min_feasible_share&quot;: 0.5, &quot;k&quot;: 5
+}
+</code></pre>
+<p>The next developer should:</p>
+<ol>
+<li>Validate fields, types/ranges and supported version/destination/scene,
+sample and grouping. Reject unknown fields; do not silently ignore constraints.</li>
+<li>Load verified data/parameters from fixed server-owned paths. Do not accept
+browser-supplied local paths, percentile files, tokens or executable code.</li>
+<li>Call recommend and save a complete bundle. Record request/actual parameters,
+including k, which current core metadata does not separately return.</li>
+<li>Return result_id, metadata, top5 and result-specific map/detail references.
+Retrieve point/area tables through that same ID. Keep low-support flags,
+coverage, caps, applied weights, statuses and source version in explanations.</li>
+<li>Convert NaN/NA/nonfinite values to null. Proposed mapping: HTTP 422 for invalid
+parameters; HTTP 200 with domain status for a valid no-result request. Keep
+service failures distinct. This HTTP mapping still needs implementation.</li>
+</ol>
+<p>The Agent converts language to structured choices and explains returned
+evidence. It must not generate temporary scoring code, fill missing
+measurements or independently assign ranks.</p>
+<p>Acceptance: section 5 requests should reproduce weights, eligible counts,
+Top IDs/scores and provenance through the wrapper; map/table IDs must align.
+Exact old IDs require matching metadata too. Adding request IDs into hashed
+metadata legitimately changes the core ID.</p>
+<h2 id="section-8">8. Unsupported requests and next work</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+  <th>Request</th>
+  <th>Gap</th>
+  <th>Required work</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Rail exit within 500 m</td>
+  <td>Only commute cap exists</td>
+  <td>Approve raw-field constraint/units; extend core feasibility/reason/version; test boundary/missing/planned denominator cases. Do not pre-filter points</td>
+</tr>
+<tr>
+  <td>Distance decay</td>
+  <td>Not calculated</td>
+  <td>Define function/beta and facility meaning; recompute measures, version normalization and repeat redundancy/robustness checks</td>
+</tr>
+<tr>
+  <td>NTU/SMU</td>
+  <td>Only NUS_AS8 supported</td>
+  <td>Review endpoint, collect new routes, agree normalization/versioning and extend support; never relabel NUS times</td>
+</tr>
+<tr>
+  <td>Different grid/cluster radius</td>
+  <td>Not recommend arguments</td>
+  <td>Version spatial preparation, regenerate points/measures, route new positions and rerun comparisons</td>
+</tr>
+<tr>
+  <td>Live weight sliders</td>
+  <td>Core available; HTTP absent</td>
+  <td>Implement section 7 or precompute finite selectable bundles</td>
+</tr>
+</tbody>
+</table></div>
+<p>Discuss: commute-only versus extra hard constraints; live server versus saved
+scenarios; low-support minimum eligibility; whether commute should include
+initial waiting. Agree research/product meaning before changing the next version.</p>
+<footer>GE5219 · 2026-10-19 · frozen computations: 2026-10-17 · routing scene: 2026-10-19 08:00 +08:00</footer></main></div></html>

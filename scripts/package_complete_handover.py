@@ -12,6 +12,8 @@ import zipfile
 from datetime import UTC, datetime
 from pathlib import Path
 
+from render_handover_docs import root_document
+
 ROOT = Path(__file__).resolve().parents[1]
 TOKEN_PATTERN = re.compile(rb"eyJ[A-Za-z0-9_-]{12,}\.[A-Za-z0-9_-]{12,}\.[A-Za-z0-9_-]{12,}")
 
@@ -47,6 +49,7 @@ def collect_files() -> dict[str, Path]:
         "outputs/experiments",
         "outputs/route_audit_v2",
         "outputs/audits",
+        "outputs/interface_acceptance",
         "outputs/GE5219_MCDA_真实结果_figures",
     ):
         for path in (ROOT / directory).rglob("*"):
@@ -75,52 +78,7 @@ def collect_files() -> dict[str, Path]:
 
 
 def make_entry(language: str) -> str:
-    if language == "zh":
-        title = "GE5219 MCDA 完整交接包｜中文版"
-        intro = "先解压完整文件夹，再打开文档入口。原始来源文件保持原语言，两种语言的主说明和全流程 notebook 各自完整。"
-        labels = (
-            "详细说明与结果解释",
-            "处理方法（含 OneMap 特殊情况）",
-            "代码结构",
-            "全流程 Notebook",
-            "工作进度与后续计划",
-        )
-    else:
-        title = "GE5219 MCDA complete handover | English"
-        intro = "Extract the entire folder before opening the documentation. Source deliveries retain their original language. The English handbook, processing methods, code guide and full-workflow notebook are complete."
-        labels = (
-            "Handbook and result interpretation",
-            "Processing methods, including OneMap caveats",
-            "Code structure",
-            "Full-workflow notebook",
-            "Progress and next steps",
-        )
-    progress = (
-        "docs/project-progress-2026-10-19.html"
-        if language == "zh"
-        else "docs/handover_en/project_progress.html"
-    )
-    paths = (
-        f"docs/handover_{language}/index.html",
-        "docs/processing_methods.html",
-        f"docs/handover_{language}/code_structure.html",
-        f"notebooks/GE5219_Full_Workflow_{language}.ipynb",
-        progress,
-    )
-    links = "".join(f'<li><a href="{path}">{label}</a></li>' for path, label in zip(paths, labels))
-    return (
-        f'<!doctype html><html lang="{language}"><meta charset="utf-8">'
-        '<meta name="viewport" content="width=device-width,initial-scale=1">'
-        f"<title>{title}</title><style>body{{font:18px/1.8 system-ui,sans-serif;max-width:880px;"
-        "margin:8vh auto;padding:0 24px;color:#163146;background:#f6f8fa}a{color:#006d77}"
-        "li{margin:1em 0}h1{line-height:1.2}</style>"
-        f"<h1>{title}</h1><p>{intro}</p><ul>{links}</ul>"
-        "<p>Snapshot: 2026-10-17 · Routing scenario: 2026-10-19 08:00 +08:00 · "
-        "NUS AS8 · A/Subzone · balanced · no default cap</p>"
-        '<p>Raw source files: <a href="raw_data/">raw_data/</a> · '
-        '<a href="HANDOVER_MANIFEST.json">SHA256 manifest</a> · '
-        '<a href="docs/methodology_report_en.md">Report methodology</a></p></html>'
-    )
+    return root_document(language)
 
 
 def create_packages(destination: Path) -> dict:

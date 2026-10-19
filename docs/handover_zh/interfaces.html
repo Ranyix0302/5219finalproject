@@ -1,0 +1,481 @@
+<!doctype html><html lang="zh"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>接口交接：下一位能直接调用什么</title><style>
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#f3f6f7;color:#183343;font:17px/1.85 system-ui,'Microsoft YaHei',sans-serif}a{color:#006d77;text-underline-offset:3px}header{background:#123c4a;color:white;padding:45px max(28px,calc((100vw - 1340px)/2));}header h1{max-width:1050px;font-size:36px;line-height:1.25;margin:0 0 15px}header p{max-width:1000px;margin:0;color:#dce8ec}.layout{max-width:1440px;margin:auto;display:grid;grid-template-columns:275px minmax(0,1fr);gap:35px;padding:36px 28px 80px}aside{font-size:14px;position:sticky;top:20px;align-self:start;max-height:90vh;overflow:auto}aside a{display:block;text-decoration:none;padding:6px 10px;border-left:2px solid #c8dadf}main{background:white;padding:28px 35px;border:1px solid #dce5e9;min-width:0}h1{font-size:29px;line-height:1.4}h2{font-size:25px;color:#00616c;margin:2.3em 0 .7em;line-height:1.4;scroll-margin-top:20px}h3{font-size:20px;margin:1.7em 0 .5em;line-height:1.5;scroll-margin-top:20px}p{margin:.8em 0}li{margin:.55em 0}strong{color:#103c49}code{font:0.88em/1.7 Consolas,monospace;background:#f0f5f6;padding:1px 4px;overflow-wrap:anywhere}pre{background:#eef4f5;padding:18px;overflow:auto;border-left:3px solid #2a7883}pre code{background:none;white-space:pre;font-size:14px;overflow-wrap:normal}.table-wrap{overflow-x:auto;margin:1.2em 0}table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:11px;border:1px solid #d5e0e5;text-align:left;vertical-align:top}th{background:#e4eff1}tr:nth-child(even){background:#f8fafb}td code{font-size:12px}.flow{width:100%;height:auto;background:#f7fafb;border:1px solid #dae6e9;margin:15px 0 28px}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}.metric{background:#e8f1f1;padding:15px;border-top:3px solid #34818a}.metric b{display:block;font-size:27px}.metric span{font-size:13px}figure{margin:30px 0}figure img{width:100%;height:auto;border:1px solid #dbe5e8}figcaption{font-size:14px;color:#4b6473;padding:10px 0}blockquote{margin:20px 0;border-left:4px solid #cc9e43;background:#fff7e8;padding:8px 20px}nav.top a{display:inline-block;color:#dceff2;margin-right:20px}footer{margin-top:35px;font-size:13px;color:#5c7481}@media(max-width:1050px){.layout{display:block}aside{position:static;max-height:260px;margin-bottom:20px;background:#e8f0f1;padding:12px}main{padding:22px}header h1{font-size:30px}}@media(max-width:600px){body{font-size:16px}.layout{padding:18px 12px}main{padding:17px}.metrics{grid-template-columns:1fr}.metric b{font-size:23px}h1{font-size:25px}h2{font-size:23px}td{min-width:125px}header{padding:30px 20px}}@media print{body{background:white;font-size:10.5pt}.layout{display:block;padding:0}aside,nav.top{display:none}header{color:black;background:white;padding:0}header p{color:black}main{padding:0;border:0}h2,h3{break-after:avoid}tr,figure{break-inside:avoid}a{color:inherit}.table-wrap{overflow:visible}}
+
+.method-figure{margin:26px 0 36px;padding:22px;border:1px solid #c8dce2;border-radius:8px;background:#fbfdfd}.method-figure h3{margin:10px 0 16px;line-height:1.5}.figure-tag{display:inline-block;border:1px solid #aac6cf;background:#e7f0f3;color:#285567;border-radius:20px;padding:2px 11px;font-size:12px;font-weight:650}.method-svg{width:100%;height:auto;display:block;min-width:0;background:white;font-family:system-ui,'Microsoft YaHei',sans-serif}.figure-legend{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:7px 19px;font-size:14px;line-height:1.6;margin:12px 0}.figure-legend li{margin:0;display:flex;align-items:center;gap:7px}.legend-chip{display:inline-block;min-width:17px;height:11px;border:1px solid #71919c;border-radius:2px}.figure-reading{padding:13px 17px;background:#eef5f4;border-left:3px solid #478f80;margin:18px 0 12px;color:#244c4b}.figure-reading p{margin:5px 0 0;font-size:15px;line-height:1.8}.figure-source{font-size:12px;line-height:1.8;color:#5d7480;overflow-wrap:anywhere}.method-figure table{font-size:13px;margin-top:15px}.method-figure figcaption{padding:0}.oat-panel{margin:18px 0 30px;padding-bottom:20px;border-bottom:1px solid #d9e5e9}.oat-panel:last-of-type{border-bottom:0}.document-nav{display:flex;flex-wrap:wrap;gap:7px 18px;margin-top:20px;font-size:14px}.document-nav a{color:#e0f2f4}.method-figure>.table-wrap{overflow:auto}.method-figure h3{scroll-margin-top:20px}@media(max-width:600px){.method-figure{padding:12px;margin:20px -7px}.method-svg{min-width:660px}.method-figure{overflow-x:auto}.figure-legend,.figure-reading,.figure-source{min-width:240px}.figure-legend li{font-size:13px}}@media print{.method-figure{break-inside:auto;background:white}.oat-panel,.method-svg,.figure-legend{break-inside:avoid}.method-svg{min-width:0}.document-nav{display:none}.figure-reading{background:white}.figure-tag{background:white}}
+</style><header><h1>接口交接：下一位能直接调用什么</h1><p>来源、公式、计算结果与待讨论问题，按真实实现逐步解释。原始来源文件保留原语言。</p><nav class="document-nav"><a href="index.html">中文全文</a><a href="../handover_en/index.html">English</a><a href="interfaces.html">接口文档</a><a href="code_structure.html">代码结构</a><a href="processing_methods.html">处理方法</a><a href="../project-progress-2026-10-19.html">工作进度</a></nav></header><div class="layout"><aside><a href="#section-1">1. 四种交接入口</a><a href="#section-2">2. 已实现的评分参数</a><a href="#section-3">3. 最简 Python 调用</a><a href="#section-4">4. 命令行</a><a href="#section-5">5. 输入、输出与结果标识</a><a href="#section-6">输入</a><a href="#section-7">四文件结果包</a><a href="#section-8">无结果和缺失</a><a href="#section-9">6. 本次实际验收</a><a href="#section-10">7. 其他流水线接口与固定版本</a><a href="#section-11">8. 网页实时评分怎样接：以下尚未实现</a><a href="#section-12">9. 当前不支持的新要求与实施方法</a></aside><main><h1>接口交接：下一位能直接调用什么</h1>
+<p><strong>已经有“计算评分”和“加通勤限制”的接口。</strong> 推荐核心在 Python 中。现有网页读取已保存的情景结果。当前没有供网页直接访问的 HTTP 服务，也没有任意距离限制接口。</p>
+<p>“接口”就是约定好的入口：你交给它参数，它返回结果。下一位不需要重写 MCDA，也不需要再次请求 OneMap，便能改变权重或通勤上限。</p>
+<h2 id="section-1">1. 四种交接入口</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+  <th>入口</th>
+  <th>怎样使用</th>
+  <th>当前状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Python 函数</td>
+  <td><code>ge5219.mcda.recommend(...)</code>；重新算分、加通勤限制</td>
+  <td>已实现</td>
+</tr>
+<tr>
+  <td>命令行</td>
+  <td><code>python -m ge5219 score ...</code>；保存一个可复现的情景</td>
+  <td>已实现；部分高级参数仅 Python 支持</td>
+</tr>
+<tr>
+  <td>四文件结果包</td>
+  <td>三个 CSV + <code>result_metadata.json</code>；地图、表格、解释读取同一份结果</td>
+  <td>已实现</td>
+</tr>
+<tr>
+  <td>HTTP/网页实时请求</td>
+  <td>浏览器提交选择，服务端调用 Python，再返回 JSON</td>
+  <td><strong>尚未实现，见第 8 节</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>还有空间准备、路线缓存、实验和质量状态入口，见第 7 节。<a href="../interfaces.md">英文公共契约</a>记录底层约定。</p>
+<h2 id="section-2">2. 已实现的评分参数</h2>
+<pre><code class="language-python">recommend(frame, params, weights, group_by=&quot;area_id&quot;, max_commute_min=None,
+          min_valid_share=0.9, min_feasible_share=0.5,
+          metadata=None, k=5)
+</code></pre>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+  <th>参数</th>
+  <th>通俗解释</th>
+  <th>默认值与单位</th>
+  <th>CLI 是否可改</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>frame</code></td>
+  <td>本次全部计划分析位置；包括失败、未知和不合格位置</td>
+  <td>A 为 2,176 点；B 为 2,196 点</td>
+  <td><code>--sample-set A</code> 或 <code>B</code></td>
+</tr>
+<tr>
+  <td><code>params</code></td>
+  <td>冻结的七项 P5/P95 及方向</td>
+  <td><code>outputs/normalization-v1.json</code> 的 <code>parameters</code></td>
+  <td><code>--normalization</code> 路径</td>
+</tr>
+<tr>
+  <td><code>weights</code></td>
+  <td>七项“重要程度”；函数自动除以总和</td>
+  <td>Python 必填；CLI 默认 balanced</td>
+  <td><code>--weights</code> 或 <code>--scenario</code></td>
+</tr>
+<tr>
+  <td><code>group_by</code></td>
+  <td>汇总到哪一种区域</td>
+  <td><code>area_id</code>；可换 <code>cluster_id</code></td>
+  <td><code>--group-by</code></td>
+</tr>
+<tr>
+  <td><code>max_commute_min</code></td>
+  <td>最多接受多少分钟；原始时间 ≤ 上限才通过</td>
+  <td><code>None</code> 即不上限；可设 40、60 等非负分钟</td>
+  <td><code>--max-commute-min</code></td>
+</tr>
+<tr>
+  <td><code>min_valid_share</code></td>
+  <td>该区有效测量点数/计划点数至少多少</td>
+  <td><code>0.9</code> 即 90%；取值 0–1</td>
+  <td>未暴露；用 Python</td>
+</tr>
+<tr>
+  <td><code>min_feasible_share</code></td>
+  <td>该区已验证可行点数/计划点数至少多少</td>
+  <td><code>0.5</code> 即 50%；取值 0–1</td>
+  <td>未暴露；用 Python</td>
+</tr>
+<tr>
+  <td><code>k</code></td>
+  <td>最多推荐多少个合格区域</td>
+  <td><code>5</code>，正整数</td>
+  <td>未暴露；用 Python</td>
+</tr>
+<tr>
+  <td><code>metadata</code></td>
+  <td>数据版本、校园、时段、样本、来源哈希等证据</td>
+  <td>可传字典；交接应保留原上下文</td>
+  <td>CLI 自动建立</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>权重不是硬约束。</strong> 降低校园通勤权重仍可能推荐通勤很久的位置。设 <code>max_commute_min=40</code> 才会把超过 40 分钟的位置排除在可行评分外。</p>
+<p><strong>区域门槛不是点的距离限制。</strong> 一个区计划 10 个点，9 个测量完整，4 个满足通勤上限：有效测量覆盖 = 90%，已验证可行比例 = 40%，因此默认不能推荐整个区。不能用 4/9 替换 4/10。</p>
+<p><code>limited_support=True</code> 表示 <code>n_valid&lt;3</code>。它是“证据较少”的标记，不会自动禁止该区，也不是居民覆盖率。当前许多 Top 5 有此标记，应继续展示。</p>
+<p>七项权重顺序固定；字段名字典更不容易填错：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+  <th>顺序</th>
+  <th>字段名</th>
+  <th>单位</th>
+  <th>方向</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>1</td>
+  <td><code>campus_transit_min</code></td>
+  <td>第一条 OneMap itinerary 的分钟数</td>
+  <td>越小越好</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>rail_exit_euclid_m</code></td>
+  <td>到轨道出口的欧氏距离，米</td>
+  <td>越小越好</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>bus_stops_800m</code></td>
+  <td>800 米欧氏半径内公交站点数</td>
+  <td>越大越好</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>supermarket_sites_800m</code></td>
+  <td>800 米欧氏半径内超市服务地点数</td>
+  <td>越大越好</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>library_euclid_m</code></td>
+  <td>到图书馆的欧氏距离，米</td>
+  <td>越小越好</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>clinic_sites_1000m</code></td>
+  <td>1,000 米欧氏半径内医疗服务地点数</td>
+  <td>越大越好</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>park_proximity_euclid_m</code></td>
+  <td>到公园多边形的欧氏邻近距离，米；内部为 0</td>
+  <td>越小越好</td>
+</tr>
+</tbody>
+</table></div>
+<p>四套预设权重为 <code>campus_first</code>、<code>transit_first</code>、<code>lifestyle</code>、<code>balanced</code>，是声明的偏好情景，不是调查估计。不得少传一项；零权重也仍要求该指标有效。布尔值、负数、非有限值和全零权重会被拒绝。</p>
+<h2 id="section-3">3. 最简 Python 调用</h2>
+<p>按<a href="code_structure.md">代码结构文档</a>安装环境。从完整包根目录运行，不需要 token：</p>
+<pre><code class="language-python">import json
+from pathlib import Path
+from ge5219.artifacts import read_locations, save_result
+from ge5219.mcda import recommend
+from ge5219.settings import SCENARIOS
+
+root = Path.cwd()
+frame = read_locations(root / &quot;outputs/score/indicator_matrix.csv&quot;)
+frame_A = frame.loc[frame.sample_A].copy()
+params = json.loads((root / &quot;outputs/normalization-v1.json&quot;).read_text(
+    encoding=&quot;utf-8&quot;))[&quot;parameters&quot;]
+stored = json.loads((root / &quot;outputs/score/result_metadata.json&quot;).read_text(
+    encoding=&quot;utf-8&quot;))
+output_keys = {&quot;result_id&quot;, &quot;status&quot;, &quot;applied_weights&quot;, &quot;group_by&quot;,
+               &quot;max_commute_min&quot;, &quot;min_valid_share&quot;, &quot;min_feasible_share&quot;}
+context = {key: value for key, value in stored.items() if key not in output_keys}
+result = recommend(frame_A, params, SCENARIOS[&quot;balanced&quot;],
+                   max_commute_min=40, metadata=context)
+save_result(result, root / &quot;outputs/interface_acceptance/my_cap40&quot;)
+print(result[&quot;metadata&quot;][&quot;status&quot;])
+print(result[&quot;top5&quot;][[&quot;unit_name&quot;, &quot;score&quot;, &quot;n_planned&quot;, &quot;n_feasible&quot;]])
+</code></pre>
+<p>这是最短示意。正式联调用<a href="../../examples/score_from_handover.py">完整可运行示例</a>：它还检查数据版本、静态指标/路线哈希、A 样本指纹，并重建矩阵，避免新旧数据混用。</p>
+<p>要改变偏好及资格门槛：</p>
+<pre><code class="language-python">weights = {&quot;campus_transit_min&quot;: 3, &quot;rail_exit_euclid_m&quot;: 2,
+           &quot;bus_stops_800m&quot;: 1, &quot;supermarket_sites_800m&quot;: 1,
+           &quot;library_euclid_m&quot;: 1, &quot;clinic_sites_1000m&quot;: 1,
+           &quot;park_proximity_euclid_m&quot;: 1}
+result = recommend(frame_A, params, weights, max_commute_min=60,
+                   min_feasible_share=0.75, k=3, metadata=context)
+</code></pre>
+<p>实际使用权重为 <code>[0.3,0.2,0.1,0.1,0.1,0.1,0.1]</code>。返回键仍叫 <code>top5</code>，但这次最多 3 行；不要按文件名补成五行。</p>
+<p>比较住宅簇：用完整 B 表 <code>frame</code>，设 <code>group_by=&quot;cluster_id&quot;</code>，metadata 的 <code>sample_set</code> 标为 <code>B</code>。不能只把 A 的 Subzone 名称换成 cluster 名称。重新聚合仍用固定 A 标准化参数。</p>
+<h2 id="section-4">4. 命令行</h2>
+<p>在完整包根目录运行。<strong>用新输出目录，保留正式基线</strong>：</p>
+<pre><code class="language-powershell">.\.venv\Scripts\python.exe -m ge5219 score --routes outputs/routes.csv --max-commute-min 40 --output outputs/interface_acceptance/cli_cap40
+.\.venv\Scripts\python.exe -m ge5219 score --routes outputs/routes.csv --weights &quot;3,2,1,1,1,1,1&quot; --output outputs/interface_acceptance/cli_custom_weights
+.\.venv\Scripts\python.exe -m ge5219 score --routes outputs/routes.csv --sample-set B --group-by cluster_id --max-commute-min 60 --output outputs/interface_acceptance/cli_B_cluster
+.\.venv\Scripts\python.exe examples/score_from_handover.py
+</code></pre>
+<p><code>--weights</code> 覆盖 <code>--scenario</code>。CLI 没有 <code>--min-feasible-share</code>、<code>--min-valid-share</code> 或 <code>--k</code>；这些能力已在 Python 中，需要时直接调用函数。若以后也要在 CLI 暴露，只需解析这些参数并传给 <code>recommend</code>，不必修改公式。</p>
+<h2 id="section-5">5. 输入、输出与结果标识</h2>
+<h3 id="section-6">输入</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+  <th>文件</th>
+  <th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>outputs/prepared/static_indicators.csv</code></td>
+  <td>全部 B 计划点，ID、Subzone/cluster、经纬度、sample_A 和六项静态指标</td>
+</tr>
+<tr>
+  <td><code>outputs/routes.csv</code></td>
+  <td>同一位置、校园和时段的路线状态/分钟及起终点证据</td>
+</tr>
+<tr>
+  <td><code>outputs/normalization-v1.json</code></td>
+  <td>固定 A 的七项 P5/P95、数据版本及 A 测量指纹</td>
+</tr>
+<tr>
+  <td><code>config/destination.json</code></td>
+  <td>核准的 NUS AS8 地面到达代理点</td>
+</tr>
+<tr>
+  <td><code>outputs/score/indicator_matrix.csv</code></td>
+  <td>已合并的 B 七维表；教学方便，正式联调优先重建并核对</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>location_id</code> 唯一；区域 ID 对应一致名称；ID/邮编是字符串，不能丢前导 0。经纬度为 EPSG:4326，距离计算用 EPSG:3414。不要先删失败路线，否则分母变小，会高估区域资格。</p>
+<p><code>assemble_matrix</code> 校验唯一 ID、起点、校园终点、时刻和 TRANSIT 模式，再左连接全部计划点。失败/未查询时间保留未知；<code>Success</code> 才能作为有效原始分钟。</p>
+<h3 id="section-7">四文件结果包</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+  <th>文件</th>
+  <th>关键字段与用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>point_scores.csv</code></td>
+  <td>原始指标，七项 <code>z_</code> 分数、七项 <code>contribution_</code> 贡献，<code>is_valid/is_feasible</code>，测量/可行状态，总分与 <code>result_id</code>；被拒绝和未知点仍保留</td>
+</tr>
+<tr>
+  <td><code>area_scores.csv</code></td>
+  <td><code>unit_id/name/type</code>，<code>n_planned/n_valid/n_feasible</code>，有效/条件可行/已验证可行三种比例，<code>eligible/limited_support</code>，均分、标准差/最小/最大，原始通勤/轨道距离均值，贡献均值、rank、result_id</td>
+</tr>
+<tr>
+  <td><code>top5.csv</code></td>
+  <td>最多 k 个合格区域；已完成确定排序</td>
+</tr>
+<tr>
+  <td><code>result_metadata.json</code></td>
+  <td>status、result_id、实际权重、限制、资格门槛、数据/方法版本、校园/时段和测量来源</td>
+</tr>
+</tbody>
+</table></div>
+<p>字段全名见<a href="../interfaces.md">公共契约</a>与示例输出。点只有测量完整并满足约束后才获总分/贡献。区域分数是可行点平均，不按建筑数或人口加权。区域有分也可能因门槛不足不合格。不合格区域没有 rank。</p>
+<p>排序按完整精度总分降序；完全相同再比较原始平均通勤、轨道距离和稳定 ID。网页不能按四舍五入的显示值重新排序。score 是 0–1 模型分，不是满意率或概率。</p>
+<p>四部分的 <code>result_id</code> 必须一致。它由输入、参数、权重、限制、k 和 metadata 一起生成。改 metadata 也可能改 ID；它不代替数据版本和哈希。地图、表格和 Agent 必须引用同一 ID。</p>
+<p>当前哈希还保留数字写法：Python 传整数 <code>40</code>，CLI 解析成浮点 <code>40.0</code>，分数相同但 ID 不同。联调应固定参数类型，并使用函数返回的 ID，不从界面显示值自行拼 ID。这是结果标识的限制，不是评分差异。</p>
+<p><code>save_result</code> 写上述四文件；CLI score 另外写全 B 的 <code>indicator_matrix.csv</code>。即使选 A，这份额外矩阵仍是 B；实际评分点以 point_scores 和 sample_set 为准。</p>
+<h3 id="section-8">无结果和缺失</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+  <th>metadata.status</th>
+  <th>含义</th>
+  <th>网页展示</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>ok</code></td>
+  <td>至少一个合格区域；可能不足 k 个</td>
+  <td>实际数量及证据标记</td>
+</tr>
+<tr>
+  <td><code>data_coverage_insufficient</code></td>
+  <td>没有任何区达到有效测量覆盖门槛</td>
+  <td>“现有完整测量不足，不能推荐”</td>
+</tr>
+<tr>
+  <td><code>no_feasible_results</code></td>
+  <td>覆盖不是唯一原因，但没有区域通过完整资格规则</td>
+  <td>“没有区域满足当前条件，可调整限制”</td>
+</tr>
+<tr>
+  <td><code>unsupported_destination</code></td>
+  <td>目的地不是目前支持的 NUS_AS8</td>
+  <td>“该校园尚未完成通勤测量”</td>
+</tr>
+</tbody>
+</table></div>
+<p>非法参数、缺列、重复 ID 等抛 <code>ValueError</code>。CLI 记录 <code>invalid_parameters_or_inputs</code>，退出码 2。合法但无结果仍退出 0，必须读 status。</p>
+<p>CSV 空白可能读成 NaN/NA；JSON 必须变成 <code>null</code>，页面显示“未知”，不能替换 0。用公开 <code>write_json</code>，避免非标准 <code>NaN</code> JSON。</p>
+<h2 id="section-9">6. 本次实际验收</h2>
+<p>完整示例已执行八项，无路线客户端调用，正式基线及输入哈希未改变：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+  <th>情景</th>
+  <th>样本/单位</th>
+  <th style="text-align:right">合格数</th>
+  <th>核对</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>balanced，无上限</td>
+  <td>A/Subzone</td>
+  <td style="text-align:right">239</td>
+  <td>精确复现正式 mcda-7541f705e66a7e1095a13b60</td>
+</tr>
+<tr>
+  <td>40 分钟</td>
+  <td>A/Subzone</td>
+  <td style="text-align:right">51</td>
+  <td>Top ID、分数与保存实验一致</td>
+</tr>
+<tr>
+  <td>60 分钟</td>
+  <td>A/Subzone</td>
+  <td style="text-align:right">167</td>
+  <td>Top ID、分数与保存实验一致</td>
+</tr>
+<tr>
+  <td>自定义 [3,2,1,1,1,1,1]</td>
+  <td>A/Subzone</td>
+  <td style="text-align:right">239</td>
+  <td>实际规范为 [.3,.2,.1,.1,.1,.1,.1]</td>
+</tr>
+<tr>
+  <td>60 分钟、75% 可行门槛</td>
+  <td>A/Subzone</td>
+  <td style="text-align:right">152</td>
+  <td>与保存 qualification_75 一致</td>
+</tr>
+<tr>
+  <td>k=3</td>
+  <td>A/Subzone</td>
+  <td style="text-align:right">239</td>
+  <td>只返回三行</td>
+</tr>
+<tr>
+  <td>60 分钟住宅簇</td>
+  <td>B/cluster</td>
+  <td style="text-align:right">276</td>
+  <td>与保存空间对照一致</td>
+</tr>
+<tr>
+  <td>0 分钟上限</td>
+  <td>A/Subzone</td>
+  <td style="text-align:right">0</td>
+  <td>no_feasible_results，Top 表空</td>
+</tr>
+</tbody>
+</table></div>
+<p>默认 Top 5：PEOPLE'S PARK、CHINA SQUARE、CHINATOWN、TANJONG PAGAR、BOAT QUAY。40 分钟 Top 5：PEOPLE'S PARK、TANJONG PAGAR、CLEMENTI CENTRAL、HOLLAND DRIVE、JURONG GATEWAY。</p>
+<p>证据：<a href="../../outputs/interface_acceptance/acceptance_summary.json">acceptance_summary.json</a>。各情景目录有四文件及标准 JSON <code>response.json</code>，都位于 <code>outputs/interface_acceptance/</code>。下一位应复跑；这证明与冻结成果一致，不证明每条现实测量已准确。</p>
+<p>第 4 节的三条 CLI 也已执行，与相同数值的 Python 结果一致；按 CLI 的浮点上限类型重放时 ID 精确一致。见 <a href="../../outputs/interface_acceptance/cli_acceptance_summary.json">cli_acceptance_summary.json</a>。</p>
+<h2 id="section-10">7. 其他流水线接口与固定版本</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+  <th>入口</th>
+  <th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><code>spatial.prepare_data(data_root, output_dir)</code> / CLI prepare</td>
+  <td>原始图层到代表点、静态指标、住宅簇及审计；不需 API</td>
+</tr>
+<tr>
+  <td><code>pipeline.assemble_matrix</code></td>
+  <td>验证并连接全部计划位置和路线；不需 API</td>
+</tr>
+<tr>
+  <td><code>mcda.fit_normalization/normalize_indicators</code></td>
+  <td>拟合/应用 P5/P95；当前情景只应用冻结参数</td>
+</tr>
+<tr>
+  <td><code>routing.OneMapClient/SQLiteRouteCache/route_locations</code> / CLI route</td>
+  <td>新路由、断点续跑和场景缓存；需本机 ONEMAP_TOKEN，仅在测量变化时用</td>
+</tr>
+<tr>
+  <td><code>experiments.run_experiments</code> / CLI experiments</td>
+  <td>四情景、Monte Carlo、OAT、空间/门槛对照；现有路线无需新请求</td>
+</tr>
+<tr>
+  <td>CLI status</td>
+  <td>准备数据、校园核准、路由和结果元数据状态</td>
+</tr>
+</tbody>
+</table></div>
+<p>场景固定 <code>2026-10-19T08:00:00+08:00</code>（新加坡时区），方法 <code>mcda-v1.0</code>。校园为 NUS_AS8 地面到达代理点。第一 itinerary 可能纯步行，也可能不含请求时刻到真正出发的等待；通勤上限约束的是这个特定时长，不能宣传为完整门到门时间。见<a href="processing_methods.md">处理方法</a>。</p>
+<p>公开评分函数不自行检查标准化属于哪份 A；CLI 和完整示例会查数据版本、A 指纹。服务端也必须检查并固定路线/静态哈希。改权重、上限、A/B 或聚合不能重拟合 P5/P95。数据、时段或指标含义变化时显式创建新分析/参数版本。</p>
+<h2 id="section-11">8. 网页实时评分怎样接：以下尚未实现</h2>
+<p>目前没有 <code>POST /recommendations</code> 地址。下面是拟议请求契约，不能当现成接口调用：</p>
+<pre><code class="language-json">{
+  &quot;analysis_version&quot;: &quot;mcda-v1.0&quot;,
+  &quot;destination_id&quot;: &quot;NUS_AS8&quot;,
+  &quot;departure&quot;: &quot;2026-10-19T08:00:00+08:00&quot;,
+  &quot;sample_set&quot;: &quot;A&quot;, &quot;group_by&quot;: &quot;area_id&quot;,
+  &quot;weights&quot;: {
+    &quot;campus_transit_min&quot;: 3, &quot;rail_exit_euclid_m&quot;: 2,
+    &quot;bus_stops_800m&quot;: 1, &quot;supermarket_sites_800m&quot;: 1,
+    &quot;library_euclid_m&quot;: 1, &quot;clinic_sites_1000m&quot;: 1,
+    &quot;park_proximity_euclid_m&quot;: 1
+  },
+  &quot;max_commute_min&quot;: 40, &quot;min_valid_share&quot;: 0.9,
+  &quot;min_feasible_share&quot;: 0.5, &quot;k&quot;: 5
+}
+</code></pre>
+<p>下一位依次实现：</p>
+<ol>
+<li>只接受已声明字段与支持的版本、校园、时段、样本和聚合；按第 2 节校验类型/范围。未知字段报错，不能悄悄忽略用户想要的限制。</li>
+<li>从服务端固定目录加载核对后的 A/B、路线和参数。网页不能传本地路径、归一化文件、token 或代码。</li>
+<li>调用现有 recommend 并保存完整结果包。记录请求和实际参数，包括 k；当前核心 metadata 不单独返回 k。</li>
+<li>返回 result_id、metadata、top5 及同一 ID 的地图/详情引用；详情从该 ID 的 point/area 表读取。保留门槛、实际权重、低样本标记、来源版本和状态。</li>
+<li>NaN/NA/非有限值转 null。建议非法参数返回 HTTP 422；合法无结果返回 HTTP 200 和领域 status；服务错误单列。HTTP 状态映射仍需实现。</li>
+</ol>
+<p>Agent 只把自然语言转换为结构化字段，再解释函数返回证据；不临时写代码、补测量或自行排名。</p>
+<p>联调验收：同第 6 节参数得到相同实际权重、资格数量、Top ID/分数及来源证据；地图表格 result_id 一致。只有 metadata 也完全一致时才要求旧 ID 一样，不能加请求流水号后还要求旧 ID 不变。</p>
+<h2 id="section-12">9. 当前不支持的新要求与实施方法</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+  <th>新要求</th>
+  <th>当前缺口</th>
+  <th>下一位要补</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>MRT 必须在 500 米内</td>
+  <td>仅通勤硬约束；距离目前只评分</td>
+  <td>先批准原始字段/单位，再扩展核心可行判定、原因状态和版本；测边界、未知和计划分母；不能先删点再评分</td>
+</tr>
+<tr>
+  <td>公园使用 distance decay</td>
+  <td>没有计算 decay</td>
+  <td>定义函数/β 和设施含义，重算指标、新版本标准化及相关性/稳健性对照</td>
+</tr>
+<tr>
+  <td>改到 NTU/SMU</td>
+  <td>只支持 NUS_AS8</td>
+  <td>核准终点、查新路线、议定跨校园标准化/版本并扩展支持；不能复用 NUS 时间</td>
+</tr>
+<tr>
+  <td>250/500 米网格或不同簇半径</td>
+  <td>不是 recommend 参数</td>
+  <td>版本化准备阶段，重建位置/指标，新位置补路由后重做对照</td>
+</tr>
+<tr>
+  <td>网页拖动权重实时算分</td>
+  <td>核心可算，HTTP 未封装</td>
+  <td>实现第 8 节，或预先生成有限情景供选择</td>
+</tr>
+</tbody>
+</table></div>
+<p>待商讨：继续只支持通勤硬约束还是增加距离条件；实时评分还是保存情景；是否给低样本区域设置额外资格；通勤是否改含初始等待。先明确研究和产品含义，再进入新版本。</p>
+<footer>GE5219 · 2026-10-19 · frozen computations: 2026-10-17 · routing scene: 2026-10-19 08:00 +08:00</footer></main></div></html>
