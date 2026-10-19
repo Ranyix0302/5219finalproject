@@ -33,11 +33,13 @@ GitHub 只提供源码、文档和 notebook；`raw_data/`、已计算数据和�
 | `settings.py` | 七指标顺序、方向、四权重、出发时刻、方法版本 |
 | `cli.py` | 分段命令及错误状态 |
 | `report.py` | 数据准备证据页 |
-| `result_report.py` | 从保存结果生成离线结果页 |
+| `result_report.py` | 从保存结果生成中英文离线结果页，图内文字随语言切换 |
 | `route_audit.py` | 路线复核计划、证据绑定及摘要 |
 | `__main__.py`、`__init__.py` | 包入口与初始化 |
 
 先看懂公式，再读 `mcda.py`；要核计数/采样看 `spatial.py`；改路由前先读处理文档的特殊情况。
+
+用 `.\.venv\Scripts\python.exe scripts/render_result_pages.py` 重新生成两种语言的真实结果页。该命令只读取冻结的准备数据、正式评分与实验结果，绘制图表并写入 HTML，不新增路由请求、不重算 MCDA。中文文件为 `outputs/GE5219_MCDA_真实结果.html`，英文文件为 `outputs/GE5219_MCDA_Actual_Results_EN.html`；二者均已包含在完整交接包内，可离线打开。
 
 ## 3. 安装与默认完整运行
 

@@ -20,6 +20,8 @@ The separate Chinese and English complete ZIP packages additionally include
 all 176 original A/B delivery files in `raw_data/`, prepared layers, cached
 routes and saved experiment outputs. Extract the full package to reproduce
 the frozen analysis; cloning GitHub alone does not supply those datasets.
+Both packages also include the Chinese and fully translated English actual-results
+pages, with embedded offline charts and selectors for the saved scenarios.
 See [current progress and next tasks](docs/project-progress-2026-10-19.md) and
 the [report methodology](docs/methodology_report_en.md).
 

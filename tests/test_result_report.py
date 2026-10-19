@@ -1,6 +1,7 @@
 """Synthetic artifact contracts; these fixtures are never Singapore results."""
 
 import json
+import re
 from pathlib import Path
 
 import geopandas as gpd
@@ -147,3 +148,59 @@ def test_route_review_requires_binding_to_current_result_snapshot(tmp_path, bind
         assert "独立路线复核未匹配当前快照" in document
         assert "记录复核 20 / 20 条" not in document
         assert "synthetic_review_complete" in document
+
+
+def test_english_report_localizes_ui_and_figures_and_preserves_saved_values(tmp_path, monkeypatch):
+    import matplotlib.pyplot as plt
+    from matplotlib.text import Text
+
+    import ge5219.result_report as report
+
+    prepared, score, experiments = _make_synthetic_artifacts(tmp_path)
+    original_inputs = {path: path.read_bytes() for path in tmp_path.rglob("*.csv")}
+    figure_text = []
+
+    def capture_figure(figure, output):
+        figure_text.extend(artist.get_text() for artist in figure.findobj(Text))
+        plt.close(figure)
+        return "data:image/png;base64,c3ludGhldGlj"
+
+    monkeypatch.setattr(report, "_figure_data", capture_figure)
+    output = tmp_path / "english-report.html"
+    create_result_report(prepared, score, experiments, output, language="en")
+    document = output.read_text(encoding="utf-8")
+    data = json.loads(document.split('id="report-data">')[1].split("</script>")[0])
+    reader_facing = re.sub(r'<script type="application/json" id="report-data">.*?</script>', "", document, flags=re.DOTALL)
+    assert '<html lang="en">' in document
+    assert "Preference scenario" in reader_facing
+    assert "Limited: fewer than 3 valid locations" in reader_facing
+    assert "not a resident choice probability" in reader_facing
+    assert "Route review is incomplete" in reader_facing
+    assert not re.search(r"[\u3400-\u9fff]", reader_facing)
+    assert figure_text and not any(re.search(r"[\u3400-\u9fff]", value) for value in figure_text)
+    assert "Campus trip" in figure_text
+    assert "SVY21 easting / m" in figure_text
+    assert len(data["views"]) == 6 and len(data["arms"]) == 3
+    saved = data["views"]["scenario_balanced"]
+    assert saved["top"][0]["score"] == .7
+    assert saved["metadata"]["applied_weights"] == dict(zip(FEATURES, SCENARIOS["balanced"], strict=True))
+    assert saved["metadata"]["result_id"] == "mcda-synthetic-balanced"
+    assert all(path.read_bytes() == value for path, value in original_inputs.items())
+
+
+def test_english_source_limitations_require_explicit_translation():
+    from ge5219.result_report import ENGLISH_SOURCE_NOTES, _audit_review_details
+
+    audit = {"reviewer_types": {"AI_assisted_desktop": 21}, "reviewed_concerns_count": 6,
+             "limitations": list(ENGLISH_SOURCE_NOTES)}
+    translated = _audit_review_details(audit, "en")
+    assert "AI-assisted desktop review: 21" in translated
+    assert all(value in translated for value in ENGLISH_SOURCE_NOTES.values())
+    assert not re.search(r"[\u3400-\u9fff]", translated)
+    with pytest.raises(ValueError, match="English translation is required"):
+        _audit_review_details({"limitations": ["新增的未翻译限制"]}, "en")
+
+
+def test_result_report_rejects_unknown_language_before_reading_inputs(tmp_path):
+    with pytest.raises(ValueError, match="language"):
+        create_result_report(tmp_path, tmp_path, tmp_path, tmp_path / "unsupported.html", language="fr")

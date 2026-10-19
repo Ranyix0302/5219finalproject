@@ -60,6 +60,7 @@ def document_navigation(destination: Path, language: str) -> str:
         [
             ("中文全文", "docs/handover_zh/index.html"),
             ("English", "docs/handover_en/index.html"),
+            ("真实结果", "outputs/GE5219_MCDA_真实结果.html"),
             ("接口文档", "docs/handover_zh/interfaces.html"),
             ("代码结构", "docs/handover_zh/code_structure.html"),
             ("处理方法", "docs/handover_zh/processing_methods.html"),
@@ -69,6 +70,7 @@ def document_navigation(destination: Path, language: str) -> str:
         else [
             ("English handbook", "docs/handover_en/index.html"),
             ("中文", "docs/handover_zh/index.html"),
+            ("Actual results", "outputs/GE5219_MCDA_Actual_Results_EN.html"),
             ("Integration interfaces", "docs/handover_en/interfaces.html"),
             ("Code structure", "docs/handover_en/code_structure.html"),
             ("Processing methods", "docs/handover_en/processing_methods.html"),

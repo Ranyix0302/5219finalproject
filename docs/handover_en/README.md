@@ -19,7 +19,7 @@ Each figure now follows the paragraph it explains. Its caption distinguishes act
 
 ## 1. Start here: files and the frozen baseline
 
-Open the [actual results page](../../outputs/GE5219_MCDA_真实结果.html), then the [route desktop review page](../../outputs/route_audit_v2/route_audit.html). The [Notebook directory](../../notebooks/) supports a step by step reading of the calculation, and the standard package's [documentation entry](../../doc.html) brings the reading links together. Source result tables are in the [baseline](../../outputs/score/), [experiments](../../outputs/experiments/) and [prepared data](../../outputs/prepared/) directories.
+Open the [actual results page in English](../../outputs/GE5219_MCDA_Actual_Results_EN.html), or the [Chinese results page](../../outputs/GE5219_MCDA_真实结果.html), then the [route desktop review page](../../outputs/route_audit_v2/route_audit.html). Both complete packages include both results pages and their charts. The English page translates the interface, explanations, chart titles, axes and legends while retaining the same saved scores, rankings and result IDs. Its selectors display saved scenarios without recalculating scores. The [Notebook directory](../../notebooks/) supports a step by step reading of the calculation, and the standard package's [documentation entry](../../doc.html) brings the reading links together. Source result tables are in the [baseline](../../outputs/score/), [experiments](../../outputs/experiments/) and [prepared data](../../outputs/prepared/) directories.
 
 | Item | Frozen value and interpretation |
 | --- | --- |

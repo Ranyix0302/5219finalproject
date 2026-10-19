@@ -19,7 +19,7 @@
 
 ## 1. 先打开什么，当前究竟冻结了什么
 
-先看 [真实结果网页](../../outputs/GE5219_MCDA_真实结果.html)，再看 [路线桌面复核网页](../../outputs/route_audit_v2/route_audit.html)。需要逐步理解计算时打开 [Notebook 目录](../../notebooks/)；标准包的 [文档入口](../../doc.html) 汇总阅读入口。原始结果分别在 [正式基线](../../outputs/score/)、[实验](../../outputs/experiments/) 和 [准备与数据质量](../../outputs/prepared/) 中。以下表格是理解这些文件的共同前提。
+先看 [真实结果网页（中文）](../../outputs/GE5219_MCDA_真实结果.html)，也可打开 [英文结果网页](../../outputs/GE5219_MCDA_Actual_Results_EN.html)，再看 [路线桌面复核网页](../../outputs/route_audit_v2/route_audit.html)。中英文交接包均包含两种语言的结果页及图表；页面切换已保存的情景，不现场重算。需要逐步理解计算时打开 [Notebook 目录](../../notebooks/)；标准包的 [文档入口](../../doc.html) 汇总阅读入口。原始结果分别在 [正式基线](../../outputs/score/)、[实验](../../outputs/experiments/) 和 [准备与数据质量](../../outputs/prepared/) 中。以下表格是理解这些文件的共同前提。
 
 | 项目 | 冻结值及含义 |
 | --- | --- |

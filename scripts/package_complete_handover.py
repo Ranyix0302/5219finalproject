@@ -51,6 +51,7 @@ def collect_files() -> dict[str, Path]:
         "outputs/audits",
         "outputs/interface_acceptance",
         "outputs/GE5219_MCDA_真实结果_figures",
+        "outputs/GE5219_MCDA_Actual_Results_EN_figures",
     ):
         for path in (ROOT / directory).rglob("*"):
             if path.is_file():
@@ -62,6 +63,7 @@ def collect_files() -> dict[str, Path]:
         "normalization-v1.json",
         "test-final.log",
         "GE5219_MCDA_真实结果.html",
+        "GE5219_MCDA_Actual_Results_EN.html",
     ):
         files[f"outputs/{name}"] = ROOT / "outputs" / name
     for name in ("audit_plan.csv", "audit_plan_manifest.json"):
@@ -125,7 +127,7 @@ def create_packages(destination: Path) -> dict:
             "source_routes_sha256": metadata["source_routes_sha256"],
             "raw_file_count": raw_manifest["file_count"],
             "raw_total_bytes": raw_manifest["total_bytes"],
-            "scope": "Original A/B deliveries unchanged; reviewed source; bilingual explanations; executed notebooks; prepared data; route cache; saved MCDA/experiments; audits; updated work plans. No credentials or runtime environments. Source-language files and archived result pages retain their original language.",
+            "scope": "Original A/B deliveries unchanged; reviewed source; bilingual explanations and actual-results pages with embedded translated charts; executed notebooks; prepared data; route cache; saved MCDA/experiments; audits; updated work plans. No credentials or runtime environments. Original source files and archived route-review pages retain their original language.",
             "files": local_entries,
         }
         temporary = archive.with_suffix(".zip.partial")

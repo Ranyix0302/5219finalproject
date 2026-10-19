@@ -33,11 +33,13 @@ This is a small, staged Python application. GIS measurements and MCDA scores are
 | `settings.py` | Ordered seven indicators, directions, scenario vectors, departure and analysis version |
 | `cli.py` | User-facing stage commands and clear error statuses |
 | `report.py` | Preparation evidence page |
-| `result_report.py` | Portable real-result page from saved outputs |
+| `result_report.py` | Portable Chinese and English actual-results pages from saved outputs, including translated chart labels |
 | `route_audit.py` | Route-review plans, evidence binding and review summaries |
 | `__main__.py`, `__init__.py` | Package entry and initialization |
 
 For formulas, start with `mcda.py`; for sampling and facility counts, use `spatial.py`; for the OneMap special cases, read the processing guide before changing `routing.py`.
+
+Run `.\.venv\Scripts\python.exe scripts/render_result_pages.py` to regenerate both actual-results pages. It only reads frozen prepared data, baseline scores and experiment outputs, renders charts and writes HTML; it makes no new route requests and does not recalculate MCDA. The Chinese file is `outputs/GE5219_MCDA_真实结果.html`, and the English file is `outputs/GE5219_MCDA_Actual_Results_EN.html`. Both are included in the complete packages and can be opened offline.
 
 ## 3. Installation and offline Run All
 
