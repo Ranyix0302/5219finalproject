@@ -4,6 +4,16 @@ Python implementation of Xie Bingsheng's indicator framework, MCDA and
 sensitivity analysis. The accepted specification is
 [docs/implementation-plan.md](docs/implementation-plan.md).
 
+## Submission guide
+
+This repository implements residential sampling, seven accessibility measurements, public-transport routing to NUS AS8, weighted MCDA, and sensitivity analysis. The command-line entry is `python -m ge5219 <command>` or the installed `ge5219` command. The companion [Area Ranking Audit toolbox](https://github.com/Satelius/area-ranking-audit) provides a reusable ArcGIS Pro interface for building indicators and auditing regional rankings.
+
+The interface reference below describes the executable code in this repository. The archived counts and findings in the handover sections belong to the dated public-transport analysis.
+
+- [Input arguments and file schemas](#input-arguments-and-file-schemas)
+- [Output formats and interpretation](#output-formats-and-interpretation)
+- [Source comments and function documentation](#source-comments-and-function-documentation)
+
 ## Complete handover — 19 October 2026
 
 Start with [the documentation entry](doc.html), the complete
@@ -227,3 +237,110 @@ conceptual validity or resident choice probabilities.
 Code assistance used Codex for implementation, tests and documentation.
 Students must verify sources, endpoints, facilities and reported results, and
 write the final report from actual evidence with the required AI disclosure.
+
+## Input arguments and file schemas
+
+Run commands from the repository root. Paths containing spaces must be quoted. Paths below are filesystem paths, CSV files contain a header row, and JSON files use named keys. Use `python -m ge5219 <command> --help` to inspect a command's syntax.
+
+| Command | Function | Main output |
+| --- | --- | --- |
+| `prepare` | Read delivered GIS data, construct samples, and calculate six static measurements | Prepared CSV and GIS layers |
+| `route` | Request and cache OneMap itineraries for planned locations | SQLite cache and route CSV |
+| `score` | Apply fixed normalization, weights, eligibility, and ranking | Point/area scores and selected regions |
+| `experiments` | Evaluate preference, weight, qualification, and spatial assumptions | Saved scenarios and sensitivity tables |
+| `status` | Inspect available preparation, route, and result metadata | JSON printed to standard output |
+| `report` | Render the spatial-preparation evidence | HTML preparation report |
+
+### Complete command-line argument reference
+
+| Argument | Commands | Syntax and default | Meaning |
+| --- | --- | --- | --- |
+| `--data-root` | `prepare` | Required directory path | Root containing the A geodatabase and B handover, as laid out under Install |
+| `--output` | `prepare` | Directory, `outputs/prepared` | Destination for prepared layers, measurements, and audits |
+| `--prepared` | `route`, `score`, `experiments`, `status`, `report` | Directory, `outputs/prepared` | Existing prepared data consumed by the selected stage |
+| `--destination` | `route`, `score`, `experiments`, `status` | JSON path, `config/destination.json` | Destination identity, coordinates, and review evidence |
+| `--cache` | `route` | SQLite path, `outputs/routes.sqlite` | Persistent requests and responses used for resumption |
+| `--output` | `route` | CSV path, `outputs/routes.csv` | Route measurement export |
+| `--max-requests` | `route` | Optional integer, omitted by default | Maximum requests issued in this run, useful for a pilot |
+| `--retry-no-route` | `route` | Boolean flag, off by default | Request cached no-route cases again |
+| `--routes` | `score`, `experiments`, `status` | CSV path, required for `score` and `experiments`, optional for `status` | Route measurements and routing provenance |
+| `--normalization` | `score`, `experiments` | JSON path, `outputs/normalization-v1.json` | Fixed A-sample percentile reference. First use creates the file, later runs validate its dataset and measurement binding |
+| `--output` | `score`, `experiments` | Directory, `outputs/score` or `outputs/experiments` | Destination for the selected result bundle |
+| `--scenario` | `score` | `balanced`, `campus_first`, `transit_first`, or `lifestyle`; default `balanced` | Preset importance vector |
+| `--weights` | `score` | Seven comma-separated finite nonnegative numbers, e.g. `3,2,1,1,1,1,1` | Overrides the preset. Values are normalized to sum to one and must include a positive value |
+| `--max-commute-min` | `score` | Optional nonnegative number in minutes, default no cap | Inclusive upper bound on raw campus commute minutes |
+| `--sample-set` | `score` | `A` or `B`, default `A` | Original 400 m sample or the sample with cluster supplements |
+| `--group-by` | `score` | `area_id` or `cluster_id`, default `area_id` | Unit over which feasible-point scores are averaged |
+| `--result` | `status` | JSON path, `outputs/score/result_metadata.json` | Saved result metadata to inspect |
+| `--output` | `report` | HTML path, `outputs/preparation_report.html` | Preparation report filename |
+| `-h`, `--help` | All commands | Flag | Display command syntax and defaults |
+
+`ONEMAP_TOKEN` is a local environment variable used by `route` for authentication. The fixed routing scene is `2026-10-19T08:00:00+08:00`, mode `TRANSIT`. Date, mode, and destination support follow the versioned implementation in `settings.py` and the routing adapter.
+
+The destination JSON requires `destination_id` (string), `name` (string), `latitude` and `longitude` (decimal-degree numbers), `reviewed` (Boolean), and `coordinate_evidence` (string). The supplied file also records address, sources, coordinate precision, and review history. The supported destination is `NUS_AS8`.
+
+### Measurement inputs
+
+Every planned point has a unique string `location_id`, building/region/cluster identifiers, decimal-degree `latitude` and `longitude`, and Boolean `sample_A`. Preserve leading zeroes in identifiers. B comprises the complete analysis-location table. A selects the rows whose `sample_A` value is true.
+
+The seven weight positions and measurement columns are fixed in this order.
+
+| Position | Column | Type and unit | Interpretation and direction |
+| --- | --- | --- | --- |
+| 1 | `campus_transit_min` | Nonnegative number, minutes | First returned campus itinerary duration, lower is preferred |
+| 2 | `rail_exit_euclid_m` | Nonnegative number, metres | Nearest rail-exit straight-line distance, lower is preferred |
+| 3 | `bus_stops_800m` | Nonnegative count | Bus stops within 800 m, higher is preferred |
+| 4 | `supermarket_sites_800m` | Nonnegative count | Grouped supermarket locations within 800 m, higher is preferred |
+| 5 | `library_euclid_m` | Nonnegative number, metres | Nearest library straight-line distance, lower is preferred |
+| 6 | `clinic_sites_1000m` | Nonnegative count | Grouped clinic locations within 1,000 m, higher is preferred |
+| 7 | `park_proximity_euclid_m` | Nonnegative number, metres | Park proximity under the documented source-geometry rules, lower is preferred |
+
+`static_indicators.csv` contains the six static columns and point identifiers. The route CSV requires `location_id`, `origin_lat`, `origin_lon`, `destination_id`, `destination_lat`, `destination_lon`, `departure`, `mode`, `route_status`, and `campus_transit_min`. `assemble_matrix` validates the routing scene and joins routes to all planned points. A missing route leaves campus minutes unknown. Blank measurements remain missing throughout eligibility calculations.
+
+### Python scoring interface
+
+```python
+recommend(frame, params, weights, group_by="area_id", max_commute_min=None,
+          min_valid_share=0.9, min_feasible_share=0.5, metadata=None, k=5)
+```
+
+| Argument | Python type and default | Meaning |
+| --- | --- | --- |
+| `frame` | `pandas.DataFrame`, required | All planned points for the chosen sample, identifiers, seven measurements, and `route_status` |
+| `params` | `dict`, required | Per-indicator bounds returned by `fit_normalization(frame_A)` |
+| `weights` | Seven-item numeric sequence or mapping of the seven feature names, required | Relative importances, normalized internally |
+| `group_by` | String, `area_id` | Grouping field, `area_id` or `cluster_id` |
+| `max_commute_min` | Number or `None`, `None` | Inclusive raw commute cap in minutes |
+| `min_valid_share` | Number in `[0,1]`, `0.9` | Minimum complete-point count divided by planned count |
+| `min_feasible_share` | Number in `[0,1]`, `0.5` | Minimum complete, constraint-satisfying count divided by planned count |
+| `metadata` | `dict` or `None`, `None` | Dataset, destination, sample, and provenance carried into the result |
+| `k` | Positive integer, `5` | Number of eligible regions selected |
+
+The last two share thresholds and `k` are available through Python. The CLI uses their defaults. Complete points require all seven measurements. Normalization clips each value to its fixed P5/P95 interval, rescales it to `[0,1]`, and reverses cost indicators. The weighted point score is `sum(weight_j * normalized_j)`. Eligible regions must meet both share thresholds and contain a feasible point. Their scores average feasible-point scores. The public-transport implementation flags `n_valid < 3` as limited support.
+
+## Output formats and interpretation
+
+| Stage/file | Format and structure | Meaning |
+| --- | --- | --- |
+| `prepared/analysis_locations.csv` | One row per planned location with sample flags and IDs | Common point catalogue for routing and scoring |
+| `prepared/static_indicators.csv` | Location identifiers plus six raw measurements | Static scoring inputs |
+| `prepared/buildings.gpkg`, `analysis_locations.gpkg`, `subzones.geojson` | Vector GIS datasets | Buildings, sample locations, and region boundaries |
+| `prepared/cluster_membership.csv`, `clusters.csv` | Membership and cluster summary tables | Building-to-cluster relationships |
+| `prepared/data_quality.json` and audit tables | JSON and CSV | Data versions, counts, and preparation checks |
+| `routes.sqlite`, `routes.csv` | SQLite cache and point-level CSV | Saved itinerary status, duration, and provenance |
+| `normalization-v1.json` | JSON with `parameters`, dataset identity, and A-measurement fingerprint | Reusable normalization reference |
+| `point_scores.csv` | One row per planned point, raw values, `z_` values, weighted contributions, and result identity | Point-level explanation and qualification |
+| `area_scores.csv` | One row per regional unit | Planned/valid/feasible counts and shares, `eligible`, `limited_support`, score, and rank |
+| `top5.csv` | Up to `k` eligible rows ordered by rank | Selected regions. The filename remains `top5.csv` when Python callers change `k` |
+| `result_metadata.json` | JSON with `result_id`, `status`, applied weights, thresholds, and provenance | Run settings and state shared by result tables |
+| `indicator_matrix.csv` | Full assembled B measurement table | Measurement record retained by CLI scoring, including when the scoring sample is A |
+| `experiments/` | Scenario bundles, simulation weights/ranks, OAT tables, spatial comparisons, charts, and `experiment_manifest.json` | Results under the registered alternative assumptions |
+| Preparation/results HTML | Standalone report pages | Visual inspection of saved data and result bundles |
+
+`recommend` returns a dictionary containing `point_scores`, `area_scores`, and `top5` DataFrames plus a `metadata` dictionary. `save_result` writes these four components. Scores lie in `[0,1]` when defined. Unknown values are empty CSV cells or JSON `null`. Rank is assigned to eligible units. `limited_support` identifies a small supporting sample. Point and area contributions expose how indicators form the score.
+
+Metadata status is `ok`, `data_coverage_insufficient`, `no_feasible_results`, or `unsupported_destination`. A successfully executed command returns exit code 0, including valid runs with no selected regions. Read `metadata.status` together with the tables. Handled parameter/input errors return exit code 2 and JSON containing `status` and `message`.
+
+## Source comments and function documentation
+
+The course submission also requests line-level comments and docstrings for user-defined functions. The current source contains module descriptions, selected inline comments, and function docstrings. Coverage is partial. Completing a line-by-line explanation and adding docstrings to all user-defined functions remain source-documentation tasks for submission. Function and module interfaces are documented above and in [the interface guide](docs/interfaces.md).
